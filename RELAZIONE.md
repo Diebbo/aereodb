@@ -39,3 +39,8 @@ La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo 
 Tra i servizi offerti dagli aereoporti si vuole memorizzare informazioni riguardanti i parcheggi, i ristoranti e i negozi. Dei parcheggi si vuole memorizzare il numero di posti disponibili, il costo orario, numero di posti occupati e lberi. Satà inoltre necessario salvare tutti i servizi di trasporto che collegano l'areoporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche. Dei ristoranti e dei negozi si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. I servizi di sicurezza devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio e il numero di addetti, facendo distizione tra addetti di sicurezza e addetti di controllo.
 
 ## Glossario dei termini
+
+| Termine | Descrizione | Sinonimi | Collegamenti | 
+| --------------- | --------------- | --------------- | --------------- | 
+| Areoporto | stazione di transito di aerei| - | Voli, Compagnie, Lavoratori, Servizi, Trasporti |
+
