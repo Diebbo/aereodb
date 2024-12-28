@@ -4,4 +4,17 @@ AereoDB is a simple, sql-based database for managing airports, airlines, flights
 
 ## Installation
 
-TODO
+run the docker-compose file to start the database
+
+```bash
+docker-compose up -d
+```
+
+enter the database container
+
+```bash
+mysql -u root -p -h 127.0.0.1
+```
+
+> Note that the password matches the one in the docker-compose file
+
