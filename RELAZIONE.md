@@ -1,4 +1,4 @@
-<h1 align="center"> Gestione areoporotuale </h1>
+<h1 align="center"> Gestione aeroportuale </h1>
 <p align="center"> 2024-12-27 </p>
 
 <p align="center">
@@ -41,35 +41,37 @@
 ## Analisi dei requisiti
 ### Requisiti in linguaggio naturale
 
-Si vuole realizzare una base di dati per la gestione di aereoporti, con particolare attenzione alla gestione dei voli, dei passeggeri, dei lavoratori e dei servizi connessi. Nello specifico, si vuole memorizzare informazioni riguardanti aerei di tipologie cargo e passeggeri, i voli che essi effettuano, i passeggeri che viaggiano su di essi, i lavoratori che operano negli aereoporti e i servizi offerti da questi ultimi.
+Si vuole realizzare una base di dati per la gestione di aeroporti, con particolare attenzione alla gestione dei voli, dei passeggeri, dei lavoratori e dei servizi connessi. Nello specifico, si vuole memorizzare informazioni riguardanti aerei di tipologie cargo e passeggeri, i voli che essi effettuano, le merci e i passeggeri che viaggiano su di essi, i lavoratori che operano negli aeroporti e i servizi offerti da questi ultimi.
 
-Per quanto riguarda la gestione dei voli passeggeri, si vuole memorizzare informazioni riguardanti le generalità dei passeggeri (nome, cognome, data di nascita, nazionalità dei passeggeri, un recapito telefonico e un indirizzo email) e il loro documento di identità e il bagaglio che trasportano. I bagagli si suddividono in bagagli a mano e bagagli da stiva. Di questi ultimi si vuole memorizzare il peso e la descrizione. I voli devono essere memorizzati con il numero di volo, la data e l'ora di partenza e di arrivo, la compagnia aerea che lo opera, l'aereo utilizzato e l'aeroporto di partenza e di arrivo.
+Per gli aeroporti sarà necessario mantenere il codice identificativo, il nome completo, la città e lo stato di appartenenza, il numero di posti aereo, separati in passeggeri e cargo. Oltre a ciò è fondamentale memorizzare i servizi offerti e i servizi di sicurezza. Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il modello, l'identificativo, la compagnia aerea che lo possiede e la capienza.
 
-Per quello che riguarda i voli cargo, si vuole memorizzare informazioni riguardanti il carico trasportato. Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensione e contenuto.
+Per quanto riguarda la gestione dei voli passeggeri, si vogliono memorizzare informazioni sui passeggeri tra le quali generalità (nome, cognome, data di nascita, nazionalità, un recapito telefonico e un indirizzo email), le compagnie aeree di cui sono clienti insieme al numero di km viaggiati con esse, i loro documenti di identità registrati ed i bagagli che trasportano. I bagagli si suddividono in bagagli a mano e bagagli da stiva. Di entrambi si vuole memorizzare il peso e le dimensioni (altezza, larghezza e profondità). Dei bagagli da stiva si vuole inoltre mantenere una breve descrizione e un flag se è un animale. I voli devono essere memorizzati con il numero di volo, la data e l'ora di partenza e di arrivo, la compagnia aerea che lo opera, l'aereo utilizzato, l'aeroporto di partenza e di arrivo ed il personale a bordo.
 
-Verranno inoltre salvate le compagnie aeree che operano negli aereoporti. Di queste si vuole memorizzare il nome, il codice IATA e il codice ICAO.
+Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, data e ora di partenza e di arrivo contestualmente all'aeroporto, la compagnia logistica che lo opera, l'aereo utilizzato, il personale a bordo ed informazioni sul carico trasportato. Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensioni (altezza, larghezza e profondità) e contenuto.
 
-La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aereoporti e lavoratori delle compagnie aeree. I lavoratori presentano genralità uguali a quelle dei passeggeri, ma si vuole memorizzare anche il ruolo che essi ricoprono e il loro stipendio.
+Verranno inoltre salvate le compagnie aeree e logistiche che operano negli aeroporti. Di queste si vuole memorizzare il nome, il codice IATA e il codice ICAO. (DIEBBO ENTRAMBE??? O per le logistiche cambia qualcosa?)
 
-Tra i servizi offerti dagli aereoporti si vuole memorizzare informazioni riguardanti i parcheggi, i ristoranti e i negozi. Dei parcheggi si vuole memorizzare il numero di posti disponibili, il costo orario, numero di posti occupati e lberi. Satà inoltre necessario salvare tutti i servizi di trasporto che collegano l'areoporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche. Dei ristoranti e dei negozi si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. I servizi di sicurezza devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio e il numero di addetti, facendo distizione tra addetti di sicurezza e addetti di controllo.
+La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche la compagnia per cui lavorano, il ruolo che essi ricoprono e il loro stipendio.
+
+Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguardanti le lounge, i parcheggi, i ristoranti e i negozi. Delle lounge si vuole mantenere la compagnia aerea che la mette a disposizione ed i posti disponibili. Dei parcheggi si vuole memorizzare l’ubicazione, il numero di posti disponibili, il costo orario ed il numero di posti occupati. Sarà inoltre necessario salvare tutti i servizi di trasporto che collegano l'aeroporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche. Dei ristoranti e dei negozi si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. Per tutti i servizi è cruciale memorizzare i dipendenti.  I servizi di sicurezza devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio, il tempo medio di attesa e il numero di addetti, facendo distinzione tra addetti di sicurezza e addetti di controllo.
 
 ### Glossario dei termini
 
 | Termine | Descrizione | Sinonimi | Collegamenti | 
 | --------------- | --------------- | --------------- | --------------- | 
-| Areoporto | stazione di transito di aerei| - | Voli, Compagnie, Lavoratori, Servizi, Trasporti |
-| Volo | descrizione transito tra due areoporti distinit | - | Compagnia, Lavoratori, Areoporti, Areo |
-| Areo | mezzo di trasporto | - | Passeggero, Volo, Lavoratori (hostess, pilota), Areoporti, volo |
-| Passeggero | cliente per una compagnia area, presente su almeno un volo | cliente | Volo, Identità | 
+| Aeroporto | stazione di transito di aerei| - | Voli, Compagnie, Lavoratori, Servizi, Trasporti |
+| Volo | descrizione transito tra due aeroporti distinti | - | Compagnia, Lavoratori, Aeroporti, Aereo |
+| Areo | mezzo di trasporto | - | Passeggero, Volo, Lavoratori (hostess, pilota), Aeroporti, volo |
+| Passeggero | cliente per una compagnia aerea, presente su almeno un volo | cliente | Volo, Identità | 
 | Identità | si distinguono diversi tipi di documenti, come carta d’identità e/o passaporti. | documento | Passeggero, Lavoratore |
-| Lavoratore | rappresenta il personale dell’aeroporto, tra cui piloti, hostess e steward. | hostess, steward, impiegato | Areoporto, Volo, Compagnia, Servizi commerciali |
+| Lavoratore | rappresenta il personale dell’aeroporto, tra cui piloti, hostess e steward. | hostess, steward, impiegato | Aeroporto, Volo, Compagnia, Servizi commerciali |
 | Bagaglio | oggetto trasportabile in una tratta aerea e ne rappresenta il peso e la tipologia | valigia, borsa, zaino | Passeggero, Lavoratore |
 | Compagnia aerea | gestisce il trasporto passeggeri. | - | Voli, Aerei |
 | Compagnia logistica | si occupa della gestione degli aerei cargo e del trasporto merci. | - | Voli |
-| Servizi commerciali | attività come ristorazione, negozi e altre strutture a servizio dei passeggeri. | - | Areoporto |
-| Servizi di sicurezza | servizi di controllo delle attività ordinarie all'interno dell'areoporto | controllo bagagli, controllo documenti. | Areoporto |
-| Parcheggi |  aree di sosta per veicoli  | - | Areoporto, Servizi di trasporto |
-| Servizi di trasporto | mezzi di collegamento a servizi esterni all'areoporto. | taxi, navette | Areoporto, servizio commerciali, parcheggi |
+| Servizi commerciali | attività come ristorazione, negozi e altre strutture a servizio dei passeggeri. | - | Aeroporto |
+| Servizi di sicurezza | servizi di controllo delle attività ordinarie all'interno dell'aeroporto | controllo bagagli, controllo documenti. | Aeroporto |
+| Parcheggi |  aree di sosta per veicoli  | - | Aeroporto, Servizi di trasporto |
+| Servizi di trasporto | mezzi di collegamento a servizi esterni all'aeroporto. | taxi, navette | Aeroporto, servizio commerciali, parcheggi |
 
 ### Eliminazione delle Ambiguità
 
