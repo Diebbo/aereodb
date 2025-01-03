@@ -173,12 +173,24 @@ I servizi di sicurezza devono essere memorizzati separatamente. Più precisament
     - servizi di trasporto
     - stato parcheggi
 
-
-
 ## Progettazione concettuale
+
+### Approccio top-down
+
+```mermaid
+erDiagram
+    AEROPORTO }|--|| VOLO : parte
+    AEROPORTO }|--|| VOLO : arriva
+    AEROPORTO }|--|| DIPENDENTE: lavora
+
+    VOLO }|--|| DIPENDENTE: lavora
+    VOLO ||--|{ PASSEGGERO: compra
+    VOLO ||--o{ AEREO: trasporta
+```
 
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
 - [voli in partenza al secondo](https://www.mytripmap.it/quanti-aerei-ci-sono-ora-in-volo-mappa-in-tempo-reale/)
 - [codice aeroportuale IATA](https://it.wikipedia.org/wiki/Codice_aeroportuale_IATA)
+- [ER](https://mermaid.js.org/syntax/entityRelationshipDiagram.html)
 
