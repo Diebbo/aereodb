@@ -43,13 +43,11 @@
 
 Si vuole realizzare una base di dati per la gestione di aeroporti, con particolare attenzione alla gestione dei voli, dei passeggeri, dei lavoratori e dei servizi connessi. Nello specifico, si vuole memorizzare informazioni riguardanti aerei di tipologie cargo e passeggeri, i voli che essi effettuano, le merci e i passeggeri che viaggiano su di essi, i lavoratori che operano negli aeroporti e i servizi offerti da questi ultimi.
 
-Per gli aeroporti sarà necessario mantenere il codice identificativo, il nome completo, la città e lo stato di appartenenza, il numero di posti aereo, separati in passeggeri e cargo. Oltre a ciò è fondamentale memorizzare i servizi offerti e i servizi di sicurezza. Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il modello, l'identificativo, la compagnia aerea che lo possiede e la capienza.
+Per gli aeroporti sarà necessario mantenere il codice identificativo IATA e ICAO, il nome completo, la città e lo stato di appartenenza, il numero di posti aereo, separati in passeggeri e cargo. Oltre a ciò è fondamentale memorizzare i servizi offerti e i servizi di sicurezza. Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il modello, l'identificativo, la compagnia aerea che lo possiede e la capienza.
 
 Per quanto riguarda la gestione dei voli passeggeri, si vogliono memorizzare informazioni sui passeggeri tra le quali generalità (nome, cognome, data di nascita, nazionalità, un recapito telefonico e un indirizzo email), le compagnie aeree di cui sono clienti insieme al numero di km viaggiati con esse, i loro documenti di identità registrati ed i bagagli che trasportano. I bagagli si suddividono in bagagli a mano e bagagli da stiva. Di entrambi si vuole memorizzare il peso, le dimensioni (altezza, larghezza e profondità) e lo stato(disperso, danneggiato o integro). Dei bagagli da stiva si vuole inoltre mantenere una breve descrizione e un flag se è un animale. I voli devono essere memorizzati con il numero di volo, la data e l'ora di partenza e di arrivo, la compagnia aerea che lo opera, l'aereo utilizzato, l'aeroporto di partenza e di arrivo ed il personale a bordo.
 
 Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, data e ora di partenza e di arrivo contestualmente all'aeroporto, la compagnia logistica che lo opera, l'aereo utilizzato, il personale a bordo ed informazioni sul carico trasportato. Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensioni (altezza, larghezza e profondità), contenuto e stato (medesimo del bagaglio).
-
-Verranno inoltre salvate le compagnie aeree e logistiche che operano negli aeroporti. Di queste si vuole memorizzare il nome, il codice IATA e il codice ICAO.
 
 La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche la compagnia per cui lavorano, il ruolo che essi ricoprono e il loro stipendio.
 
@@ -75,53 +73,105 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 
 ### Eliminazione delle Ambiguità
 
-TOCHECK: Per ora non ci sono ambiguità in quanto abbiamo definito noi stessi i requisiti.
+- **Parcheggi**: per ubicazione si intende longitudine e latitudine, per posti disponibili si intende il numero di posti totali, per posti occupati si intende il numero di posti attualmente occupati.
 
 ### Strutturazione dei requisiti
 
-#### *Frase di carattere generale*
+#### *Frasi di carattere generale*
 
-TODO: quando vengono aggiunti tutti i requisiti.
+Si vuole realizzare una base di dati per la gestione di aeroporti, con particolare attenzione alla gestione dei voli, dei passeggeri, dei lavoratori e dei servizi connessi. Nello specifico, si vuole memorizzare informazioni riguardanti aerei di tipologie cargo e passeggeri, i voli che essi effettuano, le merci e i passeggeri che viaggiano su di essi, i lavoratori che operano negli aeroporti e i servizi offerti da questi ultimi.
 
+#### *Frasi relative agli aeroporti*
+
+Per gli aeroporti sarà necessario mantenere il codice identificativo IATA e ICAO, il nome completo, la città e lo stato di appartenenza, il numero di posti aereo, separati in passeggeri e cargo. Oltre a ciò è fondamentale memorizzare i servizi offerti e i servizi di sicurezza. Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il modello, l'identificativo, la compagnia aerea che lo possiede e la capienza.
+
+
+#### *Frasi relative ai passeggeri*
+
+Per quanto riguarda la gestione dei voli passeggeri, si vogliono memorizzare informazioni sui passeggeri tra le quali generalità (nome, cognome, data di nascita, nazionalità, un recapito telefonico e un indirizzo email), le compagnie aeree di cui sono clienti insieme al numero di km viaggiati con esse, i loro documenti di identità registrati ed i bagagli che trasportano. 
+
+
+#### *Frasi relative ai bagagli*
+
+I bagagli si suddividono in bagagli a mano e bagagli da stiva. Di entrambi si vuole memorizzare il peso, le dimensioni (altezza, larghezza e profondità) e lo stato(disperso, danneggiato o integro). Dei bagagli da stiva si vuole inoltre mantenere una breve descrizione e un flag se è un animale.
+
+#### *Frasi relative ai voli*
+
+I voli devono essere memorizzati con il numero di volo, la data e l'ora di partenza e di arrivo, la compagnia aerea che lo opera, l'aereo utilizzato, l'aeroporto di partenza e di arrivo ed il personale a bordo.
+
+#### *Frasi relative ai voli cargo*
+
+
+Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, data e ora di partenza e di arrivo contestualmente all'aeroporto, la compagnia logistica che lo opera, l'aereo utilizzato, il personale a bordo ed informazioni sul carico trasportato. Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensioni (altezza, larghezza e profondità), contenuto e stato (medesimo del bagaglio).
+
+#### *Frasi relative ai lavoratori*
+
+La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche la compagnia per cui lavorano, il ruolo che essi ricoprono e il loro stipendio.
+
+#### *Frasi relative ai servizi*
+
+Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguardanti le lounge, i parcheggi, i ristoranti e i negozi. Delle lounge si vuole mantenere la compagnia aerea che la mette a disposizione ed i posti disponibili. 
+
+
+
+**Parcheggi** 
+
+Dei parcheggi si vuole memorizzare l’ubicazione, il numero di posti disponibili, il costo orario ed il numero di posti occupati. 
+
+**Servizi di trasporto**
+
+Sarà inoltre necessario salvare tutti i servizi di trasporto che collegano l'aeroporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche.
+
+**Servizi commerciali**
+
+Dei ristoranti e dei negozi si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. 
+
+**Servizi di sicurezza** 
+
+I servizi di sicurezza devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio, il tempo medio di attesa e il numero di addetti, facendo distinzione tra addetti di sicurezza e addetti di controllo.
 
 ### Specifica operazioni
 
-- Inserimento nuovo aeroporto (stima che dipende dal numero di aeroporti sotto lo stesso gestore)
-- Inserimento nuovo volo (750 aerei al giorno)
-- Inserimento nuovo aereo (100 all'anno)
-- Inserimento nuovo passeggero (7 circa sette miliardi all'anno, contando duplicati)
-- Inserimento nuovo lavoratore (1 volta al mese)
-- Inserimento nuovo bagaglio (7 miliardi all'anno)
-- Inserimento nuova compagnia aerea
-- Inserimento nuova compagnia logistica
+- Inserimenti
 
-- Modifica esercizio commerciale aeroportuale
-- Modifica servizio di sicurezza
-- Modifica servizio di trasporto
-- Modifica volo: ritardo, cancellazione, cambio aereo
-- Modifica documenti di identità
-- Modifica stato bagaglio
-- Modifica stipendio lavoratore
+    - nuovo aeroporto (stima che dipende dal numero di aeroporti sotto lo stesso gestore)
+    - nuovo volo (750 aerei al giorno)
+    - nuovo aereo (100 all'anno)
+    - nuovo passeggero (7 circa sette miliardi all'anno, contando duplicati)
+    - nuovo lavoratore (1 volta al mese)
+    - nuovo bagaglio (7 miliardi all'anno)
+    - nuova compagnia aerea (1 ogni anno)
+    - nuova compagnia logistica (1 ogni anno)
 
+- Modifiche
+    - esercizio commerciale aeroportuale
+    - servizio di sicurezza
+    - servizio di trasporto
+    - volo: ritardo, cancellazione, cambio aereo
+    - documenti di identità
+    - stato bagaglio
+    - stipendio lavoratore
 
-- smantellamento aereo
-- cancellazione volo
-- invalidità documenti di identità
-- licenziamento lavoratore
-- smarrimento bagaglio
+- Cancellazioni
+    - smantellamento aereo
+    - cancellazione volo
+    - invalidità documenti di identità
+    - licenziamento lavoratore
+    - smarrimento bagaglio
 
-- visualizzazione voli in partenza
-- visualizzazione voli in arrivo
-- visualizzazione lavoratori aeroportuali
-- visualizzazione lavoratori compagnie aeree
-- visualizzazione lavoratori compagnie logistiche
-- visualizzazione passeggeri
-- visualizzazione bagagli
-- visualizzazione merci trasportate
-- visualizzazione servizi aeroportuali
-- visualizzazione servizi di sicurezza
-- visualizzazione servizi di trasporto
-- visualizzazione stato parcheggi
+- Ricerche
+    - voli in partenza
+    - voli in arrivo
+    - lavoratori aeroportuali
+    - lavoratori compagnie aeree
+    - lavoratori compagnie logistiche
+    - passeggeri
+    - bagagli
+    - merci trasportate
+    - servizi aeroportuali
+    - servizi di sicurezza
+    - servizi di trasporto
+    - stato parcheggi
 
 
 
@@ -130,4 +180,5 @@ TODO: quando vengono aggiunti tutti i requisiti.
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
 - [voli in partenza al secondo](https://www.mytripmap.it/quanti-aerei-ci-sono-ora-in-volo-mappa-in-tempo-reale/)
+- [codice aeroportuale IATA](https://it.wikipedia.org/wiki/Codice_aeroportuale_IATA)
 
