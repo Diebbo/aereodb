@@ -183,9 +183,65 @@ erDiagram
     AEROPORTO }|--|| VOLO : arriva
     AEROPORTO }|--|| DIPENDENTE: lavora
 
-    VOLO }|--|| DIPENDENTE: lavora
-    VOLO ||--|{ PASSEGGERO: compra
+    VOLO }|--|{ DIPENDENTE: lavora
+    VOLO }|--|{ PASSEGGERO: compra
     VOLO ||--o{ AEREO: trasporta
+```
+
+Servizi aeroportuali e servizi di sicurezza.
+
+```mermaid
+erDiagram 
+    AEROPORTO }|--|| SERVIZIOSICUREZZA: "fornisce"
+    AEROPORTO }|--|| SERVIZIOTRASPORTO: "fornisce"
+    AEROPORTO }|--|| SERVIZIOCOMMERCIALI: "fornisce"
+
+    SERVIZIO }|--|| SERVIZIOSICUREZZA: "e'"
+    SERVIZIO }|--|| SERVIZIOTRASPORTO: "e'"
+    SERVIZIO }|--|| SERVIZIOCOMMERCIALI: "e'"
+    SERVIZIO }|--|| PARCHEGGIO: "e'"
+    SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: "collega"
+
+    SERVIZIOCOMMERCIALI o|--|| RISTORANTE: "composto"
+    SERVIZIOCOMMERCIALI o|--|| NEGOZIO: "comprende"
+```
+
+
+### Approccio inside-out
+
+Rappresentazione delle entità e gerarchia persona, dipendente e passeggero.
+
+```mermaid
+erDiagram
+    Persona {
+        int id PK
+        string nome
+        string cognome
+        date dataNascita
+        string numeroTelefono
+        string email
+    }
+
+    Dipendente {
+        enum mansione
+        date dataAssunzione
+        float stipendio
+    }
+
+    Passeggero {
+        string classeViaggio
+        string numeroBiglietto
+    }
+
+    Documento {
+        enum Tipo
+        int numero
+    }
+
+    Persona ||--o| Dipendente: "è un"
+    Persona ||--o| Passeggero: "è un"
+    Persona ||--|{ Documento: "identificato da"
+
 ```
 
 ## Riferimenti
