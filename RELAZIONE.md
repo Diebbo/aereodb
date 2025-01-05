@@ -74,6 +74,8 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 ### Eliminazione delle Ambiguità
 
 - **Parcheggi**: per ubicazione si intende longitudine e latitudine, per posti disponibili si intende il numero di posti totali, per posti occupati si intende il numero di posti attualmente occupati.
+- **Voli**: si identifica con volo un singolo viaggio tra due aeroporti, con aereo l'aeromobile utilizzato per il viaggio, con compagnia aerea la società che opera il volo, con personale a bordo i lavoratori che operano durante il volo.
+- **passeggeri**: il passegggero è una persona nella base di dati, che ha comprato un biglietto per un volo, ha un bagaglio e un documento di identità.
 
 ### Strutturazione dei requisiti
 
@@ -179,13 +181,12 @@ I servizi di sicurezza devono essere memorizzati separatamente. Più precisament
 
 ```mermaid
 erDiagram
-    AEROPORTO }|--|| VOLO : parte
-    AEROPORTO }|--|| VOLO : arriva
-    AEROPORTO }|--|| DIPENDENTE: lavora
-
-    VOLO }|--|{ DIPENDENTE: lavora
-    VOLO }|--|{ PASSEGGERO: compra
-    VOLO ||--o{ AEREO: trasporta
+    AEROPORTO }|--|| VOLO: "parte"
+    AEROPORTO }|--|| VOLO: "arriva"
+    AEROPORTO }|--|| PERSONA: "lavora"
+    VOLO }|--|{ PERSONA: "lavora"
+    VOLO }o--o{ PERSONA: "passegero" 
+    VOLO ||--o{ AEREO: "trasporta"
 ```
 
 Servizi aeroportuali e servizi di sicurezza.
@@ -204,6 +205,27 @@ erDiagram
 
     SERVIZIOCOMMERCIALI o|--|| RISTORANTE: "composto"
     SERVIZIOCOMMERCIALI o|--|| NEGOZIO: "comprende"
+```
+
+Seconda bozza voli passeggeri.
+
+```mermaid
+erDiagram
+    VOLOPASSEGERO }o--|| PASSEGGERO: "trasporta"
+    VOLOPASSEGERO ||--o| AEREO: "trasporta"
+    VOLOPASSEGERO ||--o| COMPAGNIAAEREA: "opera"
+    VOLOPASSEGERO ||--o| AEROPORTO: "parte da"
+    VOLOPASSEGERO ||--o| AEROPORTO: "arriva a"
+
+    AEREO ||--o| COMPAGNIAAEREA: "è di"
+    PASSEGGERO ||--o{ PERSONA: "è un"
+    PASSEGGERO }|--|| DOCUMENTO: "identificato da"
+    PASSEGGERO }o--|| BAGAGLIO: "trasporta"
+    DIPENDENTE }|--|| DOCUMENTO: "identificato da"
+    DIPENDENTE ||--o{ AEROPORTO: "lavora per"
+    DIPENDENTE ||--|{ VOLOP: "assegnato a"
+    DIPENDENTE ||--o| PERSONA: "è un"
+    DIPENDENTE ||--o{ COMPAGNIAAEREA: "lavora per"
 ```
 
 
@@ -240,7 +262,8 @@ erDiagram
 
     Persona ||--o| Dipendente: "è un"
     Persona ||--o| Passeggero: "è un"
-    Persona ||--|{ Documento: "identificato da"
+    Dipendente |{--|| Documento: "identificato da"
+    Passeggero |{--|| Documento: "identificato da"
 
 ```
 
