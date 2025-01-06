@@ -43,11 +43,11 @@
 
 Si vuole realizzare una base di dati per la gestione di aeroporti, con particolare attenzione alla gestione dei voli, dei passeggeri, dei lavoratori e dei servizi connessi. Nello specifico, si vuole memorizzare informazioni riguardanti aerei di tipologie cargo e passeggeri, i voli che essi effettuano, le merci e i passeggeri che viaggiano su di essi, i lavoratori che operano negli aeroporti e i servizi offerti da questi ultimi.
 
-Per gli aeroporti sarà necessario mantenere il codice identificativo IATA e ICAO, il nome completo, la città e lo stato di appartenenza, il numero di posti aereo, separati in passeggeri e cargo. Oltre a ciò è fondamentale memorizzare i servizi offerti e i servizi di sicurezza. Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il modello, l'identificativo, la compagnia aerea che lo possiede e la capienza.
+Per gli aeroporti sarà necessario mantenere il codice identificativo IATA e ICAO, il nome completo, la provincia e lo stato di appartenenza, il numero di posti aereo, separati in passeggeri e cargo. Oltre a ciò è fondamentale memorizzare i servizi offerti e i servizi di sicurezza. Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il modello, l'identificativo, la compagnia aerea che lo possiede e la capienza.
 
 Per quanto riguarda la gestione dei voli passeggeri, si vogliono memorizzare informazioni sui passeggeri tra le quali generalità (nome, cognome, data di nascita, nazionalità, un recapito telefonico e un indirizzo email), le compagnie aeree di cui sono clienti insieme al numero di km viaggiati con esse, i loro documenti di identità registrati ed i bagagli che trasportano. I bagagli si suddividono in bagagli a mano e bagagli da stiva. Di entrambi si vuole memorizzare il peso, le dimensioni (altezza, larghezza e profondità) e lo stato(disperso, danneggiato o integro). Dei bagagli da stiva si vuole inoltre mantenere una breve descrizione e un flag se è un animale. I voli devono essere memorizzati con il numero di volo, la data e l'ora di partenza e di arrivo, la compagnia aerea che lo opera, l'aereo utilizzato, l'aeroporto di partenza e di arrivo ed il personale a bordo.
 
-Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, data e ora di partenza e di arrivo contestualmente all'aeroporto, la compagnia logistica che lo opera, l'aereo utilizzato, il personale a bordo ed informazioni sul carico trasportato. Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensioni (altezza, larghezza e profondità), contenuto e stato (medesimo del bagaglio).
+Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, data e ora di partenza e di arrivo contestualmente all'aeroporto, la compagnia logistica che lo opera, l'aereo utilizzato, il personale a bordo ed informazioni sul carico trasportato. Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensioni (altezza, larghezza e spessore), contenuto e stato (medesimo del bagaglio).
 
 La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche la compagnia per cui lavorano, il ruolo che essi ricoprono e il loro stipendio.
 
@@ -83,7 +83,7 @@ Si vuole realizzare una base di dati per la gestione di aeroporti, con particola
 
 #### *Frasi relative agli aeroporti*
 
-Per gli aeroporti sarà necessario mantenere il codice identificativo IATA e ICAO, il nome completo, la città e lo stato di appartenenza, il numero di posti aereo, separati in passeggeri e cargo. Oltre a ciò è fondamentale memorizzare i servizi offerti e i servizi di sicurezza. Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il modello, l'identificativo, la compagnia aerea che lo possiede e la capienza.
+Per gli aeroporti sarà necessario mantenere il codice identificativo IATA e ICAO, il nome completo, la provincia e lo stato di appartenenza, il numero di posti aereo, separati in passeggeri e cargo. Oltre a ciò è fondamentale memorizzare i servizi offerti e i servizi di sicurezza. Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il modello, l'identificativo, la compagnia aerea che lo possiede e la capienza.
 
 
 #### *Frasi relative ai passeggeri*
@@ -102,7 +102,7 @@ I voli devono essere memorizzati con il numero di volo, la data e l'ora di parte
 #### *Frasi relative ai voli cargo*
 
 
-Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, data e ora di partenza e di arrivo contestualmente all'aeroporto, la compagnia logistica che lo opera, l'aereo utilizzato, il personale a bordo ed informazioni sul carico trasportato. Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensioni (altezza, larghezza e profondità), contenuto e stato (medesimo del bagaglio).
+Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, data e ora di partenza e di arrivo contestualmente all'aeroporto, la compagnia logistica che lo opera, l'aereo utilizzato, il personale a bordo ed informazioni sul carico trasportato. Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensioni (altezza, larghezza e spessore), contenuto e stato (medesimo del bagaglio).
 
 #### *Frasi relative ai lavoratori*
 
@@ -206,7 +206,52 @@ erDiagram
     VOLOPASSEGGERI ||--|| VOLO: "è un"
 
     VOLOCARGO ||--|| VOLO: "è un"
-    VOLOCARGO ||--o{ PACCO: "trasporta"
+    VOLOCARGO ||--o{ PACCO: trasporta
+```
+
+### Approccio inside-out
+
+Volo (cargo), Aereo e Aeroporto
+
+```mermaid
+erDiagram
+    VOLO ||--|| AEROPORTO: "parte da"
+    VOLO ||--|| AEROPORTO: "arriva a"
+    VOLO }o--|| AEREO: usa
+    VOLO {
+        string numeroVolo PK
+        date partenza
+        date arriva
+    }
+    AEROPORTO {
+        string IATA PK
+        string ICAO PK
+        string nome
+        string provincia
+        string stato
+        int postiAereoPasseggeri
+        int postiAereoCargo
+    }
+    AEREO {
+        enum tipologia "passeggeri o cargo"
+        string modello
+        string id PK
+        int capienza "n° posti o t di stiva"
+    }
+
+    VOLOCARGO ||--|| VOLO: "è un"
+    VOLOCARGO ||--o{ PACCO: trasporta
+    VOLOCARGO {
+        string carico
+    }
+    PACCO {
+        float peso
+        float altezza
+        float larghezza
+        float spessore
+        string contenuto
+        enum stato "disperso, danneggiato o integro"
+    }
 ```
 
 ## Riferimenti
