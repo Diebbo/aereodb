@@ -188,6 +188,27 @@ erDiagram
     VOLO ||--o{ AEREO: trasporta
 ```
 
+Volo e connessi (in particolare voli cargo)
+
+```mermaid
+erDiagram
+    VOLO ||--|| AEROPORTO: "parte da"
+    VOLO ||--|| AEROPORTO: "arriva a"
+    VOLO }o--|| AEREO: usa
+
+    COMPAGNIAAEREA ||--o{ VOLO: opera
+    COMPAGNIAAEREA ||--o{ AEREO: possiede
+
+    DIPENDENTE }|--|| VOLO: "assegnato a"
+    DIPENDENTE }|--|| COMPAGNIAAEREA: "lavora per"
+    DIPENDENTE ||--|| PERSONA: "è una"
+
+    VOLOPASSEGGERI ||--|| VOLO: "è un"
+
+    VOLOCARGO ||--|| VOLO: "è un"
+    VOLOCARGO ||--o{ PACCO: "trasporta"
+```
+
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
 - [voli in partenza al secondo](https://www.mytripmap.it/quanti-aerei-ci-sono-ora-in-volo-mappa-in-tempo-reale/)
