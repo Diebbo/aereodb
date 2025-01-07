@@ -186,12 +186,16 @@ Sono state identificate inizialmente le entità principali: aeroporto, aereo, vo
 
 ```mermaid
 erDiagram
-    AEROPORTO }|--|| VOLO: "parte"
-    AEROPORTO }|--|| VOLO: "arriva"
-    AEROPORTO }|--|| PERSONA: "lavora"
-    VOLO }|--|{ PERSONA: "lavora"
-    VOLO }o--o{ PERSONA: "passeggero" 
-    VOLO ||--o{ AEREO: "trasporta"
+    AEROPORTO ||--|{ SERVIZIO: "dispone"
+    VOLO }|--|| AEROPORTO: "parte"
+    VOLO }|--|| AEROPORTO: "arriva"
+    VOLO }|--|| AEREO: "usa"
+    VOLO }o--o{ PERSONA: "trasporta"
+    COMPAGNIA ||--|{ AEREO: "possiede" 
+    COMPAGNIA ||--|{ VOLO: "organizza"
+    PERSONA }|--|{ VOLO: "lavora"
+    PERSONA }|--|| COMPAGNIA: "lavora"
+    PERSONA }|--|| SERVIZIO: "lavora"
 ```
 
 ### Sviluppo delle componenti (approccio inside-out)
