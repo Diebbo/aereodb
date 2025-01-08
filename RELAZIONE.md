@@ -136,6 +136,8 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 
 ### Specifica operazioni
 
+TODO: completare le stime
+
 - Inserimenti
     - nuovo aeroporto (stima che dipende dal numero di aeroporti sotto lo stesso gestore)
     - nuovo volo (750 aerei al giorno)
@@ -180,7 +182,7 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 
 ### Identificazione delle entità e relazioni
 
-Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. L'entità volo è specializzabile in volo passeggeri e volo cargo. Similmente l'entità compagnia può essere espressa come compagnia aerea e compagnia logistica. Sono state poi secondariamente identificate le entità passeggero e lavoratore, derivate da persona, e le entità bagaglio e pacco. Oltre a ciò si suddividono i servizi in sicurezza, lounge, parcheggi, trasporti e commerciali.
+Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. L'entità volo è specializzabile in volo passeggeri e volo cargo. Similmente l'entità compagnia può essere espressa come compagnia aerea e compagnia logistica. Sono state poi secondariamente identificate le entità passeggero e dipendente, derivate da persona, e le entità bagaglio e pacco. Oltre a ciò si suddividono i servizi in sicurezza, lounge, parcheggi, trasporti e commerciali.
 
 ### Scheletro dello schema ER (approccio top-down)
 
@@ -200,8 +202,6 @@ erDiagram
 
 ### Sviluppo delle componenti (approccio inside-out)
 
-TODO: mettere insieme attributi e schemi
-
 Servizi aeroportuali e servizi di sicurezza.
 
 ```mermaid
@@ -220,54 +220,31 @@ erDiagram
     SERVIZIOCOMMERCIALE ||--o| NEGOZIO: "comprende"
 ```
 
-Seconda bozza voli passeggeri.
+Voli passeggeri.
 
 ```mermaid
 erDiagram
-    VOLOPASSEGGERI }|--|{ PASSEGGERO: "trasporta"
-    VOLOPASSEGGERI }|--|| AEREO: "usa"
-    VOLOPASSEGGERI }|--|| AEROPORTO: "parte da"
-    VOLOPASSEGGERI }|--|| AEROPORTO: "arriva a"
+    VOLO }|--|| AEREO: "usa"
+    VOLO }|--|| AEROPORTO: "parte da"
+    VOLO }|--|| AEROPORTO: "arriva a"
 
-		 COMPAGNIAAEREA ||--|{ VOLOPASSEGGERI: "opera"
-		 COMPAGNIAAEREA ||--|{ AEREO: "possiede"
+    VOLOPASSEGGERI ||--|| VOLO: "è un"
+    VOLOPASSEGGERI }|--|{ PASSEGGERO: "trasporta"
+
+    COMPAGNIA ||--|{ VOLO: "opera"
+    COMPAGNIA ||--|{ AEREO: "possiede"
 
     PASSEGGERO ||--|| PERSONA: "è un"
     PASSEGGERO ||--|{ DOCUMENTO: "identificato da"
     PASSEGGERO ||--o{ BAGAGLIO: "trasporta"
+
     DIPENDENTE ||--|{ DOCUMENTO: "identificato da"
     DIPENDENTE }|--o| SERVIZIO: "lavora per"
     DIPENDENTE }|--o{ VOLOPASSEGGERI: "assegnato a"
     DIPENDENTE ||--|| PERSONA: "è un"
-    DIPENDENTE }|--o| COMPAGNIAAEREA: "lavora per"
-```
+    DIPENDENTE }|--o| COMPAGNIA: "lavora per"
 
-Volo e connessi (in particolare voli cargo)
-
-```mermaid
-erDiagram
-    VOLO }|--|| AEROPORTO: "parte da"
-    VOLO }|--|| AEROPORTO: "arriva a"
-    VOLO }|--|| AEREO: usa
-
-    COMPAGNIAAEREA ||--|{ VOLO: opera
-    COMPAGNIAAEREA ||--|{ AEREO: possiede
-
-    DIPENDENTE }|--|{ VOLO: "assegnato a"
-    DIPENDENTE }|--|| COMPAGNIAAEREA: "lavora per"
-    DIPENDENTE ||--|| PERSONA: "è una"
-
-    VOLOPASSEGGERI ||--|| VOLO: "è un"
-
-    VOLOCARGO ||--|| VOLO: "è un"
-    VOLOCARGO ||--o{ PACCO: trasporta
-```
-
-Rappresentazione delle entità e gerarchia persona, dipendente e passeggero.
-
-```mermaid
-erDiagram
-    Persona {
+    PERSONA {
         int id PK
         string nome
         string cognome
@@ -275,37 +252,41 @@ erDiagram
         string numeroTelefono
         string email
     }
-
-    Dipendente {
+    DIPENDENTE {
         enum mansione
         date dataAssunzione
         float stipendio
     }
-
-    Passeggero {
+    PASSEGGERO {
         string classeViaggio
         string numeroBiglietto
     }
-
-    Documento {
+    DOCUMENTO {
         enum Tipo
         int numero
     }
-
-    Persona ||--o| Dipendente: "è un"
-    Persona ||--o| Passeggero: "è un"
-    Dipendente |{--|| Documento: "identificato da"
-    Passeggero |{--|| Documento: "identificato da"
-
 ```
 
-Volo (cargo), Aereo e Aeroporto
+Volo e connessi (in particolare voli cargo).
 
 ```mermaid
 erDiagram
-    VOLO ||--|| AEROPORTO: "parte da"
-    VOLO ||--|| AEROPORTO: "arriva a"
-    VOLO }o--|| AEREO: usa
+    VOLO }|--|| AEROPORTO: "parte da"
+    VOLO }|--|| AEROPORTO: "arriva a"
+    VOLO }|--|| AEREO: usa
+
+    COMPAGNIA ||--|{ VOLO: opera
+    COMPAGNIA ||--|{ AEREO: possiede
+
+    DIPENDENTE }|--|{ VOLO: "assegnato a"
+    DIPENDENTE }|--|| COMPAGNIA: "lavora per"
+    DIPENDENTE ||--|| PERSONA: "è una"
+
+    VOLOPASSEGGERI ||--|| VOLO: "è un"
+
+    VOLOCARGO ||--|| VOLO: "è un"
+    VOLOCARGO ||--o{ PACCO: trasporta
+
     VOLO {
         string numeroVolo PK
         date partenza
@@ -326,9 +307,6 @@ erDiagram
         string id PK
         int capienza "n° posti o t di stiva"
     }
-
-    VOLOCARGO ||--|| VOLO: "è un"
-    VOLOCARGO ||--o{ PACCO: trasporta
     VOLOCARGO {
         string carico
     }
