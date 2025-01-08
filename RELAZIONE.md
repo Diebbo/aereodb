@@ -201,59 +201,59 @@ erDiagram
 ### Sviluppo delle componenti (approccio inside-out)
 
 TODO: mettere insieme attributi e schemi
-TODO: controllare le cardinalità
 
 Servizi aeroportuali e servizi di sicurezza.
 
 ```mermaid
 erDiagram 
-    AEROPORTO }|--|| SERVIZIOSICUREZZA: "fornisce"
-    AEROPORTO }|--|| SERVIZIOTRASPORTO: "fornisce"
-    AEROPORTO }|--|| SERVIZIOCOMMERCIALE: "fornisce"
+    AEROPORTO ||--|{ SERVIZIOSICUREZZA: "fornisce"
+    AEROPORTO ||--o{ SERVIZIOTRASPORTO: "fornisce"
+    AEROPORTO ||--|{ SERVIZIOCOMMERCIALE: "fornisce"
 
-    SERVIZIO }|--|| SERVIZIOSICUREZZA: "e'"
-    SERVIZIO }|--|| SERVIZIOTRASPORTO: "e'"
-    SERVIZIO }|--|| SERVIZIOCOMMERCIALE: "e'"
-    SERVIZIO }|--|| PARCHEGGIO: "e'"
+    SERVIZIO ||--|| SERVIZIOSICUREZZA: "e'"
+    SERVIZIO ||--|| SERVIZIOTRASPORTO: "e'"
+    SERVIZIO ||--|| SERVIZIOCOMMERCIALE: "e'"
+    SERVIZIO ||--|| PARCHEGGIO: "e'"
     SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: "collega"
 
-    SERVIZIOCOMMERCIALE o|--|| RISTORANTE: "composto"
-    SERVIZIOCOMMERCIALE o|--|| NEGOZIO: "comprende"
+    SERVIZIOCOMMERCIALE ||--o| RISTORANTE: "composto"
+    SERVIZIOCOMMERCIALE ||--o| NEGOZIO: "comprende"
 ```
 
 Seconda bozza voli passeggeri.
 
 ```mermaid
 erDiagram
-    VOLOPASSEGGERI }o--|| PASSEGGERO: "trasporta"
-    VOLOPASSEGGERI ||--o| AEREO: "trasporta"
-    VOLOPASSEGGERI ||--o| COMPAGNIAAEREA: "opera"
-    VOLOPASSEGGERI ||--o| AEROPORTO: "parte da"
-    VOLOPASSEGGERI ||--o| AEROPORTO: "arriva a"
+    VOLOPASSEGGERI }|--|{ PASSEGGERO: "trasporta"
+    VOLOPASSEGGERI }|--|| AEREO: "usa"
+    VOLOPASSEGGERI }|--|| AEROPORTO: "parte da"
+    VOLOPASSEGGERI }|--|| AEROPORTO: "arriva a"
 
-    AEREO ||--o| COMPAGNIAAEREA: "è di"
-    PASSEGGERO ||--o{ PERSONA: "è un"
-    PASSEGGERO }|--|| DOCUMENTO: "identificato da"
-    PASSEGGERO }o--|| BAGAGLIO: "trasporta"
-    DIPENDENTE }|--|| DOCUMENTO: "identificato da"
-    DIPENDENTE ||--o{ AEROPORTO: "lavora per"
-    DIPENDENTE ||--|{ VOLOP: "assegnato a"
-    DIPENDENTE ||--o| PERSONA: "è un"
-    DIPENDENTE ||--o{ COMPAGNIAAEREA: "lavora per"
+		 COMPAGNIAAEREA ||--|{ VOLOPASSEGGERI: "opera"
+		 COMPAGNIAAEREA ||--|{ AEREO: "possiede"
+
+    PASSEGGERO ||--|| PERSONA: "è un"
+    PASSEGGERO ||--|{ DOCUMENTO: "identificato da"
+    PASSEGGERO ||--o{ BAGAGLIO: "trasporta"
+    DIPENDENTE ||--|{ DOCUMENTO: "identificato da"
+    DIPENDENTE }|--o| SERVIZIO: "lavora per"
+    DIPENDENTE }|--o{ VOLOPASSEGGERI: "assegnato a"
+    DIPENDENTE ||--|| PERSONA: "è un"
+    DIPENDENTE }|--o| COMPAGNIAAEREA: "lavora per"
 ```
 
 Volo e connessi (in particolare voli cargo)
 
 ```mermaid
 erDiagram
-    VOLO ||--|| AEROPORTO: "parte da"
-    VOLO ||--|| AEROPORTO: "arriva a"
-    VOLO }o--|| AEREO: usa
+    VOLO }|--|| AEROPORTO: "parte da"
+    VOLO }|--|| AEROPORTO: "arriva a"
+    VOLO }|--|| AEREO: usa
 
-    COMPAGNIAAEREA ||--o{ VOLO: opera
-    COMPAGNIAAEREA ||--o{ AEREO: possiede
+    COMPAGNIAAEREA ||--|{ VOLO: opera
+    COMPAGNIAAEREA ||--|{ AEREO: possiede
 
-    DIPENDENTE }|--|| VOLO: "assegnato a"
+    DIPENDENTE }|--|{ VOLO: "assegnato a"
     DIPENDENTE }|--|| COMPAGNIAAEREA: "lavora per"
     DIPENDENTE ||--|| PERSONA: "è una"
 
