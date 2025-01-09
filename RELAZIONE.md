@@ -85,6 +85,7 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 - **Voli**: si identifica con volo un singolo viaggio tra due aeroporti, con aereo l'aeromobile utilizzato per il viaggio, con compagnia la società che opera il volo, con personale a bordo i lavoratori che operano durante il volo. Voli passeggeri e voli cargo si differenziano esclusivamente per entità trasportata e compagnia di gestione.
 - **Passeggeri**: il passeggero è una persona nella base di dati, che ha comprato un biglietto per un volo, ha un documento di identità e può avere zero o più bagagli.
 - **Compagnia**: Non posso esistere due compagnie con lo stesso nome.
+- **Aereo**: un aereo non può essere condiviso tra due compagnie.
 
 ### Strutturazione dei requisiti
 
@@ -460,8 +461,7 @@ erDiagram
 | COLLEGA | Associa un servizio di trasporto a un parcheggio | SERVIZIOTRASPORTO(0,N) - PARCHEGGIO(0,N) | - |
 | FORNISCE | Associa un aeroporto a un servizio | AEROPORTO(0,N) - SERVIZIO(1,1) | - |
 | OPERA | Associa una compagnia a un volo | COMPAGNIA(1,N) - VOLO(1,1) | - |
-
-TODO: togliere Ambiguità
+| 
 
 ## Progettazione logica
 
