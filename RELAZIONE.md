@@ -37,15 +37,8 @@
     - [Sviluppo delle componenti (approccio inside-out)](#sviluppo-delle-componenti-approccio-inside-out)
     - [Unione delle componenti](#unione-delle-componenti)
     - [Dizionario dei dati](#dizionario-dei-dati)
-  - [Progettazione logica](#progettazione-logica) TODO in giù
+  - [Progettazione logica](#progettazione-logica)
     - [Tavole dei volumi e delle operazioni](#tavole-dei-volumi-e-delle-operazioni)
-    - [Ristrutturazione schema concettuale](#ristrutturazione-schema-concettuale)
-    - [Normalizzazione](#normalizzazione)
-    - [Traduzione verso il modello fisico](#traduzione-verso-il-modello-fisico)
-  - [Codifica SQL](#codifica-sql)
-    - [DDL](#ddl)
-    - [DML](#dml)
-  - [Testing](#testing)
   - [Riferimenti](#riferimenti)
 
 ## Analisi dei requisiti
@@ -72,7 +65,7 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 | Volo | transito tra due aeroporti distinti | viaggio | Aeroporto, Aereo, Lavoratore |
 | Volo passeggeri | volo che trasporta persone | - | Volo, Passeggero, Compagnia aerea |
 | Passeggero | cliente per una compagnia aerea, presente su almeno un volo | cliente | Volo passeggeri, Identità |
-| Bagaglio | oggetto trasportabile in una tratta aerea | valigia, borsa, zaino | Passeggero, Lavoratore |
+| Bagaglio | oggetto trasportabile in una tratta aerea | valigia, borsa, zaino | Passeggero |
 | Compagnia aerea | gestisce il trasporto passeggeri | - | Volo passeggeri, Aereo |
 | Volo cargo | volo che trasporta merci | - | Volo, Pacco, Compagnia logistica |
 | Pacco | contenitore per merci | - | Volo cargo |
@@ -216,7 +209,7 @@ Servizi aeroportuali e servizi di sicurezza.
 ```mermaid
 erDiagram 
     AEROPORTO ||--|{ SERVIZIOSICUREZZA: "fornisce"
-    AEROPORTO ||--o{ SERVIZIOTRASPORTO: "fornisce"
+    AEROPORTO ||--|{ SERVIZIOTRASPORTO: "fornisce"
     AEROPORTO ||--|{ SERVIZIOCOMMERCIALE: "fornisce"
 
     SERVIZIO ||--|| SERVIZIOSICUREZZA: "e'"
@@ -368,12 +361,65 @@ erDiagram
 
 ### Unione delle componenti
 
-TODO: unire le componenti in un unico schema (ivan)
+TODO: aggiungere gli attributi (ivan)
+TODO: sistemare i singoli componenti a ritroso (ivan)
+
+```mermaid
+erDiagram
+    AEROPORTO }|--|{ SERVIZIO: "fornisce"
+
+    VOLO }|--|| AEROPORTO: "parte da"
+    VOLO }|--|| AEROPORTO: "arriva a"
+    VOLO }|--|| AEREO: "usa"
+
+    COMPAGNIA ||--|{ VOLO: "opera"
+    COMPAGNIA ||--|{ AEREO: "possiede"
+
+    VOLOPASSEGGERI ||--|| VOLO: "è un"
+    VOLOPASSEGGERI }|--|{ PASSEGGERO: "trasporta"
+
+    PASSEGGERO ||--|| PERSONA: "è una"
+    PASSEGGERO ||--o{ BAGAGLIO: "trasporta"
+
+    COMPAGNIAAEREA ||--|| COMPAGNIA: "è una"
+    COMPAGNIAAEREA ||--|{ VOLOPASSEGGERI: "opera"
+
+    VOLOCARGO ||--|| VOLO: "è un"
+    VOLOCARGO ||--o{ PACCO: "trasporta"
+
+    COMPAGNIALOGISTICA ||--|| COMPAGNIA: "è una"
+    COMPAGNIALOGISTICA ||--|{ VOLOCARGO: "opera"
+
+    DOCUMENTO }|--|| PERSONA: "identifica"
+
+    DIPENDENTE ||--|| PERSONA: "è una"
+    DIPENDENTE }|--o{ VOLO: "assegnato a"
+    DIPENDENTE }|--o| COMPAGNIA: "lavora per"
+    DIPENDENTE }|--o| SERVIZIO: "lavora per"
+```
+
+Spezzato in due a "SERVIZIO" per migliorare la leggibilità
+
+```mermaid
+erDiagram
+    SERVIZIOSICUREZZA ||--|| SERVIZIO: "è un"
+
+    SERVIZIOCOMMERCIALE ||--|| SERVIZIO: "è un"
+    SERVIZIOCOMMERCIALE ||--o| RISTORANTE: "composto"
+    SERVIZIOCOMMERCIALE ||--o| NEGOZIO: "comprende"
+    
+    LOUNGE ||--|| SERVIZIO: "è un"
+
+    PARCHEGGIO ||--|| SERVIZIO: "è un"
+
+    SERVIZIOTRASPORTO ||--|| SERVIZIO: "è un"
+    SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: "collega"
+```
 
 ### Dizionario dei dati
 
 
-| Enitità | Descrizione | Attributi | Identificatore |
+| Entità | Descrizione | Attributi | Identificatore |
 | --------------- | --------------- | --------------- | --------------- |
 | AEROPORTO | Stazione di transito di aerei | IATA, ICAO, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | IATA, ICAO |
 | AEREO | Mezzo di trasporto | tipologia, modello, id, capienza, postiPasseggeri, postiPersonale, volumeStiva | id |
@@ -395,9 +441,9 @@ TODO: unire le componenti in un unico schema (ivan)
 | NEGOZIO | Attività commerciale di vendita | id, nome, tipoMerce | id |
 | LOUNGE | Area di relax | id, postiDisponibili, compagnia | id |
 
-**Relazioni** 
+**Associazioni** 
 
-| Nome Relazione | Descrizione | Enitità coinvolte | Attributi |
+| Nome Relazione | Descrizione | Entità coinvolte | Attributi |
 | --------------- | --------------- | --------------- | --------------- |
 | VOLOPASSEGGERI | Associa un volo a dei passeggeri | VOLO(1,1) - PASSEGGERO(0,N) | - |
 | VOLOCARGO | Associa un volo a dei pacchi | VOLO(1,1) - PACCO(0,N) | - |
