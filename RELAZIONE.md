@@ -372,8 +372,63 @@ TODO: unire le componenti in un unico schema (ivan)
 
 ### Dizionario dei dati
 
+
+| Enitità | Descrizione | Attributi | Identificatore |
+| --------------- | --------------- | --------------- | --------------- |
+| AEROPORTO | Stazione di transito di aerei | IATA, ICAO, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | IATA, ICAO |
+| AEREO | Mezzo di trasporto | tipologia, modello, id, capienza, postiPasseggeri, postiPersonale, volumeStiva | id |
+| VOLO | Transito tra due aeroporti distinti | numeroVolo, partenza, arriva | numeroVolo |
+| VOLOCARGO | Associa un volo a dei pacchi | carico | - | - |
+| PACCO | Contenitore per merci | id, peso, altezza, larghezza, spessore, contenuto, stato | id |
+| COMPAGNIA | Gestisce il trasporto passeggeri | nome, sede | nome |
+| PERSONA | Individuo | id, nome, cognome, dataNascita, numeroTelefono, email | id |
+| DIPENDENTE | Personale dell’aeroporto o di volo | id, mansione, dataAssunzione, stipendio | id |
+| DOCUMENTO | Documento di identità | tipo, numero | numero, tipo |
+| PASSEGGERO | Cliente per una compagnia aerea, presente su almeno un volo | voloPasseggero, classeViaggio, numeroBiglietto, posto | numeroBiglietto |
+| BAGAGLIO | Oggetto trasportabile in una tratta aerea | id, peso, altezza, larghezza, spessore, stato | id |
+| SERVIZIO | Servizio aeroportuale | id, nome, descrizione, locazione | id |
+| SERVIZIOSICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | id, tempoMedioAttesa, numeroAddetti | id |
+| SERVIZIOTRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | id, tipo, costoPerPersona | id |
+| SERVIZIOCOMMERCIALE | Attività come ristorazione, negozi e altre strutture a servizio dei passeggeri | id, nome, tipo, gestore | id |
+| PARCHEGGIO | Area di sosta per veicoli | id, ubicazione, postiDisponibili, costoOrario, postiOccupati | id |
+| RISTORANTE | Attività commerciale di ristorazione | id, nome, tipoCucina | id |
+| NEGOZIO | Attività commerciale di vendita | id, nome, tipoMerce | id |
+| LOUNGE | Area di relax | id, postiDisponibili, compagnia | id |
+
+**Relazioni** 
+
+| Nome Relazione | Descrizione | Enitità coinvolte | Attributi |
+| --------------- | --------------- | --------------- | --------------- |
+| VOLOPASSEGGERI | Associa un volo a dei passeggeri | VOLO(1,1) - PASSEGGERO(0,N) | - |
+| VOLOCARGO | Associa un volo a dei pacchi | VOLO(1,1) - PACCO(0,N) | - |
+| LAVORO | Associa un dipendente a un servizio | DIPENDENTE(1,N) - SERVIZIO(0,N) | oraInizio, oraFine |
+| LAVORO | Associa un dipendente a un volo | DIPENDENTE(1,N) - VOLO(0,N) | oraInizio, oraFine |
+| ASSUNZIONE | Associa un dipendente a una compagnia | DIPENDENTE(1,N) - COMPAGNIA(0,N) | - |
+
+TODO: togliere Ambiguità
+
+## Progettazione logica
+
+### Tavole dei volumi e delle operazioni
+
+**Tavola dei volumi** 
+
+| Concetto | Tipo | Volume |
+| --------------- | --------------- | --------------- |
+| Aeroporto(Italia) | E | 126 |
+| Volo | E | 115 mila |
+
+
+**tavola operazioni** 
+
+| Operazione | Frequenza |
+| -------------- | --------------- |
+| 1 | x Volte al y |
+
+
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
 - [voli in partenza al secondo](https://www.mytripmap.it/quanti-aerei-ci-sono-ora-in-volo-mappa-in-tempo-reale/)
 - [codice aeroportuale IATA](https://it.wikipedia.org/wiki/Codice_aeroportuale_IATA)
 - [ER](https://mermaid.js.org/syntax/entityRelationshipDiagram.html)
+- [stime in tempo reale](https://assaeroporti.com/statistiche/)
