@@ -37,6 +37,15 @@
     - [Sviluppo delle componenti (approccio inside-out)](#sviluppo-delle-componenti-approccio-inside-out)
     - [Unione delle componenti](#unione-delle-componenti)
     - [Dizionario dei dati](#dizionario-dei-dati)
+  - [Progettazione logica](#progettazione-logica) TODO in giù
+    - [Tavole dei volumi e delle operazioni](#tavole-dei-volumi-e-delle-operazioni)
+    - [Ristrutturazione schema concettuale](#ristrutturazione-schema-concettuale)
+    - [Normalizzazione](#normalizzazione)
+    - [Traduzione verso il modello fisico](#traduzione-verso-il-modello-fisico)
+  - [Codifica SQL](#codifica-sql)
+    - [DDL](#ddl)
+    - [DML](#dml)
+  - [Testing](#testing)
   - [Riferimenti](#riferimenti)
 
 ## Analisi dei requisiti
@@ -229,7 +238,7 @@ erDiagram
     VOLO }|--|| AEROPORTO: "arriva a"
 
     VOLOPASSEGGERI ||--|| VOLO: "è un"
-    VOLOPASSEGGERI }|--|{ PASSEGGERO: "trasporta"
+    VOLOPASSEGGERI ||--o{ PASSEGGERO: "trasporta"
 
     COMPAGNIA ||--|{ VOLO: "opera"
     COMPAGNIA ||--|{ AEREO: "possiede"
@@ -264,6 +273,43 @@ erDiagram
     DOCUMENTO {
         enum Tipo
         int numero
+    }
+    BAGAGLIO {
+        float peso
+        float altezza
+        float larghezza
+        float spessore
+        enum stato "disperso, danneggiato o integro"
+    }
+    VOLOPASSEGGERI {
+    }
+    VOLO {
+        string numeroVolo PK
+        date partenza
+        date arriva
+    }
+    AEROPORTO {
+        string IATA PK
+        string ICAO PK
+        string nome
+        string provincia
+        string stato
+        int postiAereoPasseggeri
+        int postiAereoCargo
+    }
+    AEREO {
+        enum tipologia "passeggeri o cargo"
+        string modello
+        string id PK
+        int capienza "n° posti o t di stiva"
+        int postiPasseggeri
+        int postiPersonale
+        int volumeStiva
+    }
+
+    COMPAGNIA {
+        string nome PK
+        string sede
     }
 ```
 
