@@ -71,7 +71,7 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 | Pacco | contenitore per merci | - | Volo cargo |
 | Compagnia logistica | si occupa della gestione degli aerei cargo e del trasporto merci | - | Volo cargo, Aereo |
 | Aereo | mezzo di trasporto | aeromobile | Volo, Lavoratore (hostess, pilota), Aeroporto |
-| Identità | documento che può essere di diversi tipi (carta d’identità, passaporto) | documento | Passeggero, Lavoratore |
+| Docuemento Identità | documento che può essere di diversi tipi (carta d’identità, passaporto) | documento | Passeggero, Lavoratore |
 | Lavoratore | personale dell’aeroporto o di volo, tra cui piloti, hostess e steward | hostess, steward, impiegato, dipendente | Aeroporto, Volo, Compagnia, Servizio |
 | Servizio di sicurezza | servizio di controllo delle attività ordinarie all'interno dell'aeroporto | controllo bagagli, controllo documenti. | Aeroporto, Lavoratore |
 | Servizio commerciale | attività come ristorazione, negozi e altre strutture a servizio dei passeggeri | - | Aeroporto, Lavoratore |
@@ -81,6 +81,7 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 ### Eliminazione delle Ambiguità
 
 - **Parcheggi**: per ubicazione si intende longitudine e latitudine, per posti disponibili si intende il numero di posti totali, per posti occupati si intende il numero di posti attualmente occupati.
+- **servizi di trasporto**: i servizi di trasporto collegano l'areoporto ad uno o più parcheggi o 
 - **Voli**: si identifica con volo un singolo viaggio tra due aeroporti, con aereo l'aeromobile utilizzato per il viaggio, con compagnia la società che opera il volo, con personale a bordo i lavoratori che operano durante il volo. Voli passeggeri e voli cargo si differenziano esclusivamente per entità trasportata e compagnia di gestione.
 - **Passeggeri**: il passeggero è una persona nella base di dati, che ha comprato un biglietto per un volo, ha un documento di identità e può avere zero o più bagagli.
 - **Compagnia**: Non posso esistere due compagnie con lo stesso nome.
@@ -248,7 +249,7 @@ erDiagram
     DIPENDENTE }|--o| COMPAGNIA: "lavora per"
 
     PERSONA {
-        int id PK
+        int codiceFiscale PK
         string nome
         string cognome
         date dataNascita
@@ -427,7 +428,7 @@ erDiagram
 | VOLO | Transito tra due aeroporti distinti | numeroVolo, partenza, arriva | numeroVolo |
 | PACCO | Contenitore per merci | id, peso, altezza, larghezza, spessore, contenuto, stato | id |
 | COMPAGNIA | Gestisce il trasporto passeggeri | nome, sede | nome |
-| PERSONA | Individuo | id, nome, cognome, dataNascita, numeroTelefono, email | id |
+| PERSONA | Individuo | codiceFiscale, nome, cognome, dataNascita, numeroTelefono, email | codiceFiscale |
 | DIPENDENTE | Personale dell’aeroporto o di volo | id, dataAssunzione, stipendio | id |
 | DOCUMENTO | Documento di identità | tipo, numero | numero, tipo |
 | PASSEGGERO | Cliente per una compagnia aerea, presente su almeno un volo | voloPasseggero, classeViaggio, numeroBiglietto, posto | numeroBiglietto |
@@ -449,6 +450,16 @@ erDiagram
 | VOLOCARGO | Associa un volo a dei pacchi | VOLO(1,1) - PACCO(0,N) | contenuto |
 | LAVORO_SERVIZIO | Associa un dipendente a un servizio | DIPENDENTE(1,N) - SERVIZIO(0,N) | oraInizio, oraFine, mansione |
 | LAVORO_VOLO | Associa un dipendente a un volo | DIPENDENTE(1,N) - VOLO(0,N) | oraInizio, oraFine, mansione |
+| TRASPORTO_CARGO | Associa il trasporto di un pacco a un volo | VOLOCARGO(0,N) - PACCO(1,1) | - |
+| TRASPORTO_PASSEGGERI | Associa il trasporto di un passeggero a un volo | VOLOPASSEGGERI(0,N) - PASSEGGERO(1,1) | - |
+| IDENTIFICAZIONE | Associa un documento di identità a una persona | DOCUMENTO(1,1) - PERSONA(1,N) | - |
+| TRASPORTO_BAGAGLIO | Associa il trasporto di un bagaglio a un passeggero | BAGAGLIO(1,1) - PASSEGGERO(1,3) | - |
+| ARRIVO | Associa un volo a un aeroporto di arrivo | VOLO(1,1) - AEROPORTO(0,N) | - |
+| PARTENZA | Associa un volo a un aeroporto di partenza | VOLO(1,1) - AEROPORTO(0,N) | - |
+| USO_AEREO | Associa un volo a un aereo | VOLO(1,1) - AEREO(0,N) | - |
+| COLLEGA | Associa un servizio di trasporto a un parcheggio | SERVIZIOTRASPORTO(0,N) - PARCHEGGIO(0,N) | - |
+| FORNISCE | Associa un aeroporto a un servizio | AEROPORTO(0,N) - SERVIZIO(1,1) | - |
+| OPERA | Associa una compagnia a un volo | COMPAGNIA(1,N) - VOLO(1,1) | - |
 
 TODO: togliere Ambiguità
 
