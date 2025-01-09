@@ -18,34 +18,31 @@
   - [Analisi dei requisiti](#analisi-dei-requisiti)
     - [Requisiti in linguaggio naturale](#requisiti-in-linguaggio-naturale)
     - [Glossario dei termini](#glossario-dei-termini)
-    - [Eliminazione delle Ambiguità](#eliminazione-delle-ambiguità)
+    - [Eliminazione delle ambiguità](#eliminazione-delle-ambiguità)
     - [Strutturazione dei requisiti](#strutturazione-dei-requisiti)
-      - [*Frasi di carattere generale*](#frasi-di-carattere-generale)
-      - [*Frasi relative agli aeroporti*](#frasi-relative-agli-aeroporti)
-      - [*Frasi relative agli aerei*](#frasi-relative-agli-aerei)
-      - [*Frasi relative ai passeggeri*](#frasi-relative-ai-passeggeri)
-      - [*Frasi relative ai bagagli*](#frasi-relative-ai-bagagli)
-      - [*Frasi relative ai voli passeggeri*](#frasi-relative-ai-voli-passeggeri)
-      - [*Frasi relative ai voli cargo*](#frasi-relative-ai-voli-cargo)
-      - [*Frasi relative ai pacchi*](#frasi-relative-ai-pacchi)
-      - [*Frasi relative ai lavoratori*](#frasi-relative-ai-lavoratori)
-      - [*Frasi relative ai servizi*](#frasi-relative-ai-servizi)
     - [Specifica operazioni](#specifica-operazioni)
   - [Progettazione concettuale](#progettazione-concettuale)
-    - [Identificazione delle entità e relazioni](#identificazione-delle-entità-e-relazioni)
+    - [Identificazione delle entità e associazioni](#identificazione-delle-entità-e-associazioni)
     - [Scheletro dello schema ER (approccio top-down)](#scheletro-dello-schema-er-approccio-top-down)
     - [Sviluppo delle componenti (approccio inside-out)](#sviluppo-delle-componenti-approccio-inside-out)
     - [Unione delle componenti](#unione-delle-componenti)
     - [Dizionario dei dati](#dizionario-dei-dati)
   - [Progettazione logica](#progettazione-logica)
     - [Tavole dei volumi e delle operazioni](#tavole-dei-volumi-e-delle-operazioni)
+    - [Ristrutturazione schema concettuale](#ristrutturazione-schema-concettuale)
+    - [Normalizzazione](#normalizzazione)
+    - [Traduzione verso il modello fisico](#traduzione-verso-il-modello-fisico)
+  - [Codifica SQL](#codifica-sql)
+    - [DDL](#ddl)
+    - [DML](#dml)
+  - [Testing](#testing)
   - [Riferimenti](#riferimenti)
 
 ## Analisi dei requisiti
 
 ### Requisiti in linguaggio naturale
 
-Si vuole realizzare una base di dati per la gestione di aeroporti, con particolare attenzione alla gestione dei voli, dei passeggeri, dei lavoratori e dei servizi connessi. Nello specifico, si vuole memorizzare informazioni riguardanti aerei di tipologie cargo e passeggeri, i voli che essi effettuano, le merci e i passeggeri che viaggiano su di essi, i lavoratori che operano negli aeroporti e i servizi offerti da questi ultimi.
+Si vuole realizzare una base di dati per la gestione di aeroporti italiani, con particolare attenzione alla gestione dei voli, dei passeggeri, dei lavoratori e dei servizi connessi. Nello specifico, si vuole memorizzare informazioni riguardanti aerei di tipologie cargo e passeggeri, i voli che essi effettuano, le merci e i passeggeri che viaggiano su di essi, i lavoratori che operano negli aeroporti e i servizi offerti da questi ultimi.
 
 Per gli aeroporti sarà necessario mantenere il codice identificativo IATA e ICAO, il nome completo, la provincia e lo stato di appartenenza, il numero di posti aereo, separati in passeggeri e cargo. Oltre a ciò è fondamentale memorizzare i servizi offerti e i servizi di sicurezza. Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il modello, l'identificativo, la compagnia aerea che lo possiede e la capienza.
 
@@ -53,7 +50,7 @@ Per quanto riguarda la gestione dei voli passeggeri, si vogliono memorizzare inf
 
 Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, data e ora di partenza e di arrivo contestualmente all'aeroporto, la compagnia logistica che lo opera, l'aereo utilizzato, il personale a bordo ed informazioni sul carico trasportato. Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensioni (altezza, larghezza e spessore), contenuto e stato (medesimo del bagaglio).
 
-La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche la compagnia per cui lavorano, il ruolo che essi ricoprono e il loro stipendio.
+La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche dove lavorano, il ruolo che essi ricoprono e il loro stipendio.
 
 Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguardanti le lounge, i parcheggi, i ristoranti e i negozi. Delle lounge si vuole mantenere la compagnia aerea che la mette a disposizione ed i posti disponibili. Dei parcheggi si vuole memorizzare l’ubicazione, il numero di posti disponibili, il costo orario ed il numero di posti occupati. Sarà inoltre necessario salvare tutti i servizi di trasporto che collegano l'aeroporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche. Dei ristoranti e dei negozi si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. Per tutti i servizi è cruciale memorizzare i dipendenti.  I servizi di sicurezza devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio, il tempo medio di attesa e il numero di addetti, facendo distinzione tra addetti di sicurezza e addetti di controllo.
 
@@ -65,33 +62,37 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 | Volo | transito tra due aeroporti distinti | viaggio | Aeroporto, Aereo, Lavoratore |
 | Volo passeggeri | volo che trasporta persone | - | Volo, Passeggero, Compagnia aerea |
 | Passeggero | cliente per una compagnia aerea, presente su almeno un volo | cliente | Volo passeggeri, Identità |
-| Bagaglio | oggetto trasportabile in una tratta aerea | valigia, borsa, zaino | Passeggero |
+| Bagaglio | oggetto trasportabile in una tratta aerea da una persona | valigia, borsa, zaino | Passeggero |
 | Compagnia aerea | gestisce il trasporto passeggeri | - | Volo passeggeri, Aereo |
 | Volo cargo | volo che trasporta merci | - | Volo, Pacco, Compagnia logistica |
 | Pacco | contenitore per merci | - | Volo cargo |
 | Compagnia logistica | si occupa della gestione degli aerei cargo e del trasporto merci | - | Volo cargo, Aereo |
 | Aereo | mezzo di trasporto | aeromobile | Volo, Lavoratore (hostess, pilota), Aeroporto |
-| Docuemento Identità | documento che può essere di diversi tipi (carta d’identità, passaporto) | documento | Passeggero, Lavoratore |
-| Lavoratore | personale dell’aeroporto o di volo, tra cui piloti, hostess e steward | hostess, steward, impiegato, dipendente | Aeroporto, Volo, Compagnia, Servizio |
+| Documento Identità | documento che può essere di diversi tipi (carta d’identità, passaporto) | documento | Passeggero, Lavoratore |
+| Lavoratore | personale assunto dell’aeroporto o a bordo di un volo | hostess, steward, impiegato, dipendente | Aeroporto, Volo, Servizio |
 | Servizio di sicurezza | servizio di controllo delle attività ordinarie all'interno dell'aeroporto | controllo bagagli, controllo documenti. | Aeroporto, Lavoratore |
 | Servizio commerciale | attività come ristorazione, negozi e altre strutture a servizio dei passeggeri | - | Aeroporto, Lavoratore |
+| Lounge | area privata interna all'aeroporto accessibile dai clienti della compagnia | - | Aeroporto, Compagnia |
 | Parcheggio | area di sosta per veicoli | - | Aeroporto, Servizio di trasporto |
 | Servizio di trasporto | mezzo di collegamento a servizi esterni all'aeroporto | taxi, navetta | Aeroporto, Parcheggio |
 
-### Eliminazione delle Ambiguità
+### Eliminazione delle ambiguità
+
+TODO: come gestire negozi e ristoranti di terzi?
 
 - **Parcheggi**: per ubicazione si intende longitudine e latitudine, per posti disponibili si intende il numero di posti totali, per posti occupati si intende il numero di posti attualmente occupati.
-- **servizi di trasporto**: i servizi di trasporto collegano l'areoporto ad uno o più parcheggi o 
-- **Voli**: si identifica con volo un singolo viaggio tra due aeroporti, con aereo l'aeromobile utilizzato per il viaggio, con compagnia la società che opera il volo, con personale a bordo i lavoratori che operano durante il volo. Voli passeggeri e voli cargo si differenziano esclusivamente per entità trasportata e compagnia di gestione.
+- **Servizi di trasporto**: i servizi di trasporto collegano l'aeroporto ad uno o più parcheggi. Per ogni parcheggio possono passare più servizi di trasporto ed un trasporto può passare per più parcheggi.
+- **Voli**: si identifica con volo un singolo viaggio tra due aeroporti, con aereo l'aeromobile utilizzato per il viaggio, con compagnia la società che opera il volo, con personale a bordo i lavoratori che operano durante il volo. Voli passeggeri e voli cargo si differenziano esclusivamente per entità trasportata.
 - **Passeggeri**: il passeggero è una persona nella base di dati, che ha comprato un biglietto per un volo, ha un documento di identità e può avere zero o più bagagli.
-- **Compagnia**: Non posso esistere due compagnie con lo stesso nome.
+- **Compagnia**: Non possono esistere due compagnie con lo stesso nome. Le compagnie aeree (per i passeggeri) e quelle logistiche (per le merci) sono equiparate in quanto le informazioni da mantenere sono le stesse per entrambe.
 - **Aereo**: un aereo non può essere condiviso tra due compagnie.
+- **Stato di bagagli e pacchi**: lo stato per i bagagli e i pacchi è "integro" a prescindere inizialmente. A seguito del volo il valore può essere eventualmente aggiornato in "danneggiato" o "disperso".
 
 ### Strutturazione dei requisiti
 
 #### *Frasi di carattere generale*
 
-Si vuole realizzare una base di dati per la gestione di aeroporti, con particolare attenzione alla gestione dei voli, dei passeggeri, dei lavoratori e dei servizi connessi. Nello specifico, si vuole memorizzare informazioni riguardanti aerei di tipologie cargo e passeggeri, i voli che essi effettuano, le merci e i passeggeri che viaggiano su di essi, i lavoratori che operano negli aeroporti e i servizi offerti da questi ultimi.
+Si vuole realizzare una base di dati per la gestione di aeroporti italiani, con particolare attenzione alla gestione dei voli, dei passeggeri, dei lavoratori e dei servizi connessi. Nello specifico, si vuole memorizzare informazioni riguardanti aerei di tipologie cargo e passeggeri, i voli che essi effettuano, le merci e i passeggeri che viaggiano su di essi, i lavoratori che operano negli aeroporti e i servizi offerti da questi ultimi.
 
 #### *Frasi relative agli aeroporti*
 
@@ -123,7 +124,7 @@ Nello specifico, dei singoli pacchi si vuole memorizzare il peso, dimensioni (al
 
 #### *Frasi relative ai lavoratori*
 
-La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche la compagnia per cui lavorano, il ruolo che essi ricoprono e il loro stipendio.
+La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche dove lavorano, il ruolo che essi ricoprono e il loro stipendio.
 
 #### *Frasi relative ai servizi*
 
@@ -185,23 +186,22 @@ TODO: completare le stime
 
 ## Progettazione concettuale
 
-### Identificazione delle entità e relazioni
+### Identificazione delle entità e associazioni
 
-Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. L'entità volo è specializzabile in volo passeggeri e volo cargo. Similmente l'entità compagnia può essere espressa come compagnia aerea e compagnia logistica. Sono state poi secondariamente identificate le entità passeggero e dipendente, derivate da persona, e le entità bagaglio e pacco. Oltre a ciò si suddividono i servizi in sicurezza, lounge, parcheggi, trasporti e commerciali.
+Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. L'entità volo è specializzabile in volo passeggeri e volo cargo. Sono state poi secondariamente identificate passeggero e dipendente, derivate da persona, e le entità bagaglio e pacco. Oltre a ciò si suddividono i servizi in sicurezza, lounge, parcheggi, trasporti e commerciali.
 
 ### Scheletro dello schema ER (approccio top-down)
 
 ```mermaid
 erDiagram
-    AEROPORTO ||--|{ SERVIZIO: "dispone"
+    AEROPORTO }|--|{ SERVIZIO: "fornisce"
     VOLO }|--|| AEROPORTO: "parte"
     VOLO }|--|| AEROPORTO: "arriva"
     VOLO }|--|| AEREO: "usa"
-    VOLO }o--o{ PERSONA: "trasporta"
-    COMPAGNIA ||--|{ AEREO: "possiede" 
+    VOLO }|--|{ PERSONA: "trasporta"
     COMPAGNIA ||--|{ VOLO: "organizza"
+    COMPAGNIA ||--|{ AEREO: "possiede" 
     PERSONA }|--|{ VOLO: "lavora"
-    PERSONA }|--|| COMPAGNIA: "lavora"
     PERSONA }|--|| SERVIZIO: "lavora"
 ```
 
@@ -379,25 +379,17 @@ erDiagram
     COMPAGNIA ||--|{ AEREO: "possiede"
 
     VOLOPASSEGGERI ||--|| VOLO: "è un"
-    VOLOPASSEGGERI }|--|{ PASSEGGERO: "trasporta"
+    VOLOPASSEGGERI }o--|{ PERSONA: "trasporta"
 
-    PASSEGGERO ||--|| PERSONA: "è una"
-    PASSEGGERO ||--o{ BAGAGLIO: "trasporta"
-
-    COMPAGNIAAEREA ||--|| COMPAGNIA: "è una"
-    COMPAGNIAAEREA ||--|{ VOLOPASSEGGERI: "opera"
+    PERSONA ||--o{ BAGAGLIO: "trasporta"
 
     VOLOCARGO ||--|| VOLO: "è un"
     VOLOCARGO ||--o{ PACCO: "trasporta"
-
-    COMPAGNIALOGISTICA ||--|| COMPAGNIA: "è una"
-    COMPAGNIALOGISTICA ||--|{ VOLOCARGO: "opera"
 
     DOCUMENTO }|--|| PERSONA: "identifica"
 
     DIPENDENTE ||--|| PERSONA: "è una"
     DIPENDENTE }|--o{ VOLO: "assegnato a"
-    DIPENDENTE }|--o| COMPAGNIA: "lavora per"
     DIPENDENTE }|--o| SERVIZIO: "lavora per"
 ```
 
@@ -421,6 +413,7 @@ erDiagram
 
 ### Dizionario dei dati
 
+TODO: passeggero come associazione tra volo (o volo pass?) e persona
 
 | Entità | Descrizione | Attributi | Identificatore |
 | --------------- | --------------- | --------------- | --------------- |
@@ -431,7 +424,7 @@ erDiagram
 | COMPAGNIA | Gestisce il trasporto passeggeri | nome, sede | nome |
 | PERSONA | Individuo | codiceFiscale, nome, cognome, dataNascita, numeroTelefono, email | codiceFiscale |
 | DIPENDENTE | Personale dell’aeroporto o di volo | id, dataAssunzione, stipendio | id |
-| DOCUMENTO | Documento di identità | tipo, numero | numero, tipo |
+| DOCUMENTO | Documento di identità | tipo, numero, scadenza | numero, tipo |
 | PASSEGGERO | Cliente per una compagnia aerea, presente su almeno un volo | voloPasseggero, classeViaggio, numeroBiglietto, posto | numeroBiglietto |
 | BAGAGLIO | Oggetto trasportabile in una tratta aerea | id, peso, altezza, larghezza, spessore, stato | id |
 | SERVIZIO | Servizio aeroportuale | id, nome, descrizione, locazione | id |
@@ -445,10 +438,10 @@ erDiagram
 
 **Associazioni** 
 
-| Nome Relazione | Descrizione | Entità coinvolte | Attributi |
+| Nome Associazione | Descrizione | Entità coinvolte | Attributi |
 | --------------- | --------------- | --------------- | --------------- |
 | VOLOPASSEGGERI | Associa un volo a dei passeggeri | VOLO(1,1) - PASSEGGERO(0,N) | - |
-| VOLOCARGO | Associa un volo a dei pacchi | VOLO(1,1) - PACCO(0,N) | contenuto |
+| VOLOCARGO | Associa un volo a dei pacchi | VOLO(1,1) - PACCO(0,N) | carico |
 | LAVORO_SERVIZIO | Associa un dipendente a un servizio | DIPENDENTE(1,N) - SERVIZIO(0,N) | oraInizio, oraFine, mansione |
 | LAVORO_VOLO | Associa un dipendente a un volo | DIPENDENTE(1,N) - VOLO(0,N) | oraInizio, oraFine, mansione |
 | TRASPORTO_CARGO | Associa il trasporto di un pacco a un volo | VOLOCARGO(0,N) - PACCO(1,1) | - |
