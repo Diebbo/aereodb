@@ -139,47 +139,49 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 
 ### Specifica operazioni
 
-TODO: completare le stime
+#### Inserimenti
 
-- Inserimenti
-    - nuovo aeroporto (stima che dipende dal numero di aeroporti sotto lo stesso gestore)
-    - nuovo volo (750 aerei al giorno)
-    - nuovo aereo (100 all'anno)
-    - nuovo passeggero (7 circa sette miliardi all'anno, contando duplicati)
-    - nuovo lavoratore (1 volta al mese)
-    - nuovo bagaglio (7 miliardi all'anno)
-    - nuova compagnia aerea (1 ogni anno)
-    - nuova compagnia logistica (1 ogni anno)
+1. **Nuovo aeroporto**: 1 ogni 5 anni (stimato sulla base della crescita limitata in Italia).  
+2. **Nuovo volo**: 750 aerei al giorno (stimando una media di 5 voli per aereo).  
+3. **Nuovo aereo**: 3 all'anno (basato sull'espansione flotta delle compagnie).  
+4. **Nuovo passeggero**: 10.000 al giorno (media giornaliera per tutti gli aeroporti italiani).  
+5. **Nuovo lavoratore**: 100 al mese (espansione e turnover).  
+6. **Nuovo bagaglio**: 7 miliardi all'anno (stimando circa 2 bagagli per passeggero).  
+7. **Nuova compagnia aerea**: 1 ogni anno (espansione del mercato).  
+8. **Nuova compagnia logistica**: 1 ogni anno (mercato più stabile).  
 
-- Modifiche
-    - esercizio commerciale aeroportuale
-    - servizio di sicurezza
-    - servizio di trasporto
-    - volo: ritardo, cancellazione, cambio aereo
-    - documenti di identità
-    - stato bagaglio
-    - stipendio lavoratore
+#### Modifiche
 
-- Cancellazioni
-    - smantellamento aereo
-    - cancellazione volo
-    - invalidità documenti di identità
-    - licenziamento lavoratore
-    - smarrimento bagaglio
+1. **Esercizio commerciale aeroportuale**: aggiornamenti settimanali.  
+2. **Servizio di sicurezza**: modifiche mensili.  
+3. **Servizio di trasporto**: aggiornamenti trimestrali.  
+4. **Volo**: ritardo, cancellazione, cambio aereo: 5.000 al giorno.  
+5. **Documenti di identità**: aggiornamenti giornalieri.  
+6. **Stato bagaglio**: 1.000 modifiche al giorno.  
+7. **Stipendio lavoratore**: modifiche mensili.  
 
-- Ricerche
-    - voli in partenza
-    - voli in arrivo
-    - lavoratori aeroportuali
-    - lavoratori compagnie aeree
-    - lavoratori compagnie logistiche
-    - passeggeri
-    - bagagli
-    - merci trasportate
-    - servizi aeroportuali
-    - servizi di sicurezza
-    - servizi di trasporto
-    - stato parcheggi
+#### Cancellazioni
+
+1. **Smantellamento aereo**: 5 all'anno.  
+2. **Cancellazione volo**: 500 al giorno.  
+3. **Invalidità documenti di identità**: 50 al giorno.  
+4. **Licenziamento lavoratore**: 20 al mese.  
+5. **Smarrimento bagaglio**: 200 al giorno.  
+
+#### Ricerche
+
+1. **Voli in partenza**: 10.000 al giorno.  
+2. **Voli in arrivo**: 10.000 al giorno.  
+3. **Lavoratori aeroportuali**: 500 al giorno.  
+4. **Lavoratori compagnie aeree**: 200 al giorno.  
+5. **Lavoratori compagnie logistiche**: 50 al giorno.  
+6. **Passeggeri**: 1.000.000 al giorno.  
+7. **Bagagli**: 2.000.000 al giorno.  
+8. **Merci trasportate**: 100.000 al giorno.  
+9. **Servizi aeroportuali**: 300 al giorno.  
+10. **Servizi di sicurezza**: 126 al giorno.  
+11. **Servizi di trasporto**: 100 al giorno.  
+12. **Stato parcheggi**: 140 al giorno.  
 
 ## Progettazione concettuale
 
@@ -562,19 +564,70 @@ TODO: info sul carico per voli cargo
 
 ### Tavole dei volumi e delle operazioni
 
-**Tavola dei volumi** 
+#### **Tavola dei volumi** 
 
 | Concetto | Tipo | Volume |
 | --------------- | --------------- | --------------- |
 | Aeroporto(Italia) | E | 126 |
-| Volo | E | 115 mila |
+| Aereo | E | 100 |
+| Volo | E | 10.000 |
+| Compagnia | E | 10 |
+| Persona | E | 100.000 |
+| Bagaglio | E | 40.000 |
+| Servizio | E | 300 |
+| ServizioSicurezza | E | 126 |
+| Parcheggio | E | 140 |
+| ServizioTrasporto | E | 100 |
+| ServizioCommerciale | E | 200 |
+| Ristorante | E | 250 |
+| Negozi | E | 230 |
+| Lounge | E | 90 |
+| Dipendente | E | 30.000 |
+| Documento | E | 20.100 |
+| Passeggero | E | 1.000.000 |
 
 
-**tavola operazioni** 
+#### **tavola operazioni** 
 
-| Operazione | Frequenza |
-| -------------- | --------------- |
-| 1 | x Volte al y |
+
+| Operazione                              | Tipo         | Frequenza stimata                         |
+|-----------------------------------------|--------------|-------------------------------------------|
+| **Inserimenti**                         |              |                                           |
+| Nuovo aeroporto                         | Inserimento  | 1 ogni 5 anni                             |
+| Nuovo volo                              | Inserimento  | 750 al giorno (circa 273.750 all'anno)    |
+| Nuovo aereo                             | Inserimento  | 3 all'anno                                |
+| Nuovo passeggero                        | Inserimento  | 10.000 al giorno (circa 3.650.000 all'anno) |
+| Nuovo lavoratore                        | Inserimento  | 100 al mese (circa 1.200 all'anno)        |
+| Nuovo bagaglio                          | Inserimento  | 7 miliardi all'anno                       |
+| Nuova compagnia aerea                   | Inserimento  | 1 all'anno                                |
+| Nuova compagnia logistica               | Inserimento  | 1 all'anno                                |
+| **Modifiche**                           |              |                                           |
+| Esercizio commerciale aeroportuale      | Modifica     | Variabile, stimata 100 al mese            |
+| Servizio di sicurezza                   | Modifica     | 50 al mese                                |
+| Servizio di trasporto                   | Modifica     | 30 al mese                                |
+| Volo (ritardo, cancellazione, cambio)   | Modifica     | 5% dei voli giornalieri (~37 al giorno)   |
+| Documenti di identità                   | Modifica     | 1.000 al mese                             |
+| Stato bagaglio                          | Modifica     | 1% dei bagagli (circa 70 milioni all'anno)|
+| Stipendio lavoratore                    | Modifica     | 10.000 all'anno                           |
+| **Cancellazioni**                       |              |                                           |
+| Smantellamento aereo                    | Cancellazione| 1 ogni 5 anni                             |
+| Cancellazione volo                      | Cancellazione| 1% dei voli (circa 100 al giorno)         |
+| Invalidità documenti di identità        | Cancellazione| 100 al mese                               |
+| Licenziamento lavoratore                | Cancellazione| 50 al mese                                |
+| Smarrimento bagaglio                    | Cancellazione| 0,1% dei bagagli (~7 milioni all'anno)    |
+| **Ricerche**                            |              |                                           |
+| Voli in partenza                        | Ricerca      | 1.000 al giorno                           |
+| Voli in arrivo                          | Ricerca      | 1.000 al giorno                           |
+| Lavoratori aeroportuali                 | Ricerca      | 500 al giorno                             |
+| Lavoratori compagnie aeree              | Ricerca      | 200 al giorno                             |
+| Lavoratori compagnie logistiche         | Ricerca      | 100 al giorno                             |
+| Passeggeri                              | Ricerca      | 10.000 al giorno                          |
+| Bagagli                                 | Ricerca      | 1% dei bagagli giornalieri (~700.000)     |
+| Merci trasportate                       | Ricerca      | 1.000 al giorno                           |
+| Servizi aeroportuali                    | Ricerca      | 100 al giorno                             |
+| Servizi di sicurezza                    | Ricerca      | 50 al giorno                              |
+| Servizi di trasporto                    | Ricerca      | 30 al giorno                              |
+| Stato parcheggi                         | Ricerca      | 200 al giorno                             |
 
 
 ## Riferimenti
