@@ -569,7 +569,7 @@ erDiagram
 
 ### Tavole dei volumi e delle operazioni
 
-#### **Tavola dei volumi** 
+#### *Tavola dei volumi*
 
 | Concetto | Tipo | Volume |
 | --------------- | --------------- | --------------- |
@@ -591,9 +591,7 @@ erDiagram
 | Documento | E | 20.100 |
 | Passeggero | E | 1.000.000 |
 
-
-#### **tavola operazioni** 
-
+#### *Tavola delle operazioni*
 
 | Operazione                              | Tipo         | Frequenza stimata                         |
 |-----------------------------------------|--------------|-------------------------------------------|
@@ -633,7 +631,6 @@ erDiagram
 | Servizi di sicurezza                    | Ricerca      | 50 al giorno                              |
 | Servizi di trasporto                    | Ricerca      | 30 al giorno                              |
 | Stato parcheggi                         | Ricerca      | 200 al giorno                             |
-
 
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
