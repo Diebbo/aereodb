@@ -260,9 +260,6 @@ Voli passeggeri e voli cargo.
 
 ```mermaid
 erDiagram
-    VOLO }|--|| AEROPORTO: "parte da"
-    VOLO }|--|| AEROPORTO: "arriva a"
-    VOLO }|--|| AEREO: "usa"
     VOLO }|--o{ PASSEGGERO: "trasporta"
     VOLO }|--o{ PACCO: "trasporta"
 
