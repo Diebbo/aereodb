@@ -32,7 +32,7 @@
     - [Tavole dei volumi e delle operazioni](#tavole-dei-volumi-e-delle-operazioni)
     - [Ristrutturazione schema concettuale](#ristrutturazione-schema-concettuale)
     - [Normalizzazione](#normalizzazione)
-    - [Traduzione verso il modello fisico](#traduzione-verso-il-modello-fisico)
+    - [Traduzione verso il modello relazionale](#traduzione-verso-il-modello-relazionale)
   - [Codifica SQL](#codifica-sql)
     - [DDL](#ddl)
     - [DML](#dml)
