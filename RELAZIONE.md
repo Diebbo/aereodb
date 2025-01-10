@@ -139,7 +139,7 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 
 ### Specifica operazioni
 
-#### Inserimenti
+#### *Inserimenti*
 
 1. **Nuovo aeroporto**: 1 ogni 5 anni (stimato sulla base della crescita limitata in Italia).  
 2. **Nuovo volo**: 750 aerei al giorno (stimando una media di 5 voli per aereo).  
@@ -150,7 +150,7 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 7. **Nuova compagnia aerea**: 1 ogni anno (espansione del mercato).  
 8. **Nuova compagnia logistica**: 1 ogni anno (mercato più stabile).  
 
-#### Modifiche
+#### *Modifiche*
 
 1. **Esercizio commerciale aeroportuale**: aggiornamenti settimanali.  
 2. **Servizio di sicurezza**: modifiche mensili.  
@@ -160,7 +160,7 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 6. **Stato bagaglio**: 1.000 modifiche al giorno.  
 7. **Stipendio lavoratore**: modifiche mensili.  
 
-#### Cancellazioni
+#### *Cancellazioni*
 
 1. **Smantellamento aereo**: 5 all'anno.  
 2. **Cancellazione volo**: 500 al giorno.  
@@ -168,7 +168,7 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 4. **Licenziamento lavoratore**: 20 al mese.  
 5. **Smarrimento bagaglio**: 200 al giorno.  
 
-#### Ricerche
+#### *Ricerche*
 
 1. **Voli in partenza**: 10.000 al giorno.  
 2. **Voli in arrivo**: 10.000 al giorno.  
@@ -516,7 +516,9 @@ erDiagram
 
 ### Dizionario dei dati
 
-| Entità | Descrizione | Attributi | Identificatore |
+**Entità**
+
+| Nome Entità | Descrizione | Attributi | Identificatore |
 | --------------- | --------------- | --------------- | --------------- |
 | AEROPORTO | Stazione di transito di aerei | IATA, ICAO, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | IATA, ICAO |
 | AEREO | Mezzo di trasporto | tipologia, modello, numeroDiSerie, postiPasseggeri, postiPersonale, volumeStiva | numeroDiSerie |
