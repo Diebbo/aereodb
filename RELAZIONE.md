@@ -382,6 +382,7 @@ erDiagram
 
     PASSEGGERO ||--|| PERSONA: "è una"
     PASSEGGERO ||--o{ BAGAGLIO: "trasporta"
+    PASSEGGERO }|--|{ COMPAGNIA: "cliente di"
 
     DOCUMENTO }|--|| PERSONA: "identifica"
 
@@ -401,6 +402,7 @@ erDiagram
     RISTORANTE ||--|| SERVIZIOCOMMERCIALE: "è un"
     NEGOZIO ||--|| SERVIZIOCOMMERCIALE: "è un"
     LOUNGE ||--|| SERVIZIOCOMMERCIALE: "è un"
+    COMPAGNIA ||--|| LOUNGE: "offre"
 
     PARCHEGGIO ||--|| SERVIZIO: "è un"
 
@@ -413,25 +415,29 @@ erDiagram
 | Entità | Descrizione | Attributi | Identificatore |
 | --------------- | --------------- | --------------- | --------------- |
 | AEROPORTO | Stazione di transito di aerei | IATA, ICAO, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | IATA, ICAO |
-| AEREO | Mezzo di trasporto | tipologia, modello, numeroDiSerie, capienza, postiPasseggeri, postiPersonale, volumeStiva | numeroDiSerie |
-| VOLO | Transito tra due aeroporti distinti | numeroVolo, partenza, arriva | numeroVolo |
+| AEREO | Mezzo di trasporto | tipologia, modello, numeroDiSerie, postiPasseggeri, postiPersonale, volumeStiva | numeroDiSerie |
+| VOLO | Transito tra due aeroporti distinti | numeroVolo, partenza, arrivo | numeroVolo |
+| COMPAGNIA | Organizza i voli e possiede gli aerei | nome, sede | nome |
 | PACCO | Contenitore per merci | id, peso, altezza, larghezza, spessore, contenuto, stato | id |
-| COMPAGNIA | Gestisce il trasporto passeggeri | nome, sede | nome |
-| PERSONA | Individuo | codiceFiscale, nome, cognome, dataNascita, numeroTelefono, email | codiceFiscale |
-| DIPENDENTE | Personale dell'aeroporto o di volo | id, dataAssunzione, stipendio | id |
+| PERSONA | Individuo | codiceFiscale, nome, cognome, dataNascita, nazionalita, numeroTelefono, email | codiceFiscale |
+| PASSEGGERO | Cliente per una compagnia aerea, presente su almeno un volo | classeViaggio, numeroBiglietto, posto | numeroBiglietto |
+| BAGAGLIO | Oggetto trasportabile in una tratta aerea da una persona | id, peso, altezza, larghezza, spessore, stato, descrizione, isAnimale | id |
+| DIPENDENTE | Personale dell'aeroporto o di volo | matricola, dataAssunzione, stipendio | matricola |
 | DOCUMENTO | Documento di identità | tipo, numero, scadenza | numero, tipo |
-| PASSEGGERO | Cliente per una compagnia aerea, presente su almeno un volo | voloPasseggero, classeViaggio, numeroBiglietto, posto | numeroBiglietto |
-| BAGAGLIO | Oggetto trasportabile in una tratta aerea | id, peso, altezza, larghezza, spessore, stato | id |
 | SERVIZIO | Servizio aeroportuale | id, nome, descrizione, locazione | id |
-| SERVIZIOSICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | id, tempoMedioAttesa, numeroAddetti | id |
-| SERVIZIOTRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | id, tipo, costoPerPersona | id |
-| SERVIZIOCOMMERCIALE | Attività come ristorazione, negozi e altre strutture a servizio dei passeggeri | id, nome, tipo, gestore | id |
-| PARCHEGGIO | Area di sosta per veicoli | id, ubicazione, postiDisponibili, costoOrario, postiOccupati | id |
-| RISTORANTE | Attività commerciale di ristorazione | id, nome, tipoCucina | id |
-| NEGOZIO | Attività commerciale di vendita | id, nome, tipoMerce | id |
-| LOUNGE | Area di relax | id, postiDisponibili, compagnia | id |
+| SERVIZIOSICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | tempoMedioAttesa, numeroAddetti | - |
+| SERVIZIOTRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | tipo, linea, costoPerPersona | - |
+| SERVIZIOCOMMERCIALE | Attività interne all'aeroporto come ristorazione, negozi o lounge | nome, tipo, gestore | - |
+| PARCHEGGIO | Area di sosta per veicoli | ubicazione, postiDisponibili, costoOrario, postiOccupati | ubicazione |
+| RISTORANTE | Attività commerciale di ristorazione | nome, tipoCucina | - |
+| NEGOZIO | Attività commerciale di vendita | nome, tipoMerce | - |
+| LOUNGE | Area di relax | postiDisponibili | - |
 
 **Associazioni** 
+
+TODO: km viaggiati con la compagnia tra passeggero e compagnia
+TODO: mansione nell'associazione di lavoro
+TODO: info sul carico per voli cargo
 
 | Nome Associazione | Descrizione | Entità coinvolte | Attributi |
 | --------------- | --------------- | --------------- | --------------- |
