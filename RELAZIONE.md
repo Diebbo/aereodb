@@ -364,26 +364,26 @@ erDiagram
 
 ```mermaid
 erDiagram
-    AEROPORTO }|--|{ SERVIZIO: "fornisce"
+    AEROPORTO }|--|{ SERVIZIO: fornisce
 
-    VOLO }|--|| AEROPORTO: "parte da"
-    VOLO }|--|| AEROPORTO: "arriva a"
-    VOLO }|--|| AEREO: "usa"
-    VOLO }|--o{ PASSEGGERO: "trasporta"
-    VOLO }|--o{ PACCO: "trasporta"
+    VOLO }|--|| AEROPORTO: partenza
+    VOLO }|--|| AEROPORTO: arrivo
+    VOLO }|--|| AEREO: uso_aereo
+    VOLO }|--o{ PASSEGGERO: trasporto_passeggeri
+    VOLO }|--o{ PACCO: trasporto_cargo
 
-    COMPAGNIA ||--|{ VOLO: "opera"
-    COMPAGNIA ||--|{ AEREO: "possiede"
+    COMPAGNIA ||--|{ VOLO: opera
+    COMPAGNIA ||--|{ AEREO: possesso
 
     PASSEGGERO ||--|| PERSONA: "è una"
-    PASSEGGERO ||--o{ BAGAGLIO: "trasporta"
-    PASSEGGERO }|--|{ COMPAGNIA: "cliente di"
+    PASSEGGERO ||--o{ BAGAGLIO: trasporto_bagaglio
+    PASSEGGERO }|--|{ COMPAGNIA: clientela
 
-    DOCUMENTO }|--|| PERSONA: "identifica"
+    DOCUMENTO }|--|| PERSONA: identificazione
 
     DIPENDENTE ||--|| PERSONA: "è una"
-    DIPENDENTE }|--o{ VOLO: "assegnato a"
-    DIPENDENTE }|--o{ SERVIZIO: "lavora per"
+    DIPENDENTE }|--o{ VOLO: lavoro_volo
+    DIPENDENTE }|--o{ SERVIZIO: lavoro_servizio
 
     AEROPORTO {
         string IATA PK
@@ -467,12 +467,12 @@ erDiagram
     RISTORANTE ||--|| SERVIZIOCOMMERCIALE: "è un"
     NEGOZIO ||--|| SERVIZIOCOMMERCIALE: "è un"
     LOUNGE ||--|| SERVIZIOCOMMERCIALE: "è un"
-    COMPAGNIA ||--|| LOUNGE: "offre"
+    COMPAGNIA ||--|| LOUNGE: offre
 
     PARCHEGGIO ||--|| SERVIZIO: "è un"
 
     SERVIZIOTRASPORTO ||--|| SERVIZIO: "è un"
-    SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: "collega"
+    SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: collega
 
     SERVIZIO {
         string id PK
@@ -526,37 +526,33 @@ erDiagram
 | DIPENDENTE | Personale dell'aeroporto o di volo | matricola, dataAssunzione, stipendio | matricola |
 | DOCUMENTO | Documento di identità | tipo, numero, scadenza | numero, tipo |
 | SERVIZIO | Servizio aeroportuale | id, nome, descrizione, locazione | id |
-| SERVIZIOSICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | tempoMedioAttesa, numeroAddetti | - |
-| SERVIZIOTRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | tipo, linea, costoPerPersona | - |
-| SERVIZIOCOMMERCIALE | Attività interne all'aeroporto come ristorazione, negozi o lounge | nome, tipo, gestore | - |
+| SERVIZIOSICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | tempoMedioAttesa, numeroAddetti | " |
+| SERVIZIOTRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | tipo, linea, costoPerPersona | " |
+| SERVIZIOCOMMERCIALE | Attività interne all'aeroporto come ristorazione, negozi o lounge | nome, tipo, gestore | " |
 | PARCHEGGIO | Area di sosta per veicoli | ubicazione, postiDisponibili, costoOrario, postiOccupati | ubicazione |
-| RISTORANTE | Attività commerciale di ristorazione | tipoCucina | - |
-| NEGOZIO | Attività commerciale di vendita | tipoMerce | - |
-| LOUNGE | Area di relax | postiDisponibili | - |
+| RISTORANTE | Attività commerciale di ristorazione | tipoCucina | " |
+| NEGOZIO | Attività commerciale di vendita | tipoMerce | " |
+| LOUNGE | Area di relax | postiDisponibili | " |
 
 **Associazioni** 
 
-TODO: km viaggiati con la compagnia tra passeggero e compagnia
-TODO: mansione nell'associazione di lavoro
-TODO: info sul carico per voli cargo
-
 | Nome Associazione | Descrizione | Entità coinvolte | Attributi |
 | --------------- | --------------- | --------------- | --------------- |
-| VOLOPASSEGGERI | Associa un volo a dei passeggeri | VOLO(1,1) - PASSEGGERO(0,N) | - |
-| VOLOCARGO | Associa un volo a dei pacchi | VOLO(1,1) - PACCO(0,N) | carico |
-| LAVORO_SERVIZIO | Associa un dipendente a un servizio | DIPENDENTE(1,N) - SERVIZIO(0,N) | oraInizio, oraFine, mansione |
-| LAVORO_VOLO | Associa un dipendente a un volo | DIPENDENTE(1,N) - VOLO(0,N) | oraInizio, oraFine, mansione |
-| TRASPORTO_CARGO | Associa il trasporto di un pacco a un volo | VOLOCARGO(0,N) - PACCO(1,1) | - |
-| TRASPORTO_PASSEGGERI | Associa il trasporto di un passeggero a un volo | VOLOPASSEGGERI(0,N) - PASSEGGERO(1,1) | - |
-| IDENTIFICAZIONE | Associa un documento di identità a una persona | DOCUMENTO(1,1) - PERSONA(1,N) | - |
-| TRASPORTO_BAGAGLIO | Associa il trasporto di un bagaglio a un passeggero | BAGAGLIO(1,1) - PASSEGGERO(1,3) | - |
-| ARRIVO | Associa un volo a un aeroporto di arrivo | VOLO(1,1) - AEROPORTO(0,N) | - |
-| PARTENZA | Associa un volo a un aeroporto di partenza | VOLO(1,1) - AEROPORTO(0,N) | - |
-| USO_AEREO | Associa un volo a un aereo | VOLO(1,1) - AEREO(0,N) | - |
-| COLLEGA | Associa un servizio di trasporto a un parcheggio | SERVIZIOTRASPORTO(0,N) - PARCHEGGIO(0,N) | - |
-| FORNISCE | Associa un aeroporto a un servizio | AEROPORTO(0,N) - SERVIZIO(1,1) | - |
-| OPERA | Associa una compagnia a un volo | COMPAGNIA(1,N) - VOLO(1,1) | - |
-| 
+| FORNISCE | Associa gli aeroporti ai servizi | AEROPORTO(1,N) - SERVIZIO(1,N) | - |
+| PARTENZA | Associa i voli a un aeroporto di partenza | VOLO(1,1) - AEROPORTO(1,N) | - |
+| ARRIVO | Associa i voli a un aeroporto di arrivo | VOLO(1,1) - AEROPORTO(1,N) | - |
+| USO_AEREO | Associa i voli a un aereo | VOLO(1,1) - AEREO(1,N) | - |
+| TRASPORTO_PASSEGGERI | Associa i passeggeri ai voli | VOLO(0,N) - PASSEGGERO(1,N) | - |
+| TRASPORTO_CARGO | Associa i pacchi ai voli | VOLO(0,N) - PACCO(1,N) | carico (string) |
+| OPERA | Associa una compagnia ai voli | COMPAGNIA(1,N) - VOLO(1,1) | - |
+| POSSESSO | Associa una compagnia agli aerei | COMPAGNIA(1,N) - AEREO(1,1) | - |
+| TRASPORTO_BAGAGLIO | Associa i bagagli a un passeggero | BAGAGLIO(1,1) - PASSEGGERO(0,N) | - |
+| CLIENTELA | Associa i passeggeri alle compagnie | PASSEGGERO(1,N) - COMPAGNIA(1,N) | kmViaggiati (int) |
+| IDENTIFICAZIONE | Associa i documenti di identità a una persona | DOCUMENTO(1,1) - PERSONA(1,N) | - |
+| LAVORO_VOLO | Associa i dipendenti ai voli | DIPENDENTE(0,N) - VOLO(1,N) | oraInizio, oraFine, mansione |
+| LAVORO_SERVIZIO | Associa i dipendenti ai servizi | DIPENDENTE(0,N) - SERVIZIO(1,N) | oraInizio, oraFine, mansione |
+| OFFRE | Associa una compagnia a una lounge | COMPAGNIA(1,1) - LOUNGE(1,1) | - |
+| COLLEGA | Associa i servizi di trasporto ai parcheggi | SERVIZIOTRASPORTO(1,N) - PARCHEGGIO(1,N) | orari (string) |
 
 ## Progettazione logica
 
