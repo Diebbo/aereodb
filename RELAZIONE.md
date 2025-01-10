@@ -369,8 +369,6 @@ erDiagram
 
 ### Unione delle componenti
 
-TODO: aggiungere gli attributi (ivan)
-
 ```mermaid
 erDiagram
     AEROPORTO }|--|{ SERVIZIO: "fornisce"
@@ -393,6 +391,76 @@ erDiagram
     DIPENDENTE ||--|| PERSONA: "è una"
     DIPENDENTE }|--o{ VOLO: "assegnato a"
     DIPENDENTE }|--o{ SERVIZIO: "lavora per"
+
+    AEROPORTO {
+        string IATA PK
+        string ICAO PK
+        string nome
+        string provincia
+        string stato
+        int postiAereoPasseggeri
+        int postiAereoCargo
+    }
+    VOLO {
+        string numeroVolo PK
+        date partenza
+        date arrivo
+    }
+    AEREO {
+        enum tipologia "passeggeri o cargo"
+        string modello
+        string numeroDiSerie PK
+        int postiPasseggeri
+        int postiPersonale
+        int volumeStiva
+    }
+    COMPAGNIA {
+        string nome PK
+        string sede
+    }
+    PACCO {
+        string id PK
+        float peso
+        float altezza
+        float larghezza
+        float spessore
+        string contenuto
+        enum stato "disperso, danneggiato o integro"
+    }
+    PERSONA {
+        string codiceFiscale PK
+        string nome
+        string cognome
+        date dataNascita
+        string nazionalita
+        string numeroTelefono
+        string email
+    }
+    PASSEGGERO {
+        string classeViaggio
+        string numeroBiglietto PK
+        string posto
+    }
+    BAGAGLIO {
+        string id PK
+        float peso
+        float altezza
+        float larghezza
+        float spessore
+        enum stato "disperso, danneggiato o integro"
+        string descrizione
+        bool isAnimale
+    }
+    DIPENDENTE {
+        string matricola PK
+        date dataAssunzione
+        float stipendio
+    }
+    DOCUMENTO {
+        enum tipo PK
+        string numero PK
+        date scadenza
+    }
 ```
 
 Spezzato in due a "SERVIZIO" per migliorare la leggibilità
@@ -412,6 +480,42 @@ erDiagram
 
     SERVIZIOTRASPORTO ||--|| SERVIZIO: "è un"
     SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: "collega"
+
+    SERVIZIO {
+        string id PK
+        string nome
+        string descrizione
+        string locazione
+    }
+    SERVIZIOSICUREZZA {
+        int tempoMedioAttesa
+        int numeroAddetti
+    }
+    SERVIZIOTRASPORTO {
+        enum tipo "treno, autobus, metro, taxi"
+        string linea
+        float costoPerPersona
+    }
+    SERVIZIOCOMMERCIALE {
+        string nome
+        enum tipo "ristorante, bar, negozio"
+        string gestore
+    }
+    PARCHEGGIO {
+        string ubicazione PK
+        int postiDisponibili
+        float costoOrario
+        int postiOccupati
+    }
+    RISTORANTE {
+        string tipoCucina
+    }
+    NEGOZIO {
+        string tipoMerce
+    }
+    LOUNGE {
+        int postiDisponibili
+    }
 ```
 
 ### Dizionario dei dati
