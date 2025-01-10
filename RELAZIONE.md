@@ -27,6 +27,7 @@
     - [Sviluppo delle componenti (approccio inside-out)](#sviluppo-delle-componenti-approccio-inside-out)
     - [Unione delle componenti](#unione-delle-componenti)
     - [Dizionario dei dati](#dizionario-dei-dati)
+    - [Regole aziendali](#regole-aziendali)
   - [Progettazione logica](#progettazione-logica)
     - [Tavole dei volumi e delle operazioni](#tavole-dei-volumi-e-delle-operazioni)
     - [Ristrutturazione schema concettuale](#ristrutturazione-schema-concettuale)
@@ -81,7 +82,6 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 - **Aereo**: un aereo non può essere condiviso tra due compagnie.
 - **Compagnia**: Non possono esistere due compagnie con lo stesso nome. Le compagnie aeree (per i passeggeri) e quelle logistiche (per le merci) sono equiparate in quanto le informazioni da mantenere sono le stesse per entrambe.
 - **Passeggeri**: il passeggero è una persona nella base di dati, che ha comprato un biglietto per un volo, ha un documento di identità e può avere zero o più bagagli.
-- **Stato di bagagli e pacchi**: lo stato per i bagagli e i pacchi è "integro" a prescindere inizialmente. A seguito del volo il valore può essere eventualmente aggiornato in "danneggiato" o "disperso".
 - **Parcheggi**: per ubicazione si intende longitudine e latitudine, per posti disponibili si intende il numero di posti totali, per posti occupati si intende il numero di posti attualmente occupati.
 - **Servizi di trasporto**: i servizi di trasporto collegano l'aeroporto ad uno o più parcheggi. Per ogni parcheggio possono passare più servizi di trasporto ed un trasporto può passare per più parcheggi.
 
@@ -187,7 +187,7 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 
 ### Identificazione delle entità e associazioni
 
-Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. In un secondo momento sono state identificate ulteriori entità, quali passeggero e dipendente, specializzazioni di persona, e documento, bagaglio e pacco. Oltre a ciò sono stati suddivisi i servizi in sicurezza, trasporto, parcheggi e commerciali (lounge, ristoranti, negozi). Dall'entità volo sono state estratte due associazioni: trasportoPasseggeri verso i passeggeri e trasportoCargo verso i pacchi. Tra compagnia e passeggero è stata identificata un'associazione di clientela. A partire da dipendente sono state trovate due associazioni verso le due possibilità di lavoro, ovvero volo e servizio.
+Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. In un secondo momento sono state identificate ulteriori entità, quali passeggero e dipendente, specializzazioni di persona, e documento, bagaglio e pacco. Oltre a ciò sono stati suddivisi i servizi in sicurezza, trasporto, parcheggi e commerciali (lounge, ristoranti, negozi).  Dall'entità volo sono state estratte due associazioni: trasportoPasseggeri verso i passeggeri e trasportoCargo verso i pacchi. Tra compagnia e passeggero è stata identificata un'associazione di clientela. A partire da dipendente sono state trovate due associazioni verso le due possibilità di lavoro, ovvero volo e servizio.
 
 ### Scheletro dello schema ER (approccio top-down)
 
@@ -555,6 +555,14 @@ erDiagram
 | LAVORO_SERVIZIO | Associa i dipendenti ai servizi | DIPENDENTE(0,N) - SERVIZIO(1,N) | oraInizio (string), oraFine (string), mansione (string) |
 | OFFRE | Associa una compagnia a una lounge | COMPAGNIA(1,1) - LOUNGE(1,1) | - |
 | COLLEGA | Associa i servizi di trasporto ai parcheggi | SERVIZIOTRASPORTO(1,N) - PARCHEGGIO(1,N) | orari (string) |
+
+### Regole aziendali
+
+1. Il volume della stiva di un aereo deve essere espresso in metri cubi.
+2. Lo stato per i bagagli e i pacchi è "integro" a prescindere inizialmente. A seguito del volo il valore può essere eventualmente aggiornato in "danneggiato" o "disperso".
+3. Lo stipendio di un dipendente è inteso come mensile e deve essere > 0.
+4. Il tempo medio di attesa ad un servizio di sicurezza deve essere aggiornato ogni 20 minuti.
+5. Il numero di posti occupati in un parcheggio deve essere aggiornato ogni 60 minuti.
 
 ## Progettazione logica
 
