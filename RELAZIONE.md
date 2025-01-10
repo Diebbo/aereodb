@@ -71,7 +71,7 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 | Documento identità | documento che può essere di diversi tipi (carta d'identità, passaporto) | documento | Passeggero, Lavoratore |
 | Lavoratore | personale assunto dell'aeroporto o a bordo di un volo | hostess, steward, impiegato, dipendente | Aeroporto, Volo, Servizio |
 | Servizio di sicurezza | servizio di controllo delle attività ordinarie all'interno dell'aeroporto | controllo bagagli, controllo documenti | Aeroporto, Lavoratore |
-| Servizio commerciale | attività interne all'aeroporto come ristorazione, negozi o lounge | - | Aeroporto, Lavoratore |
+| Servizio commerciale | attività interne all'aeroporto come ristorazione, negozi o lounge | negozio | Aeroporto, Lavoratore |
 | Parcheggio | area di sosta per veicoli | - | Aeroporto, Servizio di trasporto |
 | Servizio di trasporto | mezzo di collegamento a servizi esterni all'aeroporto | taxi, navetta | Aeroporto, Parcheggio |
 
@@ -185,9 +185,7 @@ TODO: completare le stime
 
 ### Identificazione delle entità e associazioni
 
-TODO: sistemare identificazione
-
-Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. L'entità volo è specializzabile in volo passeggeri e volo cargo. Sono state poi secondariamente identificate passeggero e dipendente, derivate da persona, e le entità bagaglio e pacco. Oltre a ciò si suddividono i servizi in sicurezza, lounge, parcheggi, trasporti e commerciali.
+Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. In un secondo momento sono state identificate ulteriori entità, quali passeggero e dipendente, specializzazioni di persona, e documento, bagaglio e pacco. Oltre a ciò sono stati suddivisi i servizi in sicurezza, trasporto, parcheggi e commerciali (lounge, ristoranti, negozi). Dall'entità volo sono state estratte due associazioni: trasportoPasseggeri verso i passeggeri e trasportoCargo verso i pacchi. Tra compagnia e passeggero è stata identificata un'associazione di clientela. A partire da dipendente sono state trovate due associazioni verso le due possibilità di lavoro, ovvero volo e servizio.
 
 ### Scheletro dello schema ER (approccio top-down)
 
