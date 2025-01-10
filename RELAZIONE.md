@@ -206,85 +206,23 @@ erDiagram
 
 ### Sviluppo delle componenti (approccio inside-out)
 
-TODO: sistemare i singoli componenti a ritroso (ivan)
-
-Servizi aeroportuali e servizi di sicurezza.
-
-```mermaid
-erDiagram 
-    AEROPORTO ||--|{ SERVIZIOSICUREZZA: "fornisce"
-    AEROPORTO ||--|{ SERVIZIOTRASPORTO: "fornisce"
-    AEROPORTO ||--|{ SERVIZIOCOMMERCIALE: "fornisce"
-
-    SERVIZIO ||--|| SERVIZIOSICUREZZA: "e'"
-    SERVIZIO ||--|| SERVIZIOTRASPORTO: "e'"
-    SERVIZIO ||--|| SERVIZIOCOMMERCIALE: "e'"
-    SERVIZIO ||--|| PARCHEGGIO: "e'"
-    SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: "collega"
-
-    SERVIZIOCOMMERCIALE ||--o| RISTORANTE: "composto"
-    SERVIZIOCOMMERCIALE ||--o| NEGOZIO: "comprende"
-```
-
-Voli passeggeri.
+Volo e connessi.
 
 ```mermaid
 erDiagram
-    VOLO }|--|| AEREO: "usa"
+    AEROPORTO }|--|{ SERVIZIO: "fornisce"
+
     VOLO }|--|| AEROPORTO: "parte da"
     VOLO }|--|| AEROPORTO: "arriva a"
-
-    VOLOPASSEGGERI ||--|| VOLO: "è un"
-    VOLOPASSEGGERI ||--o{ PASSEGGERO: "trasporta"
+    VOLO }|--|| AEREO: "usa"
 
     COMPAGNIA ||--|{ VOLO: "opera"
     COMPAGNIA ||--|{ AEREO: "possiede"
 
-    PASSEGGERO ||--|| PERSONA: "è un"
-    PASSEGGERO ||--|{ DOCUMENTO: "identificato da"
-    PASSEGGERO ||--o{ BAGAGLIO: "trasporta"
+    DIPENDENTE ||--|| PERSONA: "è una"
+    DIPENDENTE }|--o{ VOLO: "assegnato a"
+    DIPENDENTE }|--o{ SERVIZIO: "lavora per"
 
-    DIPENDENTE ||--|{ DOCUMENTO: "identificato da"
-    DIPENDENTE }|--o| SERVIZIO: "lavora per"
-    DIPENDENTE }|--o{ VOLOPASSEGGERI: "assegnato a"
-    DIPENDENTE ||--|| PERSONA: "è un"
-    DIPENDENTE }|--o| COMPAGNIA: "lavora per"
-
-    PERSONA {
-        int codiceFiscale PK
-        string nome
-        string cognome
-        date dataNascita
-        string numeroTelefono
-        string email
-    }
-    DIPENDENTE {
-        enum mansione
-        date dataAssunzione
-        float stipendio
-    }
-    PASSEGGERO {
-        string classeViaggio
-        string numeroBiglietto
-    }
-    DOCUMENTO {
-        enum Tipo
-        int numero
-    }
-    BAGAGLIO {
-        float peso
-        float altezza
-        float larghezza
-        float spessore
-        enum stato "disperso, danneggiato o integro"
-    }
-    VOLOPASSEGGERI {
-    }
-    VOLO {
-        string numeroVolo PK
-        date partenza
-        date arriva
-    }
     AEROPORTO {
         string IATA PK
         string ICAO PK
@@ -294,72 +232,138 @@ erDiagram
         int postiAereoPasseggeri
         int postiAereoCargo
     }
+    VOLO {
+        string numeroVolo PK
+        date partenza
+        date arrivo
+    }
     AEREO {
         enum tipologia "passeggeri o cargo"
         string modello
-        string id PK
-        int capienza "n° posti o t di stiva"
+        string numeroDiSerie PK
         int postiPasseggeri
         int postiPersonale
         int volumeStiva
     }
-
     COMPAGNIA {
         string nome PK
         string sede
     }
 ```
 
-Volo e connessi (in particolare voli cargo).
+Voli passeggeri e voli cargo.
 
 ```mermaid
 erDiagram
     VOLO }|--|| AEROPORTO: "parte da"
     VOLO }|--|| AEROPORTO: "arriva a"
-    VOLO }|--|| AEREO: usa
+    VOLO }|--|| AEREO: "usa"
+    VOLO }|--o{ PASSEGGERO: "trasporta"
+    VOLO }|--o{ PACCO: "trasporta"
 
-    COMPAGNIA ||--|{ VOLO: opera
-    COMPAGNIA ||--|{ AEREO: possiede
+    PASSEGGERO ||--|| PERSONA: "è una"
+    PASSEGGERO ||--o{ BAGAGLIO: "trasporta"
+    PASSEGGERO }|--|{ COMPAGNIA: "cliente di"
 
-    DIPENDENTE }|--|{ VOLO: "assegnato a"
-    DIPENDENTE }|--|| COMPAGNIA: "lavora per"
-    DIPENDENTE ||--|| PERSONA: "è una"
+    DOCUMENTO }|--|| PERSONA: "identifica"
 
-    VOLOPASSEGGERI ||--|| VOLO: "è un"
-
-    VOLOCARGO ||--|| VOLO: "è un"
-    VOLOCARGO ||--o{ PACCO: trasporta
-
-    VOLO {
-        string numeroVolo PK
-        date partenza
-        date arriva
-    }
-    AEROPORTO {
-        string IATA PK
-        string ICAO PK
-        string nome
-        string provincia
-        string stato
-        int postiAereoPasseggeri
-        int postiAereoCargo
-    }
-    AEREO {
-        enum tipologia "passeggeri o cargo"
-        string modello
-        string id PK
-        int capienza "n° posti o t di stiva"
-    }
-    VOLOCARGO {
-        string carico
-    }
     PACCO {
+        string id PK
         float peso
         float altezza
         float larghezza
         float spessore
         string contenuto
         enum stato "disperso, danneggiato o integro"
+    }
+    PERSONA {
+        string codiceFiscale PK
+        string nome
+        string cognome
+        date dataNascita
+        string nazionalita
+        string numeroTelefono
+        string email
+    }
+    PASSEGGERO {
+        string classeViaggio
+        string numeroBiglietto PK
+        string posto
+    }
+    BAGAGLIO {
+        string id PK
+        float peso
+        float altezza
+        float larghezza
+        float spessore
+        enum stato "disperso, danneggiato o integro"
+        string descrizione
+        bool isAnimale
+    }
+    DIPENDENTE {
+        string matricola PK
+        date dataAssunzione
+        float stipendio
+    }
+    DOCUMENTO {
+        enum tipo PK
+        string numero PK
+        date scadenza
+    }
+```
+
+Servizi aeroportuali e servizi di sicurezza.
+
+```mermaid
+erDiagram
+    SERVIZIOSICUREZZA ||--|| SERVIZIO: "è un"
+
+    SERVIZIOCOMMERCIALE ||--|| SERVIZIO: "è un"
+    
+    RISTORANTE ||--|| SERVIZIOCOMMERCIALE: "è un"
+    NEGOZIO ||--|| SERVIZIOCOMMERCIALE: "è un"
+    LOUNGE ||--|| SERVIZIOCOMMERCIALE: "è un"
+    COMPAGNIA ||--|| LOUNGE: "offre"
+
+    PARCHEGGIO ||--|| SERVIZIO: "è un"
+
+    SERVIZIOTRASPORTO ||--|| SERVIZIO: "è un"
+    SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: "collega"
+
+    SERVIZIO {
+        string id PK
+        string nome
+        string descrizione
+        string locazione
+    }
+    SERVIZIOSICUREZZA {
+        int tempoMedioAttesa
+        int numeroAddetti
+    }
+    SERVIZIOTRASPORTO {
+        enum tipo "treno, autobus, metro, taxi"
+        string linea
+        float costoPerPersona
+    }
+    SERVIZIOCOMMERCIALE {
+        string nome
+        enum tipo "ristorante, bar, negozio"
+        string gestore
+    }
+    PARCHEGGIO {
+        string ubicazione PK
+        int postiDisponibili
+        float costoOrario
+        int postiOccupati
+    }
+    RISTORANTE {
+        string tipoCucina
+    }
+    NEGOZIO {
+        string tipoMerce
+    }
+    LOUNGE {
+        int postiDisponibili
     }
 ```
 
@@ -429,8 +433,8 @@ erDiagram
 | SERVIZIOTRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | tipo, linea, costoPerPersona | - |
 | SERVIZIOCOMMERCIALE | Attività interne all'aeroporto come ristorazione, negozi o lounge | nome, tipo, gestore | - |
 | PARCHEGGIO | Area di sosta per veicoli | ubicazione, postiDisponibili, costoOrario, postiOccupati | ubicazione |
-| RISTORANTE | Attività commerciale di ristorazione | nome, tipoCucina | - |
-| NEGOZIO | Attività commerciale di vendita | nome, tipoMerce | - |
+| RISTORANTE | Attività commerciale di ristorazione | tipoCucina | - |
+| NEGOZIO | Attività commerciale di vendita | tipoMerce | - |
 | LOUNGE | Area di relax | postiDisponibili | - |
 
 **Associazioni** 
