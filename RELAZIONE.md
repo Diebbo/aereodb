@@ -536,7 +536,7 @@ erDiagram
 | NEGOZIO | Attività commerciale di vendita | tipoMerce | " |
 | LOUNGE | Area di relax | postiDisponibili | " |
 
-**Associazioni** 
+**Associazioni**
 
 | Nome Associazione | Descrizione | Entità coinvolte | Attributi |
 | --------------- | --------------- | --------------- | --------------- |
@@ -551,8 +551,8 @@ erDiagram
 | TRASPORTO_BAGAGLIO | Associa i bagagli a un passeggero | BAGAGLIO(1,1) - PASSEGGERO(0,N) | - |
 | CLIENTELA | Associa i passeggeri alle compagnie | PASSEGGERO(1,N) - COMPAGNIA(1,N) | kmViaggiati (int) |
 | IDENTIFICAZIONE | Associa i documenti di identità a una persona | DOCUMENTO(1,1) - PERSONA(1,N) | - |
-| LAVORO_VOLO | Associa i dipendenti ai voli | DIPENDENTE(0,N) - VOLO(1,N) | oraInizio, oraFine, mansione |
-| LAVORO_SERVIZIO | Associa i dipendenti ai servizi | DIPENDENTE(0,N) - SERVIZIO(1,N) | oraInizio, oraFine, mansione |
+| LAVORO_VOLO | Associa i dipendenti ai voli | DIPENDENTE(0,N) - VOLO(1,N) | oraInizio (string), oraFine (string), mansione(string) |
+| LAVORO_SERVIZIO | Associa i dipendenti ai servizi | DIPENDENTE(0,N) - SERVIZIO(1,N) | oraInizio (string), oraFine (string), mansione (string) |
 | OFFRE | Associa una compagnia a una lounge | COMPAGNIA(1,1) - LOUNGE(1,1) | - |
 | COLLEGA | Associa i servizi di trasporto ai parcheggi | SERVIZIOTRASPORTO(1,N) - PARCHEGGIO(1,N) | orari (string) |
 
