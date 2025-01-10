@@ -249,6 +249,11 @@ erDiagram
         string nome PK
         string sede
     }
+    DIPENDENTE {
+        string matricola PK
+        date dataAssunzione
+        float stipendio
+    }
 ```
 
 Voli passeggeri e voli cargo.
@@ -299,11 +304,6 @@ erDiagram
         enum stato "disperso, danneggiato o integro"
         string descrizione
         bool isAnimale
-    }
-    DIPENDENTE {
-        string matricola PK
-        date dataAssunzione
-        float stipendio
     }
     DOCUMENTO {
         enum tipo PK
