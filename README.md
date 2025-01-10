@@ -1,6 +1,6 @@
 # aereodb
 
-AereoDB is a simple, sql-based database for managing airports, airlines, flights, and passengers.
+AereoDB is a simple, sql-based database for managing airports, airlines, flights and passengers.
 
 ## Installation
 
@@ -23,5 +23,6 @@ A web interface to dialog with the database realized in Next.js, that provides o
 
 ### Run
 ```bash
+npm install
 npm run dev
 ```

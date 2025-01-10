@@ -1,3 +1,5 @@
+'use client'
+
 import Image from "next/image"
 import clsx from 'clsx'
 import { 
@@ -30,7 +32,10 @@ export default function Home() {
           width={525}
           height={295} />
         <Form className="flex flex-row items-center">
-          <Select label="Seleziona l'operazione">
+          <Select
+            label="Operazione"
+            placeholder="Seleziona l'operazione"
+          >
             {operations.map((o) => (
               <SelectItem key={o.key}>{o.label}</SelectItem>
             ))}
