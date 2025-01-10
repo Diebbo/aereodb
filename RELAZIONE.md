@@ -52,7 +52,7 @@ Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, da
 
 La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche dove lavorano, il ruolo che essi ricoprono e il loro stipendio.
 
-Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguardanti le lounge, i parcheggi, i ristoranti e i negozi. Delle lounge si vuole mantenere la compagnia aerea che la mette a disposizione ed i posti disponibili. Dei parcheggi si vuole memorizzare l’ubicazione, il numero di posti disponibili, il costo orario ed il numero di posti occupati. Sarà inoltre necessario salvare tutti i servizi di trasporto che collegano l'aeroporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche. Dei ristoranti e dei negozi si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. Per tutti i servizi è cruciale memorizzare i dipendenti.  I servizi di sicurezza devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio, il tempo medio di attesa e il numero di addetti, facendo distinzione tra addetti di sicurezza e addetti di controllo.
+Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguardanti le lounge, i parcheggi, i ristoranti e i negozi. Delle lounge si vuole mantenere la compagnia aerea che la mette a disposizione ed i posti disponibili. Dei parcheggi si vuole memorizzare l'ubicazione, il numero di posti disponibili, il costo orario ed il numero di posti occupati. Sarà inoltre necessario salvare tutti i servizi di trasporto che collegano l'aeroporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche. Dei ristoranti e dei negozi si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. Per tutti i servizi è cruciale memorizzare i dipendenti.  I servizi di sicurezza devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio, il tempo medio di attesa e il numero di addetti, facendo distinzione tra addetti di sicurezza e addetti di controllo.
 
 ### Glossario dei termini
 
@@ -68,8 +68,8 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 | Pacco | contenitore per merci | - | Volo cargo |
 | Compagnia logistica | si occupa della gestione degli aerei cargo e del trasporto merci | - | Volo cargo, Aereo |
 | Aereo | mezzo di trasporto | aeromobile | Volo, Lavoratore (hostess, pilota), Aeroporto |
-| Documento Identità | documento che può essere di diversi tipi (carta d’identità, passaporto) | documento | Passeggero, Lavoratore |
-| Lavoratore | personale assunto dell’aeroporto o a bordo di un volo | hostess, steward, impiegato, dipendente | Aeroporto, Volo, Servizio |
+| Documento Identità | documento che può essere di diversi tipi (carta d'identità, passaporto) | documento | Passeggero, Lavoratore |
+| Lavoratore | personale assunto dell'aeroporto o a bordo di un volo | hostess, steward, impiegato, dipendente | Aeroporto, Volo, Servizio |
 | Servizio di sicurezza | servizio di controllo delle attività ordinarie all'interno dell'aeroporto | controllo bagagli, controllo documenti. | Aeroporto, Lavoratore |
 | Servizio commerciale | attività come ristorazione, negozi e altre strutture a servizio dei passeggeri | - | Aeroporto, Lavoratore |
 | Lounge | area privata interna all'aeroporto accessibile dai clienti della compagnia | - | Aeroporto, Compagnia |
@@ -132,7 +132,7 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 
 Delle **lounge** si vuole mantenere la compagnia aerea che la mette a disposizione ed i posti disponibili. 
 
-Dei **parcheggi** si vuole memorizzare l’ubicazione, il numero di posti disponibili, il costo orario ed il numero di posti occupati. 
+Dei **parcheggi** si vuole memorizzare l'ubicazione, il numero di posti disponibili, il costo orario ed il numero di posti occupati. 
 
 Sarà inoltre necessario salvare tutti i **servizi di trasporto** che collegano l'aeroporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche.
 
@@ -374,23 +374,20 @@ erDiagram
     VOLO }|--|| AEROPORTO: "parte da"
     VOLO }|--|| AEROPORTO: "arriva a"
     VOLO }|--|| AEREO: "usa"
+    VOLO }|--o{ PASSEGGERO: "trasporta"
+    VOLO }|--o{ PACCO: "trasporta"
 
     COMPAGNIA ||--|{ VOLO: "opera"
     COMPAGNIA ||--|{ AEREO: "possiede"
 
-    VOLOPASSEGGERI ||--|| VOLO: "è un"
-    VOLOPASSEGGERI }o--|{ PERSONA: "trasporta"
-
-    PERSONA ||--o{ BAGAGLIO: "trasporta"
-
-    VOLOCARGO ||--|| VOLO: "è un"
-    VOLOCARGO ||--o{ PACCO: "trasporta"
+    PASSEGGERO ||--|| PERSONA: "è una"
+    PASSEGGERO ||--o{ BAGAGLIO: "trasporta"
 
     DOCUMENTO }|--|| PERSONA: "identifica"
 
     DIPENDENTE ||--|| PERSONA: "è una"
     DIPENDENTE }|--o{ VOLO: "assegnato a"
-    DIPENDENTE }|--o| SERVIZIO: "lavora per"
+    DIPENDENTE }|--o{ SERVIZIO: "lavora per"
 ```
 
 Spezzato in due a "SERVIZIO" per migliorare la leggibilità
@@ -413,8 +410,6 @@ erDiagram
 
 ### Dizionario dei dati
 
-TODO: passeggero come associazione tra volo (o volo pass?) e persona
-
 | Entità | Descrizione | Attributi | Identificatore |
 | --------------- | --------------- | --------------- | --------------- |
 | AEROPORTO | Stazione di transito di aerei | IATA, ICAO, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | IATA, ICAO |
@@ -423,7 +418,7 @@ TODO: passeggero come associazione tra volo (o volo pass?) e persona
 | PACCO | Contenitore per merci | id, peso, altezza, larghezza, spessore, contenuto, stato | id |
 | COMPAGNIA | Gestisce il trasporto passeggeri | nome, sede | nome |
 | PERSONA | Individuo | codiceFiscale, nome, cognome, dataNascita, numeroTelefono, email | codiceFiscale |
-| DIPENDENTE | Personale dell’aeroporto o di volo | id, dataAssunzione, stipendio | id |
+| DIPENDENTE | Personale dell'aeroporto o di volo | id, dataAssunzione, stipendio | id |
 | DOCUMENTO | Documento di identità | tipo, numero, scadenza | numero, tipo |
 | PASSEGGERO | Cliente per una compagnia aerea, presente su almeno un volo | voloPasseggero, classeViaggio, numeroBiglietto, posto | numeroBiglietto |
 | BAGAGLIO | Oggetto trasportabile in una tratta aerea | id, peso, altezza, larghezza, spessore, stato | id |
