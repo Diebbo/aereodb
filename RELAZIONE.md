@@ -58,7 +58,7 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 
 | Termine | Descrizione | Sinonimi | Collegamenti | 
 | --------------- | --------------- | --------------- | --------------- | 
-| Aeroporto | stazione di transito di aerei| - | Volo, Lavoratore, Servizio |
+| Aeroporto | stazione di transito di aerei | - | Volo, Lavoratore, Servizio |
 | Volo | transito tra due aeroporti distinti | viaggio | Aeroporto, Aereo, Lavoratore |
 | Volo passeggeri | volo che trasporta persone | - | Volo, Passeggero, Compagnia aerea |
 | Passeggero | cliente per una compagnia aerea, presente su almeno un volo | cliente | Volo passeggeri, Identità |
@@ -68,25 +68,22 @@ Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguarda
 | Pacco | contenitore per merci | - | Volo cargo |
 | Compagnia logistica | si occupa della gestione degli aerei cargo e del trasporto merci | - | Volo cargo, Aereo |
 | Aereo | mezzo di trasporto | aeromobile | Volo, Lavoratore (hostess, pilota), Aeroporto |
-| Documento Identità | documento che può essere di diversi tipi (carta d'identità, passaporto) | documento | Passeggero, Lavoratore |
+| Documento identità | documento che può essere di diversi tipi (carta d'identità, passaporto) | documento | Passeggero, Lavoratore |
 | Lavoratore | personale assunto dell'aeroporto o a bordo di un volo | hostess, steward, impiegato, dipendente | Aeroporto, Volo, Servizio |
-| Servizio di sicurezza | servizio di controllo delle attività ordinarie all'interno dell'aeroporto | controllo bagagli, controllo documenti. | Aeroporto, Lavoratore |
-| Servizio commerciale | attività come ristorazione, negozi e altre strutture a servizio dei passeggeri | - | Aeroporto, Lavoratore |
-| Lounge | area privata interna all'aeroporto accessibile dai clienti della compagnia | - | Aeroporto, Compagnia |
+| Servizio di sicurezza | servizio di controllo delle attività ordinarie all'interno dell'aeroporto | controllo bagagli, controllo documenti | Aeroporto, Lavoratore |
+| Servizio commerciale | attività interne all'aeroporto come ristorazione, negozi o lounge | - | Aeroporto, Lavoratore |
 | Parcheggio | area di sosta per veicoli | - | Aeroporto, Servizio di trasporto |
 | Servizio di trasporto | mezzo di collegamento a servizi esterni all'aeroporto | taxi, navetta | Aeroporto, Parcheggio |
 
 ### Eliminazione delle ambiguità
 
-TODO: come gestire negozi e ristoranti di terzi?
-
+- **Voli**: si identifica con volo un singolo viaggio tra due aeroporti, con aereo l'aeromobile utilizzato per il viaggio, con compagnia la società che opera il volo, con personale a bordo i lavoratori che operano durante il volo. Voli passeggeri e voli cargo si differenziano esclusivamente per entità trasportata.
+- **Aereo**: un aereo non può essere condiviso tra due compagnie.
+- **Compagnia**: Non possono esistere due compagnie con lo stesso nome. Le compagnie aeree (per i passeggeri) e quelle logistiche (per le merci) sono equiparate in quanto le informazioni da mantenere sono le stesse per entrambe.
+- **Passeggeri**: il passeggero è una persona nella base di dati, che ha comprato un biglietto per un volo, ha un documento di identità e può avere zero o più bagagli.
+- **Stato di bagagli e pacchi**: lo stato per i bagagli e i pacchi è "integro" a prescindere inizialmente. A seguito del volo il valore può essere eventualmente aggiornato in "danneggiato" o "disperso".
 - **Parcheggi**: per ubicazione si intende longitudine e latitudine, per posti disponibili si intende il numero di posti totali, per posti occupati si intende il numero di posti attualmente occupati.
 - **Servizi di trasporto**: i servizi di trasporto collegano l'aeroporto ad uno o più parcheggi. Per ogni parcheggio possono passare più servizi di trasporto ed un trasporto può passare per più parcheggi.
-- **Voli**: si identifica con volo un singolo viaggio tra due aeroporti, con aereo l'aeromobile utilizzato per il viaggio, con compagnia la società che opera il volo, con personale a bordo i lavoratori che operano durante il volo. Voli passeggeri e voli cargo si differenziano esclusivamente per entità trasportata.
-- **Passeggeri**: il passeggero è una persona nella base di dati, che ha comprato un biglietto per un volo, ha un documento di identità e può avere zero o più bagagli.
-- **Compagnia**: Non possono esistere due compagnie con lo stesso nome. Le compagnie aeree (per i passeggeri) e quelle logistiche (per le merci) sono equiparate in quanto le informazioni da mantenere sono le stesse per entrambe.
-- **Aereo**: un aereo non può essere condiviso tra due compagnie.
-- **Stato di bagagli e pacchi**: lo stato per i bagagli e i pacchi è "integro" a prescindere inizialmente. A seguito del volo il valore può essere eventualmente aggiornato in "danneggiato" o "disperso".
 
 ### Strutturazione dei requisiti
 
@@ -104,11 +101,11 @@ Riguardo gli aerei si vuole memorizzare la tipologia (passeggeri o cargo), il mo
 
 #### *Frasi relative ai passeggeri*
 
-Per quanto riguarda la gestione dei voli passeggeri, si vogliono memorizzare informazioni sui passeggeri tra le quali generalità (nome, cognome, data di nascita, nazionalità, un recapito telefonico e un indirizzo email), le compagnie aeree di cui sono clienti insieme al numero di km viaggiati con esse, i loro documenti di identità registrati ed i bagagli che trasportano. 
+Si vogliono memorizzare informazioni sui passeggeri tra le quali generalità (nome, cognome, data di nascita, nazionalità, un recapito telefonico e un indirizzo email), le compagnie aeree di cui sono clienti insieme al numero di km viaggiati con esse, i loro documenti di identità registrati ed i bagagli che trasportano.
 
 #### *Frasi relative ai bagagli*
 
-I bagagli si suddividono in bagagli a mano e bagagli da stiva. Di entrambi si vuole memorizzare il peso, le dimensioni (altezza, larghezza e spessore) e lo stato(disperso, danneggiato o integro). Dei bagagli da stiva si vuole inoltre mantenere una breve descrizione e un flag se è un animale.
+I bagagli si suddividono in bagagli a mano e bagagli da stiva. Di entrambi si vuole memorizzare il peso, le dimensioni (altezza, larghezza e spessore) e lo stato (disperso, danneggiato o integro). Dei bagagli da stiva si vuole inoltre mantenere una breve descrizione e un flag se è un animale.
 
 #### *Frasi relative ai voli passeggeri*
 
@@ -128,7 +125,7 @@ La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo 
 
 #### *Frasi relative ai servizi*
 
-Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguardanti le lounge, i parcheggi, i ristoranti e i negozi.
+Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguardanti le lounge, i parcheggi, i ristoranti e i negozi. Per tutti i servizi è cruciale memorizzare i dipendenti.
 
 Delle **lounge** si vuole mantenere la compagnia aerea che la mette a disposizione ed i posti disponibili. 
 
@@ -188,6 +185,8 @@ TODO: completare le stime
 
 ### Identificazione delle entità e associazioni
 
+TODO: sistemare identificazione
+
 Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. L'entità volo è specializzabile in volo passeggeri e volo cargo. Sono state poi secondariamente identificate passeggero e dipendente, derivate da persona, e le entità bagaglio e pacco. Oltre a ciò si suddividono i servizi in sicurezza, lounge, parcheggi, trasporti e commerciali.
 
 ### Scheletro dello schema ER (approccio top-down)
@@ -206,6 +205,8 @@ erDiagram
 ```
 
 ### Sviluppo delle componenti (approccio inside-out)
+
+TODO: sistemare i singoli componenti a ritroso (ivan)
 
 Servizi aeroportuali e servizi di sicurezza.
 
@@ -365,7 +366,6 @@ erDiagram
 ### Unione delle componenti
 
 TODO: aggiungere gli attributi (ivan)
-TODO: sistemare i singoli componenti a ritroso (ivan)
 
 ```mermaid
 erDiagram
@@ -397,10 +397,10 @@ erDiagram
     SERVIZIOSICUREZZA ||--|| SERVIZIO: "è un"
 
     SERVIZIOCOMMERCIALE ||--|| SERVIZIO: "è un"
-    SERVIZIOCOMMERCIALE ||--o| RISTORANTE: "composto"
-    SERVIZIOCOMMERCIALE ||--o| NEGOZIO: "comprende"
     
-    LOUNGE ||--|| SERVIZIO: "è un"
+    RISTORANTE ||--|| SERVIZIOCOMMERCIALE: "è un"
+    NEGOZIO ||--|| SERVIZIOCOMMERCIALE: "è un"
+    LOUNGE ||--|| SERVIZIOCOMMERCIALE: "è un"
 
     PARCHEGGIO ||--|| SERVIZIO: "è un"
 
