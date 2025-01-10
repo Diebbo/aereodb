@@ -53,7 +53,7 @@ Per quello che riguarda i voli cargo, si vogliono memorizzare numero di volo, da
 
 La base di dati deve inoltre tenere traccia di tutti i dipendenti, distinguendo tra lavoratori degli aeroporti e lavoratori delle compagnie aeree/logistiche. I lavoratori presentano generalità uguali a quelle dei passeggeri, ma si vuole memorizzare anche dove lavorano, il ruolo che essi ricoprono e il loro stipendio.
 
-Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguardanti le lounge, i parcheggi, i ristoranti e i negozi. Delle lounge si vuole mantenere la compagnia aerea che la mette a disposizione ed i posti disponibili. Dei parcheggi si vuole memorizzare l'ubicazione, il numero di posti disponibili, il costo orario ed il numero di posti occupati. Sarà inoltre necessario salvare tutti i servizi di trasporto che collegano l'aeroporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche. Dei ristoranti e dei negozi si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. Per tutti i servizi è cruciale memorizzare i dipendenti.  I servizi di sicurezza devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio, il tempo medio di attesa e il numero di addetti, facendo distinzione tra addetti di sicurezza e addetti di controllo.
+Tra i servizi offerti dagli aeroporti si vuole memorizzare informazioni riguardanti le lounge, i parcheggi, i ristoranti e i negozi. Delle lounge si vuole mantenere la compagnia aerea che la mette a disposizione ed i posti disponibili. Dei parcheggi si vuole memorizzare l'ubicazione, il numero di posti disponibili, il costo orario ed il numero di posti occupati. Sarà inoltre necessario salvare tutti i servizi di trasporto che collegano l'aeroporto ai servizi esterni ad esso ed alle ulteriori infrastrutture urbanistiche. Dei ristoranti e dei negozi si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. Per tutti i servizi è cruciale memorizzare i dipendenti.  I servizi di sicurezza devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio, il tempo medio di attesa e il numero di addetti richiesti per farlo operare.
 
 ### Glossario dei termini
 
@@ -135,7 +135,7 @@ Sarà inoltre necessario salvare tutti i **servizi di trasporto** che collegano 
 
 Dei **ristoranti** e dei **negozi** si vuole memorizzare il nome e il tipo di cucina o merce venduta. Gli esercizi commerciali possono essere gestiti da terzi, in tal caso si vuole memorizzare il nome del gestore. 
 
-I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio, il tempo medio di attesa e il numero di addetti, facendo distinzione tra addetti di sicurezza e addetti di controllo.
+I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisamente, si vuole memorizzare il nome del servizio, il tempo medio di attesa e il numero di addetti richiesti per farlo operare.
 
 ### Specifica operazioni
 
@@ -299,7 +299,7 @@ erDiagram
         float spessore
         enum stato "disperso, danneggiato o integro"
         string descrizione
-        bool isAnimale
+        bool animale
     }
     DOCUMENTO {
         enum tipo PK
@@ -445,7 +445,7 @@ erDiagram
         float spessore
         enum stato "disperso, danneggiato o integro"
         string descrizione
-        bool isAnimale
+        bool animale
     }
     DIPENDENTE {
         string matricola PK
@@ -527,11 +527,11 @@ erDiagram
 | PACCO | Contenitore per merci | id, peso, altezza, larghezza, spessore, contenuto, stato | id |
 | PERSONA | Individuo | codiceFiscale, nome, cognome, dataNascita, nazionalita, numeroTelefono, email | codiceFiscale |
 | PASSEGGERO | Cliente per una compagnia aerea, presente su almeno un volo | classeViaggio, numeroBiglietto, posto | numeroBiglietto |
-| BAGAGLIO | Oggetto trasportabile in una tratta aerea da una persona | id, peso, altezza, larghezza, spessore, stato, descrizione, isAnimale | id |
+| BAGAGLIO | Oggetto trasportabile in una tratta aerea da una persona | id, peso, altezza, larghezza, spessore, stato, descrizione, animale | id |
 | DIPENDENTE | Personale dell'aeroporto o di volo | matricola, dataAssunzione, stipendio | matricola |
 | DOCUMENTO | Documento di identità | tipo, numero, scadenza | numero, tipo |
 | SERVIZIO | Servizio aeroportuale | id, nome, descrizione, locazione | id |
-| SERVIZIOSICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | tempoMedioAttesa, numeroAddetti | " |
+| SERVIZIOSICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | tempoMedioAttesa, numeroAddettiRichiesti | " |
 | SERVIZIOTRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | tipo, linea, costoPerPersona | " |
 | SERVIZIOCOMMERCIALE | Attività interne all'aeroporto come ristorazione, negozi o lounge | nome, tipo, gestore | " |
 | PARCHEGGIO | Area di sosta per veicoli | ubicazione, postiDisponibili, costoOrario, postiOccupati | ubicazione |
@@ -576,22 +576,22 @@ erDiagram
 | Concetto | Tipo | Volume |
 | --------------- | --------------- | --------------- |
 | Aeroporto(Italia) | E | 126 |
-| Aereo | E | 100 |
+| Aereo | E | 1.000 |
 | Volo | E | 10.000 |
-| Compagnia | E | 10 |
-| Persona | E | 100.000 |
-| Bagaglio | E | 40.000 |
-| Servizio | E | 300 |
+| Compagnia | E | 120 |
+| Persona | E | 3.700.000 |
+| Bagaglio | E | 6.000.000 |
+| Servizio | E | 10.000 |
 | ServizioSicurezza | E | 126 |
 | Parcheggio | E | 140 |
 | ServizioTrasporto | E | 100 |
 | ServizioCommerciale | E | 200 |
-| Ristorante | E | 250 |
-| Negozi | E | 230 |
+| Ristorante | E | 5.000 |
+| Negozi | E | 4.000 |
 | Lounge | E | 90 |
-| Dipendente | E | 30.000 |
-| Documento | E | 20.100 |
-| Passeggero | E | 1.000.000 |
+| Dipendente | E | 60.000 |
+| Documento | E | 5.000.000 |
+| Passeggero | E | 3.650.000 all'anno |
 
 #### *Tavola delle operazioni*
 
@@ -603,7 +603,7 @@ erDiagram
 | Nuovo aereo                             | Inserimento  | 3 all'anno                                |
 | Nuovo passeggero                        | Inserimento  | 10.000 al giorno (circa 3.650.000 all'anno) |
 | Nuovo lavoratore                        | Inserimento  | 100 al mese (circa 1.200 all'anno)        |
-| Nuovo bagaglio                          | Inserimento  | 7 miliardi all'anno                       |
+| Nuovo bagaglio                          | Inserimento  | 7 milioni all'anno                       |
 | Nuova compagnia aerea                   | Inserimento  | 1 all'anno                                |
 | Nuova compagnia logistica               | Inserimento  | 1 all'anno                                |
 | **Modifiche**                           |              |                                           |
@@ -612,14 +612,14 @@ erDiagram
 | Servizio di trasporto                   | Modifica     | 30 al mese                                |
 | Volo (ritardo, cancellazione, cambio)   | Modifica     | 5% dei voli giornalieri (~37 al giorno)   |
 | Documenti di identità                   | Modifica     | 1.000 al mese                             |
-| Stato bagaglio                          | Modifica     | 1% dei bagagli (circa 70 milioni all'anno)|
+| Stato bagaglio                          | Modifica     | 1% dei bagagli (~70.000 all'anno)|
 | Stipendio lavoratore                    | Modifica     | 10.000 all'anno                           |
 | **Cancellazioni**                       |              |                                           |
 | Smantellamento aereo                    | Cancellazione| 1 ogni 5 anni                             |
 | Cancellazione volo                      | Cancellazione| 1% dei voli (circa 100 al giorno)         |
 | Invalidità documenti di identità        | Cancellazione| 100 al mese                               |
 | Licenziamento lavoratore                | Cancellazione| 50 al mese                                |
-| Smarrimento bagaglio                    | Cancellazione| 0,1% dei bagagli (~7 milioni all'anno)    |
+| Smarrimento bagaglio                    | Cancellazione| 0,1% dei bagagli (~7.000 all'anno)    |
 | **Ricerche**                            |              |                                           |
 | Voli in partenza                        | Ricerca      | 1.000 al giorno                           |
 | Voli in arrivo                          | Ricerca      | 1.000 al giorno                           |
@@ -627,12 +627,293 @@ erDiagram
 | Lavoratori compagnie aeree              | Ricerca      | 200 al giorno                             |
 | Lavoratori compagnie logistiche         | Ricerca      | 100 al giorno                             |
 | Passeggeri                              | Ricerca      | 10.000 al giorno                          |
-| Bagagli                                 | Ricerca      | 1% dei bagagli giornalieri (~700.000)     |
+| Bagagli                                 | Ricerca      | 1% dei bagagli giornalieri (~70.000)     |
 | Merci trasportate                       | Ricerca      | 1.000 al giorno                           |
 | Servizi aeroportuali                    | Ricerca      | 100 al giorno                             |
 | Servizi di sicurezza                    | Ricerca      | 50 al giorno                              |
 | Servizi di trasporto                    | Ricerca      | 30 al giorno                              |
 | Stato parcheggi                         | Ricerca      | 200 al giorno                             |
+
+### Ristruzione dello schema ER
+
+**Ridondanze e normalizzazione** 
+
+Il database non presenta ridondanze.
+
+Al fine di migliorare le presatazioni del databse verranno quindi introdotte le seguenti modifiche:
+- Passeggeri: dato l'elevato numero di inserimenti e ricerche. Verrà introdotta all'interno della tabella passeggero le informazioni relative alla persona, in modo da evitare di dover fare join tra le due tabelle.
+
+**Tavola accessi in presenza di ridondanze** 
+
+Inserimento di un passeggero:
+| Tabella | Operazione | Accessi |
+| --------------- | --------------- | --------------- |
+| PERSONA | S | 1 |
+| PASSEGGERO | S | 1 |
+
+Ricerca di un passeggero:
+| Tabella | Operazione | Accessi |
+| --------------- | --------------- | --------------- |
+| PERSONA | L | 1 |
+
+**Tavola accessi in assenza di ridondanze** 
+
+Inserimento di un passeggero:
+| Tabella | Operazione | Accessi |
+| --------------- | --------------- | --------------- |
+| PASSEGGERO | S | 1 |
+| PERSONA | S | 1 |
+
+Ricerca di un passeggero:
+| Tabella | Operazione | Accessi |
+| --------------- | --------------- | --------------- |
+| PASSEGGERO | L | 1 |
+| PERSONA | L | 1 |
+
+Contatndo che circa 10.000 passeggeri vengono visualizzati al giorno, calcoliamo le differenze di prestazioni:
+Consideriamo le enormi dimensione della tabella "PERSONA" e teniamo conto del fatto che la ridondanza dimezzerebbe i tempi in lettura. Tuttavia, la ridondanza comporterebbe un aumento dei tempi in scrittura, in quanto ogni modifica a un passeggero comporterebbe una modifica anche alla tabella "PERSONA". Inoltre, la ridondanza comporterebbe un aumento dello spazio occupato in memoria. Pertanto, la scelta migliore è quella di mantenere la struttura normalizzata.
+
+Proviamo invece a calcolare il numero di passeggeri che appartengono ad un volo:
+
+**Tabella con ridondanze** 
+Inserimento di un passeggero:
+| Tabella | Operazione | Accessi |
+| --------------- | --------------- | --------------- |
+| PASSEGGERO | S | 1 |
+| PERSONA | S | 1 |
+| VOLO | S | 1 |
+
+Ricerca di un volo:
+| Tabella | Operazione | Accessi |
+| --------------- | --------------- | --------------- |
+| VOLO | L | 1 |
+
+**Tabella senza ridondanze**
+Inserimento di un passeggero:
+| Tabella | Operazione | Accessi |
+| --------------- | --------------- | --------------- |
+| PASSEGGERO | S | 1 |
+| PERSONA | S | 1 |
+
+Ricerca di un volo:
+| Tabella | Operazione | Accessi |
+| --------------- | --------------- | --------------- |
+| VOLO | L | 1 |
+| PASSEGGERO | L | N |
+
+Data un elevatissimo numero di passeggeri, e una necessità di ricerca di voli molto alta giorno per giorno, la scelta di mantenere la ridondanza ridurrebbe il tempo in lettura, migliorando le prestazioni del database.
+
+
+### Gestione delle gerarchie
+
+Nel sistema sono presenti le seguenti gerarchie:
+- Persona: dipendente, passeggero
+- Servizio: servizio commerciale, servizio di sicurezza, servizio di trasporto
+
+L'entià persona è stata suddivisa in due sotto-entità: dipendente e passeggero, entrambe con riferimento all'entità padre. Questa scelta è stata fatta per differenziare i due tipi di persone presenti nel sistema, in modo da poter memorizzare informazioni specifiche per ciascuna di esse.
+
+Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizio di sicurezza e servizio di trasporto. In questo caso si è deciso, anche in questo caso, di differenziare le relazioni mantenendo un riferimento all'entità padre.
+
+### Nomralizzazione
+
+**Associazioni**: le associazioni si prensetano in forma normale di Boyece-codd.
+
+**Entità** 
+
+| Nome | Commento |
+| --------------- | --------------- |
+| AEROPORTO | Non esistono dipendenze non banali tra gli attributi. |
+| AEREO | Presenta una dipendeza funzionale tra il tipo di aereo e il numero di posti passeggeri, postiPersonale e volumeStiva. |
+| VOLO | Non esistono dipendenze non banali tra gli attributi. |
+| COMPAGNIA | Non esistono dipendenze non banali tra gli attributi. |
+| PACCO | Peso dipende da contenuto, contenuto dipende da stato (?) |
+| PERSONA | Non esistono dipendenze non banali tra gli attributi. |
+| PASSEGGERO | Non esistono dipendenze non banali tra gli attributi. |
+| BAGAGLIO | Peso dipende da descrizione o se si tratta di un animale. |
+| DIPENDENTE | Non esistono dipendenze non banali tra gli attributi. |
+| DOCUMENTO | Non esistono dipendenze non banali tra gli attributi. |
+| SERVIZIO_SICUREZZA | Non esistono dipendenze non banali tra gli attributi. |
+| SERVIZIO_COMMERCIALE | Non esistono dipendenze non banali tra gli attributi. |
+| PARCHEGGIO | Non esistono dipendenze non banali tra gli attributi. |
+| RISTORANTE | Non esistono dipendenze non banali tra gli attributi. |  
+| NEGOZIO | Non esistono dipendenze non banali tra gli attributi. |
+| LOUNGE | Non esistono dipendenze non banali tra gli attributi. |
+| SERVIZIO_TRASPORTO | Non esistono dipendenze non banali tra gli attributi. |
+
+modifiche alla struttura:
+```mermaid
+erDiagram
+    AEROPORTO }|--|{ SERVIZIO: fornisce
+
+    VOLO }|--|| AEROPORTO: partenza
+    VOLO }|--|| AEROPORTO: arrivo
+    VOLO }|--|| AEREO: uso_aereo
+    VOLO }|--o{ PASSEGGERO: trasporto_passeggeri
+    VOLO }|--o{ PACCO: trasporto_cargo
+
+    COMPAGNIA ||--|{ VOLO: opera
+    COMPAGNIA ||--|{ AEREO: possesso
+
+    PASSEGGERO ||--|| PERSONA: "è una"
+    PASSEGGERO ||--o{ BAGAGLIO: trasporto_bagaglio
+    PASSEGGERO }|--|{ COMPAGNIA: clientela
+
+    DOCUMENTO }|--|| PERSONA: identificazione
+
+    DIPENDENTE ||--|| PERSONA: "è una"
+    DIPENDENTE }|--o{ VOLO: lavoro_volo
+    DIPENDENTE }|--o{ SERVIZIO: lavoro_servizio
+
+    SERVIZIOSICUREZZA ||--|| SERVIZIO: "è un"
+
+    SERVIZIOCOMMERCIALE ||--|| SERVIZIO: "è un"
+    
+    RISTORANTE ||--|| SERVIZIOCOMMERCIALE: "è un"
+    NEGOZIO ||--|| SERVIZIOCOMMERCIALE: "è un"
+    LOUNGE ||--|| SERVIZIOCOMMERCIALE: "è un"
+    COMPAGNIA ||--|| LOUNGE: offre
+
+    PARCHEGGIO ||--|| SERVIZIO: "è un"
+
+    SERVIZIOTRASPORTO ||--|| SERVIZIO: "è un"
+    SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: collega
+
+    AEROPORTO {
+        string IATA PK
+        string ICAO PK
+        string nome
+        string provincia
+        string stato
+        int postiAereoPasseggeri
+        int postiAereoCargo
+    }
+    VOLO {
+        string numeroVolo PK
+        date partenza
+        date arrivo
+    }
+    AEREO {
+        enum tipologia PK "passeggeri o cargo"
+        string modello
+        string numeroDiSerie PK
+        int postiPasseggeri
+        int postiPersonale
+        int volumeStiva
+    }
+    COMPAGNIA {
+        string nome PK
+        string sede
+    }
+    PACCO {
+        string id PK
+        float peso
+        float altezza
+        float larghezza
+        float spessore
+        string contenuto
+        enum stato "disperso, danneggiato o integro"
+    }
+    PERSONA {
+        string codiceFiscale PK
+        string nome
+        string cognome
+        date dataNascita
+        string nazionalita
+        string numeroTelefono
+        string email
+    }
+    PASSEGGERO {
+        string classeViaggio
+        string numeroBiglietto PK
+        string posto
+    }
+    BAGAGLIO {
+        string id PK
+        float peso
+        float altezza
+        float larghezza
+        float spessore
+        enum stato "disperso, danneggiato o integro"
+        string descrizione
+        bool animale
+    }
+    DIPENDENTE {
+        string matricola PK
+        date dataAssunzione
+        float stipendio
+    }
+    DOCUMENTO {
+        enum tipo PK
+        string numero PK
+        date scadenza
+    }
+    SERVIZIO {
+        string id PK
+        string nome
+        string descrizione
+        string locazione
+    }
+    SERVIZIOSICUREZZA {
+        int tempoMedioAttesa
+        int numeroAddetti
+    }
+    SERVIZIOTRASPORTO {
+        enum tipo "treno, autobus, metro, taxi"
+        string linea
+        float costoPerPersona
+    }
+    SERVIZIOCOMMERCIALE {
+        string nome
+        enum tipo "ristorante, bar, negozio"
+        string gestore
+    }
+    PARCHEGGIO {
+        string ubicazione PK
+        int postiDisponibili
+        float costoOrario
+        int postiOccupati
+    }
+    RISTORANTE {
+        string tipoCucina
+    }
+    NEGOZIO {
+        string tipoMerce
+    }
+    LOUNGE {
+        int postiDisponibili
+    }
+
+
+    AEROPORTO ||--o{ VOLO : "ospita"
+    AEROPORTO ||--o{ SERVIZIO : "fornisce"
+    VOLO }o--|| AEREO : "utilizza"
+    VOLO }o--|| COMPAGNIA : "operato da"
+    VOLO }o--|| PACCO : "trasporta"
+    VOLO }o--|| PASSEGGERO : "trasporta"
+    AEREO }o--|| COMPAGNIA : "di proprietà di"
+    DIPENDENTE }o--|| COMPAGNIA : "lavora per"
+    DIPENDENTE }o--|| VOLO : "lavora per"
+    DIPENDENTE }o--|| SERVIZIO : "lavora per"
+    DIPENDENTE ||--o{ PERSONA : "è un"
+    DIPENDENTE }o--|| DOCUMENTO : "possiede"
+    DOCUMENTO }o--|| PASSEGGERO : "appartiene a"
+    PASSEGGERO }o--|| PERSONA : "è"
+    BAGAGLIO }o--|| PASSEGGERO : "appartiene a"
+    SERVIZIO ||--o{ EROGAZIONE_SERVIZIO : "viene erogato"
+    PASSEGGERO ||--o{ EROGAZIONE_SERVIZIO : "usufruisce"
+    SERVIZIOSICUREZZA }o--|| SERVIZIO : "è un"
+    SERVIZIOTRASPORTO }o--|| SERVIZIO : "è un"
+    RISTORANTE }o--|| SERVIZIO : "è un"
+    NEGOZIO }o--|| SERVIZIO : "è un"
+    LOUNGE }o--|| SERVIZIO : "è un"
+    SERVIZIOCOMMERCIALE }o--|| SERVIZIO : "è un"
+    PARCHEGGIO }o--|| AEROPORTO : "appartiene a"
+```
+
+### Traduzione verso il modello logico
+
+| Traduzione | Vincoli di riferimento | 
+| --------------- | --------------- |
 
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
