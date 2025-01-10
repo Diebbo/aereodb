@@ -187,7 +187,8 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 
 ### Identificazione delle entità e associazioni
 
-Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. In un secondo momento sono state identificate ulteriori entità, quali passeggero e dipendente, specializzazioni di persona, e documento, bagaglio e pacco. Oltre a ciò sono stati suddivisi i servizi in sicurezza, trasporto, parcheggi e commerciali (lounge, ristoranti, negozi).  Dall'entità volo sono state estratte due associazioni: trasportoPasseggeri verso i passeggeri e trasportoCargo verso i pacchi. Tra compagnia e passeggero è stata identificata un'associazione di clientela. A partire da dipendente sono state trovate due associazioni verso le due possibilità di lavoro, ovvero volo e servizio.
+Sono state identificate inizialmente le entità principali: aeroporto, aereo, volo, compagnia, persona, servizio. In un secondo momento sono state identificate ulteriori entità, quali passeggero e dipendente, specializzazioni di persona, e documento, bagaglio e pacco. Oltre a ciò sono stati suddivisi i servizi in sicurezza, trasporto, parcheggi e commerciali (lounge, ristoranti, negozi).  
+Dall'entità volo sono state estratte due associazioni: trasportoPasseggeri verso i passeggeri e trasportoCargo verso i pacchi. Tra compagnia e passeggero è stata identificata un'associazione di clientela. A partire da dipendente sono state trovate due associazioni verso le due possibilità di lavoro, ovvero volo e servizio.
 
 ### Scheletro dello schema ER (approccio top-down)
 
