@@ -48,9 +48,9 @@ CREATE TABLE aereo (
     postiPasseggeri INT NOT NULL,
     postiPersonale INT NOT NULL,
     volumeStiva INT NOT NULL,
-    nomeCompagnia VARCHAR(50) NOT NULL,
+    nomeCompagnia VARCHAR(50),
     PRIMARY KEY (numeroDiSerie),
-    FOREIGN KEY (nomeCompagnia) REFERENCES compagnia(nome)
+    FOREIGN KEY (nomeCompagnia) REFERENCES compagnia(nome) ON DELETE SET NULL
 );
 
 CREATE TABLE volo (
@@ -63,22 +63,23 @@ CREATE TABLE volo (
     IATAPartenza CHAR(3) NOT NULL,
     ICAOPartenza CHAR(4) NOT NULL,
     PRIMARY KEY (numeroVolo),
+
     FOREIGN KEY (IATAArrivo, ICAOArrivo) REFERENCES aereoporto(IATA, ICAO),
     FOREIGN KEY (IATAPartenza, ICAOPartenza) REFERENCES aereoporto(IATA, ICAO)
 );
 
 CREATE TABLE pacco (
     id INT NOT NULL AUTO_INCREMENT,
-    peso INT NOT NULL,
+    peso DECIMAL(5, 2) NOT NULL,
     altezza INT NOT NULL,
     larghezza INT NOT NULL,
     spessore INT NOT NULL,
     contenuto VARCHAR(50) NOT NULL,
-    stato VARCHAR(50) NOT NULL,
+    stato ENUM('integro', 'danneggiato', 'disperso') DEFAULT 'integro',
     numeroVolo CHAR(6) NOT NULL,
     codiceFiscale CHAR(16) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo)
+    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE
 );
 
 
@@ -88,16 +89,16 @@ CREATE TABLE passeggero (
     posto VARCHAR(50) NOT NULL,
     numeroVolo CHAR(6) NOT NULL,
     PRIMARY KEY (numeroBiglietto),
-    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo)
+    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE
 );
 
 CREATE TABLE bagaglio (
     id INT NOT NULL AUTO_INCREMENT,
-    peso INT NOT NULL,
+    peso DECIMAL(5,2) NOT NULL,
     altezza INT NOT NULL,
     larghezza INT NOT NULL,
     spessore INT NOT NULL,
-    stato VARCHAR(50) NOT NULL,
+    stato ENUM('integro', 'danneggiato', 'disperso') DEFAULT 'integro',
     descrizione VARCHAR(50) NOT NULL,
     animale BOOLEAN NOT NULL,
     numeroBiglietto CHAR(6) NOT NULL,
@@ -139,8 +140,8 @@ CREATE TABLE servizio (
 );
 
 CREATE TABLE servizio_sicurezza (
-    tempoMedioAttesa INT NOT NULL,
-    numeroAddettiRichiesti INT NOT NULL,
+    tempoMedioAttesa INT,
+    numeroAddettiRichiesti INT CHECK (numeroAddettiRichiesti > 0),
     id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id) REFERENCES servizio(id)
@@ -194,10 +195,52 @@ CREATE TABLE servizio_trasporto (
     linea VARCHAR(50) NOT NULL,
     costoPerPersona DECIMAL(5, 2) NOT NULL,
     id INT NOT NULL,
-    latitudineParcheggio DECIMAL(10, 8) NOT NULL,
-    longitudineParcheggio DECIMAL(10, 8) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id),
-    FOREIGN KEY (longitudineParcheggio, latitudineParcheggio) REFERENCES parcheggio(longitudine, latitudine)
+    FOREIGN KEY (id) REFERENCES servizio(id)
 );
 
+CREATE TABLE trasporto_parcheggio (
+    id INT NOT NULL,
+    longitudine DECIMAL(10, 8) NOT NULL,
+    latitudine DECIMAL(10, 8) NOT NULL,
+    costo DECIMAL(5, 2) NOT NULL,
+    PRIMARY KEY (id, longitudine, latitudine),
+    FOREIGN KEY (id) REFERENCES servizio_trasporto(id),
+    FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine),
+    CHECK (costo >= 0)
+);
+
+CREATE TABLE lavoro_servizio (
+    matricola CHAR(6) NOT NULL,
+    id INT NOT NULL,
+    mansione VARCHAR(50) NOT NULL,
+    dataInizio DATE NOT NULL,
+    dataFine DATE NOT NULL,
+    PRIMARY KEY (matricola, id),
+    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
+    FOREIGN KEY (id) REFERENCES servizio(id),
+    CHECK (dataInizio <= dataFine)
+);
+
+CREATE TABLE lavoro_volo(
+    matricola CHAR(6) NOT NULL,
+    numeroVolo CHAR(6) NOT NULL,
+    mansione VARCHAR(50) NOT NULL,
+    dataInizio DATE NOT NULL,
+    dataFine DATE NOT NULL,
+    PRIMARY KEY (matricola, numeroVolo),
+    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
+    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE,
+    CHECK (dataInizio <= dataFine)
+);
+
+CREATE TABLE usufruisce (
+    codiceFiscale CHAR(16) NOT NULL,
+    id INT NOT NULL,
+    data DATE NOT NULL,
+    costo DECIMAL(5, 2) NOT NULL,
+    PRIMARY KEY (codiceFiscale, id),
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale),
+    FOREIGN KEY (id) REFERENCES servizio(id),
+    CHECK (costo >= 0)
+);

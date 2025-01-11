@@ -547,8 +547,8 @@ erDiagram
 | PARTENZA | Associa i voli a un aeroporto di partenza | VOLO(1,1) - AEROPORTO(1,N) | - |
 | ARRIVO | Associa i voli a un aeroporto di arrivo | VOLO(1,1) - AEROPORTO(1,N) | - |
 | USO_AEREO | Associa i voli a un aereo | VOLO(1,1) - AEREO(1,N) | - |
-| TRASPORTO_PASSEGGERI | Associa i passeggeri ai voli | VOLO(0,N) - PASSEGGERO(1,N) | - |
-| TRASPORTO_CARGO | Associa i pacchi ai voli | VOLO(0,N) - PACCO(1,N) | carico (string) |
+| TRASPORTO_PASSEGGERI | Associa i passeggeri ai voli | VOLO(0,N) - PASSEGGERO(1,1) | - |
+| TRASPORTO_CARGO | Associa i pacchi ai voli | VOLO(0,N) - PACCO(1,1) | carico (string) |
 | OPERA | Associa una compagnia ai voli | COMPAGNIA(1,N) - VOLO(1,1) | - |
 | POSSESSO | Associa una compagnia agli aerei | COMPAGNIA(1,N) - AEREO(1,1) | - |
 | TRASPORTO_BAGAGLIO | Associa i bagagli a un passeggero | BAGAGLIO(1,1) - PASSEGGERO(0,N) | - |
@@ -641,7 +641,7 @@ erDiagram
 Il database presenta le seguenti ridondanze:
 - Compagnia: il numero di km viaggiati da un passeggero con una compagnia aerea è ridondante, in quanto può essere calcolato a partire dai voli effettuati dal passeggero con quella compagnia.
 
-Al fine di migliorare le presatazioni del databse verranno quindi introdotte le seguenti modifiche:
+Al fine di migliorare le prestazioni del database verranno quindi introdotte le seguenti modifiche:
 - Passeggeri: dato l'elevato numero di inserimenti e ricerche. Verrà introdotta all'interno della tabella passeggero le informazioni relative alla persona, in modo da evitare di dover fare join tra le due tabelle.
 
 **Tavola accessi in presenza di ridondanze** 
@@ -949,8 +949,12 @@ erDiagram
 | RISTORANTE | tipoCucina, <ins>*id*</ins> |
 | NEGOZIO | tipoMerce, <ins>*id*</ins> |
 | LOUNGE | postiDisponibili, <ins>*id*</ins>, *nomeCompagnia*|
-| SERVIZIO_TRASPORTO | tipo, linea, costoPerPersona, <ins>*id*</ins>, *latitudineParcheggio, longitudineParcheggio* |
+| SERVIZIO_TRASPORTO | tipo, linea, costoPerPersona, <ins>*id*</ins> |
+| TRASPORTO_PARCHEGGIO | orari, <ins>*idServizioTrasporto, longitudineParcheggio, latitudineParcheggio*</ins> |
 | SERVIZIO | <ins>id</ins>, nome, descrizione, locazione, *IATA, ICAO* |
+| LAVORO_SERVIZIO | oraInizio, oraFine, mansione, <ins>*matricola, id*</ins> |
+| LAVORO_VOLO | oraInizio, oraFine, mansione, <ins>*matricola, numeroVolo*</ins> |
+| USUFRUISCE | <ins>*numeroBiglietto, id*</ins>, data, costo |
 
 | Traduzione | Vincoli di riferimento |
 | --------------- | --------------- |
@@ -970,9 +974,12 @@ erDiagram
 | RISTORANTE | id -> SERVIZIO.id |
 | NEGOZIO | id -> SERVIZIO.id |
 | LOUNGE | id -> SERVIZIO.id, nomeCompagnia -> COMPAGNIA.nome |
-| SERVIZIO_TRASPORTO | id,-> SERVIZIO.id, latitudineParcheggio, longitudineParcheggio -> PARCHEGGIO.latitudine, PARCHEGGIO.longitudine|
+| SERVIZIO_TRASPORTO | id -> SERVIZIO.id |
+| TRASPORTO_PARCHEGGIO | id -> SERVIZIO_TRASPORTO.id, latitudineParcheggio, longitudineParcheggio -> PARCHEGGIO.latitudine, PARCHEGGIO.longitudine|
 | SERVIZIO | IATA, ICAO -> AEROPORTO.IATA, AEROPORTO.ICAO |
-
+| LAVORO_SERVIZIO | matricola, id -> DIPENDENTE.matricola, SERVIZIO.id |
+| LAVORO_VOLO | matricola, numeroVolo -> DIPENDENTE.matricola, VOLO.numeroVolo |
+| USUFRUISCE | numeroBiglietto, id -> PASSEGGERO.numeroBiglietto, SERVIZIO.id |
 
 ## Codifica SQL
 
