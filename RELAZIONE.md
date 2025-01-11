@@ -634,9 +634,9 @@ erDiagram
 | Servizi di trasporto                    | Ricerca      | 30 al giorno                              |
 | Stato parcheggi                         | Ricerca      | 200 al giorno                             |
 
-### Ristruzione dello schema ER
+### Ristrutturazione schema concettuale
 
-**Ridondanze e normalizzazione** 
+#### *Ridondanze e normalizzazione* 
 
 Il database presenta le seguenti ridondanze:
 - Compagnia: il numero di km viaggiati da un passeggero con una compagnia aerea è ridondante, in quanto può essere calcolato a partire dai voli effettuati dal passeggero con quella compagnia.
@@ -722,7 +722,7 @@ Data un elevatissimo numero di passeggeri, e una necessità di ricerca di voli m
 Non essendo presente alcun tipo di ricerca Passeggeri associati a compagnia, la ridondanza non comporterebbe alcun beneficio in termini di prestazioni. Pertanto, la scelta migliore è quella di rimuoverla.
 
 
-### Gestione delle gerarchie
+#### *Gestione delle gerarchie*
 
 Nel sistema sono presenti le seguenti gerarchie:
 - Persona: dipendente, passeggero
@@ -734,14 +734,14 @@ Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizi
 
 ### Normalizzazione
 
-**Associazioni**: le associazioni si presentano in forma normale di Boyece-codd.
+**Associazioni**: le associazioni si presentano in forma normale di Boyce-Codd.
 
 **Entità** 
 
 | Nome | Commento |
 | --------------- | --------------- |
 | AEROPORTO | Non esistono dipendenze non banali tra gli attributi. |
-| AEREO | Non esistono dipenze funzionali non banali tra gli attrivbuti. |
+| AEREO | Non esistono dipendenze funzionali non banali tra gli attributi. |
 | VOLO | Non esistono dipendenze non banali tra gli attributi. |
 | COMPAGNIA | Non esistono dipendenze non banali tra gli attributi. |
 | PACCO | Peso dipende da contenuto, contenuto dipende da stato (?) |
@@ -935,7 +935,7 @@ erDiagram
 | --------------- | --------------- |
 | AEROPORTO | <ins>IATA, ICAO</ins>, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | 
 | AEREO | <ins> numeroDiSerie</ins>, tipologia, modello, postiPasseggeri, postiPersonale, volumeStiva, *nomeCompagnia* |
-| VOLO | <ins>numeroVolo</ins>, partenza, arrivo, numeroBiglietti, *IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPArtenza* |
+| VOLO | <ins>numeroVolo</ins>, partenza, arrivo, numeroBiglietti, *IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPartenza* |
 | COMPAGNIA | <ins>nome</ins>, sede |
 | PACCO | <ins>id</ins>, peso, altezza, larghezza, spessore, contenuto, stato, *numeroVolo, codiceFiscale* |
 | PERSONA | <ins>codiceFiscale</ins>, nome, cognome, dataNascita, nazionalita, numeroTelefono, email |
@@ -945,7 +945,7 @@ erDiagram
 | DOCUMENTO | <ins>tipo, numero</ins>, scadenza, *numeroBiglietto*, *matricola* |
 | SERVIZIO_SICUREZZA | tempoMedioAttesa, numeroAddettiRichiesti, <ins>*id*<ins> |
 | SERVIZIO_COMMERCIALE | nome, tipo, gestore, <ins>*id*<ins> |
-| PARCHEGGIO | <ins>longitudine, latitudine</ins>, postiDisponibili, costoOrario, postiOccupati, *<ins>id</ins>*  |
+| PARCHEGGIO | <ins>longitudine, latitudine</ins>, postiDisponibili, costoOrario, postiOccupati, <ins>*id*</ins>  |
 | RISTORANTE | tipoCucina, <ins>*id*</ins> |
 | NEGOZIO | tipoMerce, <ins>*id*</ins> |
 | LOUNGE | postiDisponibili, <ins>*id*</ins>, *nomeCompagnia*|
@@ -960,7 +960,7 @@ erDiagram
 | --------------- | --------------- |
 | AEROPORTO | - |
 | AEREO | nomeCompagnia -> COMPAGNIA.nome |
-| VOLO | IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPArtenza -> AEROPORTO.IATA e AEROPORTO.ICAO |
+| VOLO | IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPartenza -> AEROPORTO.IATA e AEROPORTO.ICAO |
 | COMPAGNIA | - |
 | PACCO | numeroVolo -> VOLO.numeroVolo |
 | PERSONA | - |
@@ -983,6 +983,248 @@ erDiagram
 
 ## Codifica SQL
 
+### DDL
+
+```sql
+-- Create the database
+CREATE DATABASE aereodb;
+
+-- No deps
+CREATE TABLE aeroporto (
+    IATA CHAR(3) NOT NULL,
+    ICAO CHAR(4) NOT NULL,
+    nome VARCHAR(50) NOT NULL,
+    provincia VARCHAR(50) NOT NULL,
+    stato VARCHAR(50) NOT NULL,
+    postiAereoPasseggeri INT NOT NULL,
+    postiAereoCargo INT NOT NULL,
+    PRIMARY KEY (IATA, ICAO)
+);
+
+CREATE TABLE compagnia (
+    nome VARCHAR(50) NOT NULL,
+    sede VARCHAR(50) NOT NULL,
+    PRIMARY KEY (nome)
+);
+
+CREATE TABLE persona (
+    codiceFiscale CHAR(16) NOT NULL,
+    nome VARCHAR(50) NOT NULL,
+    cognome VARCHAR(50) NOT NULL,
+    dataNascita DATE NOT NULL,
+    nazionalita VARCHAR(50) NOT NULL,
+    numeroTelefono CHAR(10) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    PRIMARY KEY (codiceFiscale)
+);
+
+-- With deps
+
+CREATE TABLE aereo (
+    numeroDiSerie CHAR(10) NOT NULL,
+    tipologia VARCHAR(50) NOT NULL,
+    modello VARCHAR(50) NOT NULL,
+    postiPasseggeri INT NOT NULL,
+    postiPersonale INT NOT NULL,
+    volumeStiva INT NOT NULL,
+    nomeCompagnia VARCHAR(50),
+    PRIMARY KEY (numeroDiSerie),
+    FOREIGN KEY (nomeCompagnia) REFERENCES compagnia(nome) ON DELETE SET NULL
+);
+
+CREATE TABLE volo (
+    numeroVolo CHAR(6) NOT NULL,
+    partenza DATETIME NOT NULL,
+    arrivo DATETIME NOT NULL,
+    numeroBiglietti INT NOT NULL,
+    IATAArrivo CHAR(3) NOT NULL,
+    ICAOArrivo CHAR(4) NOT NULL,
+    IATAPartenza CHAR(3) NOT NULL,
+    ICAOPartenza CHAR(4) NOT NULL,
+    PRIMARY KEY (numeroVolo),
+
+    FOREIGN KEY (IATAArrivo, ICAOArrivo) REFERENCES aeroporto(IATA, ICAO),
+    FOREIGN KEY (IATAPartenza, ICAOPartenza) REFERENCES aeroporto(IATA, ICAO)
+);
+
+CREATE TABLE pacco (
+    id INT NOT NULL AUTO_INCREMENT,
+    peso DECIMAL(5, 2) NOT NULL,
+    altezza INT NOT NULL,
+    larghezza INT NOT NULL,
+    spessore INT NOT NULL,
+    contenuto VARCHAR(50) NOT NULL,
+    stato ENUM('integro', 'danneggiato', 'disperso') DEFAULT 'integro',
+    numeroVolo CHAR(6) NOT NULL,
+    codiceFiscale CHAR(16) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE
+);
+
+
+CREATE TABLE passeggero (
+    numeroBiglietto CHAR(6) NOT NULL,
+    classeViaggio VARCHAR(50) NOT NULL,
+    posto VARCHAR(50) NOT NULL,
+    numeroVolo CHAR(6) NOT NULL,
+    PRIMARY KEY (numeroBiglietto),
+    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE
+);
+
+CREATE TABLE bagaglio (
+    id INT NOT NULL AUTO_INCREMENT,
+    peso DECIMAL(5,2) NOT NULL,
+    altezza INT NOT NULL,
+    larghezza INT NOT NULL,
+    spessore INT NOT NULL,
+    stato ENUM('integro', 'danneggiato', 'disperso') DEFAULT 'integro',
+    descrizione VARCHAR(50) NOT NULL,
+    animale BOOLEAN NOT NULL,
+    numeroBiglietto CHAR(6) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (numeroBiglietto) REFERENCES passeggero(numeroBiglietto)
+);
+
+CREATE TABLE dipendente (
+    matricola CHAR(6) NOT NULL,
+    dataAssunzione DATE NOT NULL,
+    stipendio INT NOT NULL,
+    codiceFiscale CHAR(16) NOT NULL,
+    PRIMARY KEY (matricola),
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale),
+    CHECK (stipendio > 0)
+);
+
+CREATE TABLE documento (
+    tipo VARCHAR(50) NOT NULL,
+    numero VARCHAR(50) NOT NULL,
+    scadenza DATE NOT NULL,
+    numeroBiglietto CHAR(6),
+    matricola CHAR(6),
+    PRIMARY KEY (tipo, numero),
+    FOREIGN KEY (numeroBiglietto) REFERENCES passeggero(numeroBiglietto),
+    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
+    CHECK (numeroBiglietto IS NOT NULL OR matricola IS NOT NULL) -- At least one of the two must be not null
+);
+
+CREATE TABLE servizio (
+    id INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL,
+    descrizione VARCHAR(50) NOT NULL,
+    locazione VARCHAR(50) NOT NULL,
+    IATA CHAR(3) NOT NULL,
+    ICAO CHAR(4) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (IATA, ICAO) REFERENCES aeroporto(IATA, ICAO)
+);
+
+CREATE TABLE servizio_sicurezza (
+    tempoMedioAttesa INT,
+    numeroAddettiRichiesti INT CHECK (numeroAddettiRichiesti > 0),
+    id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE servizio_commerciale (
+    nome VARCHAR(50) NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    gestore VARCHAR(50) NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE parcheggio (
+    longitudine DECIMAL(10, 8) NOT NULL,
+    latitudine DECIMAL(10, 8) NOT NULL,
+    postiDisponibili INT NOT NULL,
+    costoOrario DECIMAL(5, 2) NOT NULL,
+    postiOccupati INT NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (longitudine, latitudine),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE ristorante (
+    tipoCucina VARCHAR(50) NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE negozio (
+    tipoMerce VARCHAR(50) NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE lounge (
+    postiDisponibili INT NOT NULL,
+    id INT NOT NULL,
+    nomeCompagnia VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id),
+    FOREIGN KEY (nomeCompagnia) REFERENCES compagnia(nome)
+);
+
+CREATE TABLE servizio_trasporto (
+    tipo VARCHAR(50) NOT NULL,
+    linea VARCHAR(50) NOT NULL,
+    costoPerPersona DECIMAL(5, 2) NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE trasporto_parcheggio (
+    id INT NOT NULL,
+    longitudine DECIMAL(10, 8) NOT NULL,
+    latitudine DECIMAL(10, 8) NOT NULL,
+    costo DECIMAL(5, 2) NOT NULL,
+    PRIMARY KEY (id, longitudine, latitudine),
+    FOREIGN KEY (id) REFERENCES servizio_trasporto(id),
+    FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine),
+    CHECK (costo >= 0)
+);
+
+CREATE TABLE lavoro_servizio (
+    matricola CHAR(6) NOT NULL,
+    id INT NOT NULL,
+    mansione VARCHAR(50) NOT NULL,
+    dataInizio DATE NOT NULL,
+    dataFine DATE NOT NULL,
+    PRIMARY KEY (matricola, id),
+    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
+    FOREIGN KEY (id) REFERENCES servizio(id),
+    CHECK (dataInizio <= dataFine)
+);
+
+CREATE TABLE lavoro_volo(
+    matricola CHAR(6) NOT NULL,
+    numeroVolo CHAR(6) NOT NULL,
+    mansione VARCHAR(50) NOT NULL,
+    dataInizio DATE NOT NULL,
+    dataFine DATE NOT NULL,
+    PRIMARY KEY (matricola, numeroVolo),
+    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
+    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE,
+    CHECK (dataInizio <= dataFine)
+);
+
+CREATE TABLE usufruisce (
+    codiceFiscale CHAR(16) NOT NULL,
+    id INT NOT NULL,
+    data DATE NOT NULL,
+    costo DECIMAL(5, 2) NOT NULL,
+    PRIMARY KEY (codiceFiscale, id),
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale),
+    FOREIGN KEY (id) REFERENCES servizio(id),
+    CHECK (costo >= 0)
+);
+```
+
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
 - [voli in partenza al secondo](https://www.mytripmap.it/quanti-aerei-ci-sono-ora-in-volo-mappa-in-tempo-reale/)
@@ -990,4 +1232,3 @@ erDiagram
 - [ER](https://mermaid.js.org/syntax/entityRelationshipDiagram.html)
 - [stime in tempo reale](https://assaeroporti.com/statistiche/)
 - [numero volo](https://airadvisor.com/it/blog/la-guida-per-decifrare-e-capire-l-importanza-del-numero-del-tuo-volo)
-
