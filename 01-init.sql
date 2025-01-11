@@ -10,7 +10,7 @@ CREATE DATABASE aereodb;
 USE aereodb;
 
 -- No deps
-CREATE TABLE aereoporto (
+CREATE TABLE aeroporto (
     IATA CHAR(3) NOT NULL,
     ICAO CHAR(4) NOT NULL,
     nome VARCHAR(50) NOT NULL,
@@ -64,8 +64,8 @@ CREATE TABLE volo (
     ICAOPartenza CHAR(4) NOT NULL,
     PRIMARY KEY (numeroVolo),
 
-    FOREIGN KEY (IATAArrivo, ICAOArrivo) REFERENCES aereoporto(IATA, ICAO),
-    FOREIGN KEY (IATAPartenza, ICAOPartenza) REFERENCES aereoporto(IATA, ICAO)
+    FOREIGN KEY (IATAArrivo, ICAOArrivo) REFERENCES aeroporto(IATA, ICAO),
+    FOREIGN KEY (IATAPartenza, ICAOPartenza) REFERENCES aeroporto(IATA, ICAO)
 );
 
 CREATE TABLE pacco (
@@ -136,7 +136,7 @@ CREATE TABLE servizio (
     IATA CHAR(3) NOT NULL,
     ICAO CHAR(4) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (IATA, ICAO) REFERENCES aereoporto(IATA, ICAO)
+    FOREIGN KEY (IATA, ICAO) REFERENCES aeroporto(IATA, ICAO)
 );
 
 CREATE TABLE servizio_sicurezza (
