@@ -10,6 +10,7 @@ CREATE DATABASE aereodb;
 USE aereodb;
 
 -- No deps
+
 CREATE TABLE aeroporto (
     IATA CHAR(3) NOT NULL,
     ICAO CHAR(4) NOT NULL,
@@ -38,7 +39,6 @@ CREATE TABLE persona (
     PRIMARY KEY (codiceFiscale)
 );
 
-
 -- With deps
 
 CREATE TABLE aereo (
@@ -57,7 +57,6 @@ CREATE TABLE volo (
     numeroVolo CHAR(6) NOT NULL,
     partenza DATETIME NOT NULL,
     arrivo DATETIME NOT NULL,
-    numeroBiglietti INT NOT NULL,
     IATAArrivo CHAR(3) NOT NULL,
     ICAOArrivo CHAR(4) NOT NULL,
     IATAPartenza CHAR(3) NOT NULL,
@@ -77,7 +76,6 @@ CREATE TABLE pacco (
     contenuto VARCHAR(50) NOT NULL,
     stato ENUM('integro', 'danneggiato', 'disperso') DEFAULT 'integro',
     numeroVolo CHAR(6) NOT NULL,
-    codiceFiscale CHAR(16) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE
 );
@@ -87,8 +85,10 @@ CREATE TABLE passeggero (
     numeroBiglietto CHAR(6) NOT NULL,
     classeViaggio VARCHAR(50) NOT NULL,
     posto VARCHAR(50) NOT NULL,
+    codiceFiscale CHAR(16) NOT NULL,
     numeroVolo CHAR(6) NOT NULL,
     PRIMARY KEY (numeroBiglietto),
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale) ON DELETE CASCADE,
     FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE
 );
 
@@ -112,7 +112,7 @@ CREATE TABLE dipendente (
     stipendio INT NOT NULL,
     codiceFiscale CHAR(16) NOT NULL,
     PRIMARY KEY (matricola),
-    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale),
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale) ON DELETE CASCADE,
     CHECK (stipendio > 0)
 );
 
@@ -120,12 +120,9 @@ CREATE TABLE documento (
     tipo VARCHAR(50) NOT NULL,
     numero VARCHAR(50) NOT NULL,
     scadenza DATE NOT NULL,
-    numeroBiglietto CHAR(6),
-    matricola CHAR(6),
+    codiceFiscale CHAR(16) NOT NULL,
     PRIMARY KEY (tipo, numero),
-    FOREIGN KEY (numeroBiglietto) REFERENCES passeggero(numeroBiglietto),
-    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
-    CHECK (numeroBiglietto IS NOT NULL OR matricola IS NOT NULL) -- At least one of the two must be not null
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale) ON DELETE CASCADE
 );
 
 CREATE TABLE servizio (
@@ -203,7 +200,7 @@ CREATE TABLE trasporto_parcheggio (
     id INT NOT NULL,
     longitudine DECIMAL(10, 8) NOT NULL,
     latitudine DECIMAL(10, 8) NOT NULL,
-    costo DECIMAL(5, 2) NOT NULL,
+    orari VARCHAR(200) NOT NULL,
     PRIMARY KEY (id, longitudine, latitudine),
     FOREIGN KEY (id) REFERENCES servizio_trasporto(id),
     FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine),
@@ -214,33 +211,22 @@ CREATE TABLE lavoro_servizio (
     matricola CHAR(6) NOT NULL,
     id INT NOT NULL,
     mansione VARCHAR(50) NOT NULL,
-    dataInizio DATE NOT NULL,
-    dataFine DATE NOT NULL,
+    oraInizio TIME NOT NULL,
+    oraFine TIME NOT NULL,
     PRIMARY KEY (matricola, id),
     FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
     FOREIGN KEY (id) REFERENCES servizio(id),
-    CHECK (dataInizio <= dataFine)
+    CHECK (oraInizio <= oraFine)
 );
 
 CREATE TABLE lavoro_volo(
     matricola CHAR(6) NOT NULL,
     numeroVolo CHAR(6) NOT NULL,
     mansione VARCHAR(50) NOT NULL,
-    dataInizio DATE NOT NULL,
-    dataFine DATE NOT NULL,
+    oraInizio TIME NOT NULL,
+    oraFine TIME NOT NULL,
     PRIMARY KEY (matricola, numeroVolo),
     FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
     FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE,
-    CHECK (dataInizio <= dataFine)
-);
-
-CREATE TABLE usufruisce (
-    codiceFiscale CHAR(16) NOT NULL,
-    id INT NOT NULL,
-    data DATE NOT NULL,
-    costo DECIMAL(5, 2) NOT NULL,
-    PRIMARY KEY (codiceFiscale, id),
-    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale),
-    FOREIGN KEY (id) REFERENCES servizio(id),
-    CHECK (costo >= 0)
+    CHECK (oraInizio <= oraFine)
 );
