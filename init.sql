@@ -9,10 +9,195 @@ CREATE DATABASE aereodb;
 -- Use the database
 USE aereodb;
 
--- Table 'UserData'
-DROP TABLE IF EXISTS aereoports;
-
-CREATE TABLE aereoports (
-    id CHAR(36) NOT NULL PRIMARY KEY,
-    name VARCHAR(160) NOT NULL
+-- No deps
+CREATE TABLE aereoporto (
+    IATA CHAR(3) NOT NULL,
+    ICAO CHAR(4) NOT NULL,
+    nome VARCHAR(50) NOT NULL,
+    provincia VARCHAR(50) NOT NULL,
+    stato VARCHAR(50) NOT NULL,
+    postiAereoPasseggeri INT NOT NULL,
+    postiAereoCargo INT NOT NULL,
+    PRIMARY KEY (IATA, ICAO)
 );
+
+CREATE TABLE compagnia (
+    nome VARCHAR(50) NOT NULL,
+    sede VARCHAR(50) NOT NULL,
+    PRIMARY KEY (nome)
+);
+
+CREATE TABLE persona (
+    codiceFiscale CHAR(16) NOT NULL,
+    nome VARCHAR(50) NOT NULL,
+    cognome VARCHAR(50) NOT NULL,
+    dataNascita DATE NOT NULL,
+    nazionalita VARCHAR(50) NOT NULL,
+    numeroTelefono CHAR(10) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    PRIMARY KEY (codiceFiscale)
+);
+
+
+-- With deps
+
+CREATE TABLE aereo (
+    numeroDiSerie CHAR(10) NOT NULL,
+    tipologia VARCHAR(50) NOT NULL,
+    modello VARCHAR(50) NOT NULL,
+    postiPasseggeri INT NOT NULL,
+    postiPersonale INT NOT NULL,
+    volumeStiva INT NOT NULL,
+    nomeCompagnia VARCHAR(50) NOT NULL,
+    PRIMARY KEY (numeroDiSerie),
+    FOREIGN KEY (nomeCompagnia) REFERENCES compagnia(nome)
+);
+
+CREATE TABLE volo (
+    numeroVolo CHAR(6) NOT NULL,
+    partenza DATETIME NOT NULL,
+    arrivo DATETIME NOT NULL,
+    numeroBiglietti INT NOT NULL,
+    IATAArrivo CHAR(3) NOT NULL,
+    ICAOArrivo CHAR(4) NOT NULL,
+    IATAPartenza CHAR(3) NOT NULL,
+    ICAOPartenza CHAR(4) NOT NULL,
+    PRIMARY KEY (numeroVolo),
+    FOREIGN KEY (IATAArrivo, ICAOArrivo) REFERENCES aereoporto(IATA, ICAO),
+    FOREIGN KEY (IATAPartenza, ICAOPartenza) REFERENCES aereoporto(IATA, ICAO)
+);
+
+CREATE TABLE pacco (
+    id INT NOT NULL AUTO_INCREMENT,
+    peso INT NOT NULL,
+    altezza INT NOT NULL,
+    larghezza INT NOT NULL,
+    spessore INT NOT NULL,
+    contenuto VARCHAR(50) NOT NULL,
+    stato VARCHAR(50) NOT NULL,
+    numeroVolo CHAR(6) NOT NULL,
+    codiceFiscale CHAR(16) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo)
+);
+
+
+CREATE TABLE passeggero (
+    numeroBiglietto CHAR(6) NOT NULL,
+    classeViaggio VARCHAR(50) NOT NULL,
+    posto VARCHAR(50) NOT NULL,
+    numeroVolo CHAR(6) NOT NULL,
+    PRIMARY KEY (numeroBiglietto),
+    FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo)
+);
+
+CREATE TABLE bagaglio (
+    id INT NOT NULL AUTO_INCREMENT,
+    peso INT NOT NULL,
+    altezza INT NOT NULL,
+    larghezza INT NOT NULL,
+    spessore INT NOT NULL,
+    stato VARCHAR(50) NOT NULL,
+    descrizione VARCHAR(50) NOT NULL,
+    animale BOOLEAN NOT NULL,
+    numeroBiglietto CHAR(6) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (numeroBiglietto) REFERENCES passeggero(numeroBiglietto)
+);
+
+CREATE TABLE dipendente (
+    matricola CHAR(6) NOT NULL,
+    dataAssunzione DATE NOT NULL,
+    stipendio INT NOT NULL,
+    codiceFiscale CHAR(16) NOT NULL,
+    PRIMARY KEY (matricola),
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale),
+    CHECK (stipendio > 0)
+);
+
+CREATE TABLE documento (
+    tipo VARCHAR(50) NOT NULL,
+    numero VARCHAR(50) NOT NULL,
+    scadenza DATE NOT NULL,
+    numeroBiglietto CHAR(6),
+    matricola CHAR(6),
+    PRIMARY KEY (tipo, numero),
+    FOREIGN KEY (numeroBiglietto) REFERENCES passeggero(numeroBiglietto),
+    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
+    CHECK (numeroBiglietto IS NOT NULL OR matricola IS NOT NULL) -- At least one of the two must be not null
+);
+
+CREATE TABLE servizio (
+    id INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL,
+    descrizione VARCHAR(50) NOT NULL,
+    locazione VARCHAR(50) NOT NULL,
+    IATA CHAR(3) NOT NULL,
+    ICAO CHAR(4) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (IATA, ICAO) REFERENCES aereoporto(IATA, ICAO)
+);
+
+CREATE TABLE servizio_sicurezza (
+    tempoMedioAttesa INT NOT NULL,
+    numeroAddettiRichiesti INT NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE servizio_commerciale (
+    nome VARCHAR(50) NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    gestore VARCHAR(50) NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE parcheggio (
+    longitudine DECIMAL(10, 8) NOT NULL,
+    latitudine DECIMAL(10, 8) NOT NULL,
+    postiDisponibili INT NOT NULL,
+    costoOrario DECIMAL(5, 2) NOT NULL,
+    postiOccupati INT NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (longitudine, latitudine),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE ristorante (
+    tipoCucina VARCHAR(50) NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE negozio (
+    tipoMerce VARCHAR(50) NOT NULL,
+    id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id)
+);
+
+CREATE TABLE lounge (
+    postiDisponibili INT NOT NULL,
+    id INT NOT NULL,
+    nomeCompagnia VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id),
+    FOREIGN KEY (nomeCompagnia) REFERENCES compagnia(nome)
+);
+
+CREATE TABLE servizio_trasporto (
+    tipo VARCHAR(50) NOT NULL,
+    linea VARCHAR(50) NOT NULL,
+    costoPerPersona DECIMAL(5, 2) NOT NULL,
+    id INT NOT NULL,
+    latitudineParcheggio DECIMAL(10, 8) NOT NULL,
+    longitudineParcheggio DECIMAL(10, 8) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES servizio(id),
+    FOREIGN KEY (longitudineParcheggio, latitudineParcheggio) REFERENCES parcheggio(longitudine, latitudine)
+);
+

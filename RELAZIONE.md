@@ -982,3 +982,5 @@ erDiagram
 - [codice aeroportuale IATA](https://it.wikipedia.org/wiki/Codice_aeroportuale_IATA)
 - [ER](https://mermaid.js.org/syntax/entityRelationshipDiagram.html)
 - [stime in tempo reale](https://assaeroporti.com/statistiche/)
+- [numero volo](https://airadvisor.com/it/blog/la-guida-per-decifrare-e-capire-l-importanza-del-numero-del-tuo-volo)
+
