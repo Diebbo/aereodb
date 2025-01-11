@@ -32,7 +32,7 @@
     - [Tavole dei volumi e delle operazioni](#tavole-dei-volumi-e-delle-operazioni)
     - [Ristrutturazione schema concettuale](#ristrutturazione-schema-concettuale)
     - [Normalizzazione](#normalizzazione)
-    - [Traduzione verso il modello relazionale](#traduzione-verso-il-modello-relazionale)
+    - [Traduzione verso il modello logico](#traduzione-verso-il-modello-logico)
   - [Codifica SQL](#codifica-sql)
     - [DDL](#ddl)
     - [DML](#dml)
@@ -638,7 +638,8 @@ erDiagram
 
 **Ridondanze e normalizzazione** 
 
-Il database non presenta ridondanze.
+Il database presenta le seguenti ridondanze:
+- Compagnia: il numero di km viaggiati da un passeggero con una compagnia aerea è ridondante, in quanto può essere calcolato a partire dai voli effettuati dal passeggero con quella compagnia.
 
 Al fine di migliorare le presatazioni del databse verranno quindi introdotte le seguenti modifiche:
 - Passeggeri: dato l'elevato numero di inserimenti e ricerche. Verrà introdotta all'interno della tabella passeggero le informazioni relative alla persona, in modo da evitare di dover fare join tra le due tabelle.
@@ -683,10 +684,17 @@ Inserimento di un passeggero:
 | PERSONA | S | 1 |
 | VOLO | S | 1 |
 
+Costo di un inserimento: 3
+
 Ricerca di un volo:
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | VOLO | L | 1 |
+
+Costo di una ricerca: 1
+
+Tempo totale di inserimento: 3 * 10.000 (volte al mese) = 30.000
+Tempo totale di ricerca: 1 * 10.000 (volte al mese) = 10.000
 
 **Tabella senza ridondanze**
 Inserimento di un passeggero:
@@ -695,13 +703,23 @@ Inserimento di un passeggero:
 | PASSEGGERO | S | 1 |
 | PERSONA | S | 1 |
 
+Costo di un inserimento: 2
+
 Ricerca di un volo:
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | VOLO | L | 1 |
 | PASSEGGERO | L | N |
 
+Costo di una ricerca: 1 + N
+
+Tempo totale di inserimento: 2 * 10.000 (volte al mese) = 20.000
+Tempo totale di ricerca: 1 * 10.000 (volte al mese) + N * 10.000 (volte al mese) = 10.000 + N * 10.000
+
+
 Data un elevatissimo numero di passeggeri, e una necessità di ricerca di voli molto alta giorno per giorno, la scelta di mantenere la ridondanza ridurrebbe il tempo in lettura, migliorando le prestazioni del database.
+
+Non essendo presente alcun tipo di ricerca Passeggeri associati a compagnia, la ridondanza non comporterebbe alcun beneficio in termini di prestazioni. Pertanto, la scelta migliore è quella di rimuoverla.
 
 
 ### Gestione delle gerarchie
@@ -756,7 +774,6 @@ erDiagram
 
     PASSEGGERO ||--|| PERSONA: "è una"
     PASSEGGERO ||--o{ BAGAGLIO: trasporto_bagaglio
-    PASSEGGERO }|--|{ COMPAGNIA: clientela
 
     DOCUMENTO }|--|| PERSONA: identificazione
 
