@@ -728,20 +728,20 @@ Nel sistema sono presenti le seguenti gerarchie:
 - Persona: dipendente, passeggero
 - Servizio: servizio commerciale, servizio di sicurezza, servizio di trasporto
 
-L'entià persona è stata suddivisa in due sotto-entità: dipendente e passeggero, entrambe con riferimento all'entità padre. Questa scelta è stata fatta per differenziare i due tipi di persone presenti nel sistema, in modo da poter memorizzare informazioni specifiche per ciascuna di esse.
+L'entità persona è stata suddivisa in due sotto-entità: dipendente e passeggero, entrambe con riferimento all'entità padre. Questa scelta è stata fatta per differenziare i due tipi di persone presenti nel sistema, in modo da poter memorizzare informazioni specifiche per ciascuna di esse.
 
 Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizio di sicurezza e servizio di trasporto. In questo caso si è deciso, anche in questo caso, di differenziare le relazioni mantenendo un riferimento all'entità padre.
 
 ### Nomralizzazione
 
-**Associazioni**: le associazioni si prensetano in forma normale di Boyece-codd.
+**Associazioni**: le associazioni si presentano in forma normale di Boyece-codd.
 
 **Entità** 
 
 | Nome | Commento |
 | --------------- | --------------- |
 | AEROPORTO | Non esistono dipendenze non banali tra gli attributi. |
-| AEREO | Presenta una dipendeza funzionale tra il tipo di aereo e il numero di posti passeggeri, postiPersonale e volumeStiva. |
+| AEREO | Non esistono dipenze funzionali non banali tra gli attrivbuti. |
 | VOLO | Non esistono dipendenze non banali tra gli attributi. |
 | COMPAGNIA | Non esistono dipendenze non banali tra gli attributi. |
 | PACCO | Peso dipende da contenuto, contenuto dipende da stato (?) |
@@ -758,7 +758,8 @@ Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizi
 | LOUNGE | Non esistono dipendenze non banali tra gli attributi. |
 | SERVIZIO_TRASPORTO | Non esistono dipendenze non banali tra gli attributi. |
 
-modifiche alla struttura:
+Modifiche alla struttura:
+
 ```mermaid
 erDiagram
     AEROPORTO }|--|{ SERVIZIO: fornisce
@@ -931,6 +932,48 @@ erDiagram
 
 | Traduzione | Vincoli di riferimento | 
 | --------------- | --------------- |
+| AEROPORTO | <ins>IATA, ICAO</ins>, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | 
+| AEREO | <ins> numeroDiSerie</ins>, tipologia, modello, postiPasseggeri, postiPersonale, volumeStiva, *nomeCompagnia* |
+| VOLO | <ins>numeroVolo</ins>, partenza, arrivo, *IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPArtenza* |
+| COMPAGNIA | <ins>nome</ins>, sede |
+| PACCO | <ins>id</ins>, peso, altezza, larghezza, spessore, contenuto, stato, *numeroVolo, codiceFiscale* |
+| PERSONA | <ins>codiceFiscale</ins>, nome, cognome, dataNascita, nazionalita, numeroTelefono, email |
+| PASSEGGERO | <ins>numeroBiglietto</ins>, classeViaggio, posto, *numeroVolo* |
+| BAGAGLIO | <ins>id</ins>, peso, altezza, larghezza, spessore, stato, descrizione, animale, *numeroBiglietto* |
+| DIPENDENTE | <ins>matricola</ins>, dataAssunzione, stipendio, *codiceFiscale* |
+| DOCUMENTO | <ins>tipo, numero</ins>, scadenza, *numeroBiglietto*, *matricola* |
+| SERVIZIO_SICUREZZA | tempoMedioAttesa, numeroAddettiRichiesti, <ins>*id*<ins> |
+| SERVIZIO_COMMERCIALE | nome, tipo, gestore, <ins>*id*<ins> |
+| PARCHEGGIO | <ins>ubicazione</ins>, postiDisponibili, costoOrario, postiOccupati, ICAO, IATA |
+| RISTORANTE | tipoCucina, <ins>*id*<ins> |
+| NEGOZIO | tipoMerce, <ins>*id*<ins> |
+| LOUNGE | postiDisponibili, <ins>*id*<ins>, *nomeCompagnia*|
+| SERVIZIO_TRASPORTO | tipo, linea, costoPerPersona, <ins>*id*<ins>, *ubicazioneParcheggio* |
+| SERVIZIO | <ins>id<ins>, nome, descrizione, locazione, *IATA, ICAO* |
+
+| Traduzione | Vincoli di riferimento |
+| --------------- | --------------- |
+| AEROPORTO | - |
+| AEREO | nomeCompagnia -> COMPAGNIA.nome |
+| VOLO | IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPArtenza -> AEROPORTO.IATA e AEROPORTO.ICAO |
+| COMPAGNIA | - |
+| PACCO | numeroVolo -> VOLO.numeroVolo |
+| PERSONA | - |
+| PASSEGGERO | numeroVolo, codiceFiscale -> VOLO.numeroVolo, PERSONA.codiceFiscale |
+| BAGAGLIO | numeroBiglietto -> PASSEGGERO.numeroBiglietto |
+| DIPENDENTE | codiceFiscale -> PERSONA.codiceFiscale |
+| DOCUMENTO | numeroBiglietto, matricola -> PASSEGGERO.numeroBiglietto, DIPENDENTE.matricola |
+| SERVIZIO_SICUREZZA | id -> SERVIZIO.id |
+| SERVIZIO_COMMERCIALE | id -> SERVIZIO.id |
+| PARCHEGGIO | ICAO, IATA -> AEROPORTO.ICAO, AEROPORTO.IATA |
+| RISTORANTE | id -> SERVIZIO.id |
+| NEGOZIO | id -> SERVIZIO.id |
+| LOUNGE | id -> SERVIZIO.id, nomeCompagnia -> COMPAGNIA.nome |
+| SERVIZIO_TRASPORTO | id, ubicazioneParcheggio -> SERVIZIO.id, PARCHEGGIO.ubicazione |
+| SERVIZIO | IATA, ICAO -> AEROPORTO.IATA, AEROPORTO.ICAO |
+
+
+## Codifica SQL
 
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
