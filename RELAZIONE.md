@@ -717,7 +717,7 @@ Tempo totale di inserimento: 2 * 10.000 (volte al mese) = 20.000
 Tempo totale di ricerca: 1 * 10.000 (volte al mese) + N * 10.000 (volte al mese) = 10.000 + N * 10.000
 
 
-Data un elevatissimo numero di passeggeri, e una necessità di ricerca di voli molto alta giorno per giorno, la scelta di mantenere la ridondanza ridurrebbe il tempo in lettura, migliorando le prestazioni del database.
+Dato un elevatissimo numero di passeggeri, e una necessità di ricerca di voli molto alta giorno per giorno, la scelta di mantenere la ridondanza ridurrebbe il tempo in lettura, migliorando le prestazioni del database.
 
 Non essendo presente alcun tipo di ricerca Passeggeri associati a compagnia, la ridondanza non comporterebbe alcun beneficio in termini di prestazioni. Pertanto, la scelta migliore è quella di rimuoverla.
 
@@ -985,11 +985,14 @@ erDiagram
 
 ### DDL
 
+#### *Creazione database e tabelle*
+
 ```sql
 -- Create the database
 CREATE DATABASE aereodb;
 
 -- No deps
+
 CREATE TABLE aeroporto (
     IATA CHAR(3) NOT NULL,
     ICAO CHAR(4) NOT NULL,
@@ -1182,7 +1185,7 @@ CREATE TABLE trasporto_parcheggio (
     id INT NOT NULL,
     longitudine DECIMAL(10, 8) NOT NULL,
     latitudine DECIMAL(10, 8) NOT NULL,
-    costo DECIMAL(5, 2) NOT NULL,
+    orari VARCHAR(200) NOT NULL,
     PRIMARY KEY (id, longitudine, latitudine),
     FOREIGN KEY (id) REFERENCES servizio_trasporto(id),
     FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine),
@@ -1224,6 +1227,22 @@ CREATE TABLE usufruisce (
     CHECK (costo >= 0)
 );
 ```
+
+#### *Popolamento tabelle*
+
+TODO: aggiungere gli insert into...
+
+### DML
+
+#### *Inserimenti*
+
+**Nuovo aeroporto**
+```sql
+INSERT INTO aeroporto (IATA, ICAO, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo) VALUES (...)
+```
+
+
+
 
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
