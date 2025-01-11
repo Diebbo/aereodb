@@ -671,7 +671,7 @@ Ricerca di un passeggero:
 | PASSEGGERO | L | 1 |
 | PERSONA | L | 1 |
 
-Contatndo che circa 10.000 passeggeri vengono visualizzati al giorno, calcoliamo le differenze di prestazioni:
+Contando che circa 10.000 passeggeri vengono visualizzati al giorno, calcoliamo le differenze di prestazioni:
 Consideriamo le enormi dimensione della tabella "PERSONA" e teniamo conto del fatto che la ridondanza dimezzerebbe i tempi in lettura. Tuttavia, la ridondanza comporterebbe un aumento dei tempi in scrittura, in quanto ogni modifica a un passeggero comporterebbe una modifica anche alla tabella "PERSONA". Inoltre, la ridondanza comporterebbe un aumento dello spazio occupato in memoria. Pertanto, la scelta migliore è quella di mantenere la struttura normalizzata.
 
 Proviamo invece a calcolare il numero di passeggeri che appartengono ad un volo:
@@ -732,7 +732,7 @@ L'entità persona è stata suddivisa in due sotto-entità: dipendente e passegge
 
 Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizio di sicurezza e servizio di trasporto. In questo caso si è deciso, anche in questo caso, di differenziare le relazioni mantenendo un riferimento all'entità padre.
 
-### Nomralizzazione
+### Normalizzazione
 
 **Associazioni**: le associazioni si presentano in forma normale di Boyece-codd.
 
@@ -945,12 +945,12 @@ erDiagram
 | DOCUMENTO | <ins>tipo, numero</ins>, scadenza, *numeroBiglietto*, *matricola* |
 | SERVIZIO_SICUREZZA | tempoMedioAttesa, numeroAddettiRichiesti, <ins>*id*<ins> |
 | SERVIZIO_COMMERCIALE | nome, tipo, gestore, <ins>*id*<ins> |
-| PARCHEGGIO | <ins>ubicazione</ins>, postiDisponibili, costoOrario, postiOccupati, ICAO, IATA |
-| RISTORANTE | tipoCucina, <ins>*id*<ins> |
-| NEGOZIO | tipoMerce, <ins>*id*<ins> |
-| LOUNGE | postiDisponibili, <ins>*id*<ins>, *nomeCompagnia*|
-| SERVIZIO_TRASPORTO | tipo, linea, costoPerPersona, <ins>*id*<ins>, *ubicazioneParcheggio* |
-| SERVIZIO | <ins>id<ins>, nome, descrizione, locazione, *IATA, ICAO* |
+| PARCHEGGIO | <ins>longitudine, latitudine</ins>, postiDisponibili, costoOrario, postiOccupati, *<ins>id</ins>*  |
+| RISTORANTE | tipoCucina, <ins>*id*</ins> |
+| NEGOZIO | tipoMerce, <ins>*id*</ins> |
+| LOUNGE | postiDisponibili, <ins>*id*</ins>, *nomeCompagnia*|
+| SERVIZIO_TRASPORTO | tipo, linea, costoPerPersona, <ins>*id*</ins>, *latitudineParcheggio, longitudineParcheggio* |
+| SERVIZIO | <ins>id</ins>, nome, descrizione, locazione, *IATA, ICAO* |
 
 | Traduzione | Vincoli di riferimento |
 | --------------- | --------------- |
@@ -966,11 +966,11 @@ erDiagram
 | DOCUMENTO | numeroBiglietto, matricola -> PASSEGGERO.numeroBiglietto, DIPENDENTE.matricola |
 | SERVIZIO_SICUREZZA | id -> SERVIZIO.id |
 | SERVIZIO_COMMERCIALE | id -> SERVIZIO.id |
-| PARCHEGGIO | ICAO, IATA -> AEROPORTO.ICAO, AEROPORTO.IATA |
+| PARCHEGGIO | id -> SERVIZIO.id |
 | RISTORANTE | id -> SERVIZIO.id |
 | NEGOZIO | id -> SERVIZIO.id |
 | LOUNGE | id -> SERVIZIO.id, nomeCompagnia -> COMPAGNIA.nome |
-| SERVIZIO_TRASPORTO | id, ubicazioneParcheggio -> SERVIZIO.id, PARCHEGGIO.ubicazione |
+| SERVIZIO_TRASPORTO | id,-> SERVIZIO.id, latitudineParcheggio, longitudineParcheggio -> PARCHEGGIO.latitudine, PARCHEGGIO.longitudine|
 | SERVIZIO | IATA, ICAO -> AEROPORTO.IATA, AEROPORTO.ICAO |
 
 
