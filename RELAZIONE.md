@@ -809,6 +809,7 @@ erDiagram
         string numeroVolo PK
         date partenza
         date arrivo
+        int numeroBiglietti
     }
     AEREO {
         enum tipologia PK "passeggeri o cargo"
@@ -934,7 +935,7 @@ erDiagram
 | --------------- | --------------- |
 | AEROPORTO | <ins>IATA, ICAO</ins>, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | 
 | AEREO | <ins> numeroDiSerie</ins>, tipologia, modello, postiPasseggeri, postiPersonale, volumeStiva, *nomeCompagnia* |
-| VOLO | <ins>numeroVolo</ins>, partenza, arrivo, *IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPArtenza* |
+| VOLO | <ins>numeroVolo</ins>, partenza, arrivo, numeroBiglietti, *IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPArtenza* |
 | COMPAGNIA | <ins>nome</ins>, sede |
 | PACCO | <ins>id</ins>, peso, altezza, larghezza, spessore, contenuto, stato, *numeroVolo, codiceFiscale* |
 | PERSONA | <ins>codiceFiscale</ins>, nome, cognome, dataNascita, nazionalita, numeroTelefono, email |
