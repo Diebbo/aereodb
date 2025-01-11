@@ -143,12 +143,11 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 
 1. **Nuovo aeroporto**: 1 ogni 5 anni (stimato sulla base della crescita limitata in Italia).  
 2. **Nuovo volo**: 750 aerei al giorno (stimando una media di 5 voli per aereo).  
-3. **Nuovo aereo**: 3 all'anno (basato sull'espansione flotta delle compagnie).  
-4. **Nuovo passeggero**: 10.000 al giorno (media giornaliera per tutti gli aeroporti italiani).  
-5. **Nuovo lavoratore**: 100 al mese (espansione e turnover).  
-6. **Nuovo bagaglio**: 7 miliardi all'anno (stimando circa 2 bagagli per passeggero).  
-7. **Nuova compagnia aerea**: 1 ogni anno (espansione del mercato).  
-8. **Nuova compagnia logistica**: 1 ogni anno (mercato più stabile).  
+3. **Nuovo passeggero**: 10.000 al giorno (media giornaliera per tutti gli aeroporti italiani).  
+4. **Nuovo lavoratore**: 100 al mese (espansione e turnover).  
+5. **Nuovo bagaglio**: 7 miliardi all'anno (stimando circa 2 bagagli per passeggero).  
+6. **Nuovo pacco**: 65 milioni all'anno (stimando 40% pacchi di 5-10kg e restanti di 100kg).  
+7. **Nuova compagnia**: 2 ogni anno (espansione del mercato).   
 
 #### *Modifiche*
 
@@ -159,12 +158,14 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 5. **Documenti di identità**: aggiornamenti giornalieri.  
 6. **Stato bagaglio**: 1.000 modifiche al giorno.  
 7. **Stipendio lavoratore**: modifiche mensili.  
+8. **Tempo di attesa controlli**: 72 modifiche al giorno.
+9. **Posti nei parcheggi**: 24 modifiche al giorno.  
 
 #### *Cancellazioni*
 
 1. **Smantellamento aereo**: 5 all'anno.  
 2. **Cancellazione volo**: 500 al giorno.  
-3. **Invalidità documenti di identità**: 50 al giorno.  
+3. **Invalidazione documenti di identità**: 50 al giorno.  
 4. **Licenziamento lavoratore**: 20 al mese.  
 5. **Smarrimento bagaglio**: 200 al giorno.  
 
@@ -589,50 +590,52 @@ erDiagram
 | Ristorante | E | 5.000 |
 | Negozi | E | 4.000 |
 | Lounge | E | 90 |
-| Dipendente | E | 60.000 |
-| Documento | E | 5.000.000 |
-| Passeggero | E | 3.650.000 all'anno |
+| Dipendente | E | 30.000 |
+| Documento | E | 20.100 |
+| Passeggero | E | 1.000.000 |
+| Pacco | E | 65.000.000 |
 
 #### *Tavola delle operazioni*
 
-| Operazione                              | Tipo         | Frequenza stimata                         |
-|-----------------------------------------|--------------|-------------------------------------------|
-| **Inserimenti**                         |              |                                           |
-| Nuovo aeroporto                         | Inserimento  | 1 ogni 5 anni                             |
-| Nuovo volo                              | Inserimento  | 750 al giorno (circa 273.750 all'anno)    |
-| Nuovo aereo                             | Inserimento  | 3 all'anno                                |
+| Operazione                              | Tipo         | Frequenza stimata                           |
+|-----------------------------------------|--------------|---------------------------------------------|
+| **Inserimenti**                         |              |                                             |
+| Nuovo aeroporto                         | Inserimento  | 1 ogni 5 anni                               |
+| Nuovo volo                              | Inserimento  | 750 al giorno (circa 273.750 all'anno)      |
 | Nuovo passeggero                        | Inserimento  | 10.000 al giorno (circa 3.650.000 all'anno) |
-| Nuovo lavoratore                        | Inserimento  | 100 al mese (circa 1.200 all'anno)        |
-| Nuovo bagaglio                          | Inserimento  | 7 milioni all'anno                       |
-| Nuova compagnia aerea                   | Inserimento  | 1 all'anno                                |
-| Nuova compagnia logistica               | Inserimento  | 1 all'anno                                |
-| **Modifiche**                           |              |                                           |
-| Esercizio commerciale aeroportuale      | Modifica     | Variabile, stimata 100 al mese            |
-| Servizio di sicurezza                   | Modifica     | 50 al mese                                |
-| Servizio di trasporto                   | Modifica     | 30 al mese                                |
-| Volo (ritardo, cancellazione, cambio)   | Modifica     | 5% dei voli giornalieri (~37 al giorno)   |
-| Documenti di identità                   | Modifica     | 1.000 al mese                             |
-| Stato bagaglio                          | Modifica     | 1% dei bagagli (~70.000 all'anno)|
-| Stipendio lavoratore                    | Modifica     | 10.000 all'anno                           |
-| **Cancellazioni**                       |              |                                           |
-| Smantellamento aereo                    | Cancellazione| 1 ogni 5 anni                             |
-| Cancellazione volo                      | Cancellazione| 1% dei voli (circa 100 al giorno)         |
-| Invalidità documenti di identità        | Cancellazione| 100 al mese                               |
-| Licenziamento lavoratore                | Cancellazione| 50 al mese                                |
-| Smarrimento bagaglio                    | Cancellazione| 0,1% dei bagagli (~7.000 all'anno)    |
-| **Ricerche**                            |              |                                           |
-| Voli in partenza                        | Ricerca      | 1.000 al giorno                           |
-| Voli in arrivo                          | Ricerca      | 1.000 al giorno                           |
-| Lavoratori aeroportuali                 | Ricerca      | 500 al giorno                             |
-| Lavoratori compagnie aeree              | Ricerca      | 200 al giorno                             |
-| Lavoratori compagnie logistiche         | Ricerca      | 100 al giorno                             |
-| Passeggeri                              | Ricerca      | 10.000 al giorno                          |
-| Bagagli                                 | Ricerca      | 1% dei bagagli giornalieri (~70.000)     |
-| Merci trasportate                       | Ricerca      | 1.000 al giorno                           |
-| Servizi aeroportuali                    | Ricerca      | 100 al giorno                             |
-| Servizi di sicurezza                    | Ricerca      | 50 al giorno                              |
-| Servizi di trasporto                    | Ricerca      | 30 al giorno                              |
-| Stato parcheggi                         | Ricerca      | 200 al giorno                             |
+| Nuovo lavoratore                        | Inserimento  | 100 al mese (circa 1.200 all'anno)          |
+| Nuovo bagaglio                          | Inserimento  | 7 miliardi all'anno                         |
+| Nuovo pacco                             | Inserimento  | 65 milioni all'anno                         |
+| Nuova compagnia                         | Inserimento  | 2 all'anno                                  |
+| **Modifiche**                           |              |                                             |
+| Esercizio commerciale aeroportuale      | Modifica     | Variabile, stimata 100 al mese              |
+| Servizio di sicurezza                   | Modifica     | 50 al mese                                  |
+| Servizio di trasporto                   | Modifica     | 30 al mese                                  |
+| Volo (ritardo, cancellazione, cambio)   | Modifica     | 5% dei voli giornalieri (~37 al giorno)     |
+| Documenti di identità                   | Modifica     | 1.000 al mese                               |
+| Stato bagaglio                          | Modifica     | 1% dei bagagli (circa 70 milioni all'anno)  |
+| Stipendio lavoratore                    | Modifica     | 10.000 all'anno                             |
+| Tempo di attesa controlli               | Modifica     | 72 al giorno                                |
+| Posti nei parcheggi                     | Modifica     | 24 al giorno                                |
+| **Cancellazioni**                       |              |                                             |
+| Smantellamento aereo                    | Cancellazione| 1 ogni 5 anni                               |
+| Cancellazione volo                      | Cancellazione| 1% dei voli (circa 100 al giorno)           |
+| Invalidazione documenti di identità     | Cancellazione| 100 al mese                                 |
+| Licenziamento lavoratore                | Cancellazione| 50 al mese                                  |
+| Smarrimento bagaglio                    | Cancellazione| 0,1% dei bagagli (~7 milioni all'anno)      |
+| **Ricerche**                            |              |                                             |
+| Voli in partenza                        | Ricerca      | 1.000 al giorno                             |
+| Voli in arrivo                          | Ricerca      | 1.000 al giorno                             |
+| Lavoratori aeroportuali                 | Ricerca      | 500 al giorno                               |
+| Lavoratori compagnie aeree              | Ricerca      | 200 al giorno                               |
+| Lavoratori compagnie logistiche         | Ricerca      | 100 al giorno                               |
+| Passeggeri                              | Ricerca      | 10.000 al giorno                            |
+| Bagagli                                 | Ricerca      | 1% dei bagagli giornalieri (~700.000)       |
+| Merci trasportate                       | Ricerca      | 1.000 al giorno                             |
+| Servizi aeroportuali                    | Ricerca      | 100 al giorno                               |
+| Servizi di sicurezza                    | Ricerca      | 50 al giorno                                |
+| Servizi di trasporto                    | Ricerca      | 30 al giorno                                |
+| Stato parcheggi                         | Ricerca      | 200 al giorno                               |
 
 ### Ristrutturazione schema concettuale
 
