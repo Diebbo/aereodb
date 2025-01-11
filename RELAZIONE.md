@@ -195,7 +195,7 @@ Dall'entità volo sono state estratte due associazioni: trasportoPasseggeri vers
 
 ```mermaid
 erDiagram
-    AEROPORTO }|--|{ SERVIZIO: "fornisce"
+    AEROPORTO ||--|{ SERVIZIO: "fornisce"
     VOLO }|--|| AEROPORTO: "parte / arriva"
     VOLO }|--|| AEREO: "usa"
     VOLO }|--|{ PERSONA: "trasporta / lavora"
@@ -210,7 +210,7 @@ Volo e connessi.
 
 ```mermaid
 erDiagram
-    AEROPORTO }|--|{ SERVIZIO: "fornisce"
+    AEROPORTO ||--|{ SERVIZIO: "fornisce"
 
     VOLO }|--|| AEROPORTO: "parte da"
     VOLO }|--|| AEROPORTO: "arriva a"
@@ -368,7 +368,7 @@ erDiagram
 
 ```mermaid
 erDiagram
-    AEROPORTO }|--|{ SERVIZIO: fornisce
+    AEROPORTO ||--|{ SERVIZIO: fornisce
 
     VOLO }|--|| AEROPORTO: partenza
     VOLO }|--|| AEROPORTO: arrivo
@@ -544,7 +544,7 @@ erDiagram
 
 | Nome Associazione | Descrizione | Entità coinvolte | Attributi |
 | --------------- | --------------- | --------------- | --------------- |
-| FORNISCE | Associa gli aeroporti ai servizi | AEROPORTO(1,N) - SERVIZIO(1,N) | - |
+| FORNISCE | Associa gli aeroporti ai servizi | AEROPORTO(1,N) - SERVIZIO(1,1) | - |
 | PARTENZA | Associa i voli a un aeroporto di partenza | VOLO(1,1) - AEROPORTO(1,N) | - |
 | ARRIVO | Associa i voli a un aeroporto di arrivo | VOLO(1,1) - AEROPORTO(1,N) | - |
 | USO_AEREO | Associa i voli a un aereo | VOLO(1,1) - AEREO(1,N) | - |
@@ -555,8 +555,8 @@ erDiagram
 | TRASPORTO_BAGAGLIO | Associa i bagagli a un passeggero | BAGAGLIO(1,1) - PASSEGGERO(0,N) | - |
 | CLIENTELA | Associa i passeggeri alle compagnie | PASSEGGERO(1,N) - COMPAGNIA(1,N) | kmViaggiati (int) |
 | IDENTIFICAZIONE | Associa i documenti di identità a una persona | DOCUMENTO(1,1) - PERSONA(1,N) | - |
-| LAVORO_VOLO | Associa i dipendenti ai voli | DIPENDENTE(0,N) - VOLO(1,N) | oraInizio (string), oraFine (string), mansione(string) |
-| LAVORO_SERVIZIO | Associa i dipendenti ai servizi | DIPENDENTE(0,N) - SERVIZIO(1,N) | oraInizio (string), oraFine (string), mansione (string) |
+| LAVORO_VOLO | Associa i dipendenti ai voli | DIPENDENTE(0,N) - VOLO(1,N) | oraInizio (time), oraFine (time), mansione(string) |
+| LAVORO_SERVIZIO | Associa i dipendenti ai servizi | DIPENDENTE(0,N) - SERVIZIO(1,N) | oraInizio (time), oraFine (time), mansione (string) |
 | OFFRE | Associa una compagnia a una lounge | COMPAGNIA(1,1) - LOUNGE(1,1) | - |
 | COLLEGA | Associa i servizi di trasporto ai parcheggi | SERVIZIOTRASPORTO(1,N) - PARCHEGGIO(1,N) | orari (string) |
 
@@ -674,8 +674,8 @@ Ricerca di un passeggero:
 | PASSEGGERO | L | 1 |
 | PERSONA | L | 1 |
 
-Contando che circa 10.000 passeggeri vengono visualizzati al giorno, calcoliamo le differenze di prestazioni:
-Consideriamo le enormi dimensione della tabella "PERSONA" e teniamo conto del fatto che la ridondanza dimezzerebbe i tempi in lettura. Tuttavia, la ridondanza comporterebbe un aumento dei tempi in scrittura, in quanto ogni modifica a un passeggero comporterebbe una modifica anche alla tabella "PERSONA". Inoltre, la ridondanza comporterebbe un aumento dello spazio occupato in memoria. Pertanto, la scelta migliore è quella di mantenere la struttura normalizzata.
+Contando che circa 10.000 passeggeri vengono visualizzati al giorno, calcoliamo le differenze di prestazioni:  
+Consideriamo le enormi dimensioni della tabella "PERSONA" e teniamo conto del fatto che la ridondanza dimezzerebbe i tempi in lettura. Tuttavia, la ridondanza comporterebbe un aumento dei tempi in scrittura, in quanto ogni modifica a un passeggero comporterebbe una modifica anche alla tabella "PERSONA". Inoltre, la ridondanza comporterebbe un aumento dello spazio occupato in memoria. Pertanto, la scelta migliore è quella di mantenere la struttura normalizzata.
 
 Proviamo invece a calcolare il numero di passeggeri che appartengono ad un volo:
 
@@ -719,11 +719,9 @@ Costo di una ricerca: 1 + N
 Tempo totale di inserimento: 2 * 10.000 (volte al mese) = 20.000
 Tempo totale di ricerca: 1 * 10.000 (volte al mese) + N * 10.000 (volte al mese) = 10.000 + N * 10.000
 
-
 Dato un elevatissimo numero di passeggeri, e una necessità di ricerca di voli molto alta giorno per giorno, la scelta di mantenere la ridondanza ridurrebbe il tempo in lettura, migliorando le prestazioni del database.
 
 Non essendo presente alcun tipo di ricerca Passeggeri associati a compagnia, la ridondanza non comporterebbe alcun beneficio in termini di prestazioni. Pertanto, la scelta migliore è quella di rimuoverla.
-
 
 #### *Gestione delle gerarchie*
 
@@ -733,7 +731,7 @@ Nel sistema sono presenti le seguenti gerarchie:
 
 L'entità persona è stata suddivisa in due sotto-entità: dipendente e passeggero, entrambe con riferimento all'entità padre. Questa scelta è stata fatta per differenziare i due tipi di persone presenti nel sistema, in modo da poter memorizzare informazioni specifiche per ciascuna di esse.
 
-Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizio di sicurezza e servizio di trasporto. In questo caso si è deciso, anche in questo caso, di differenziare le relazioni mantenendo un riferimento all'entità padre.
+Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizio di sicurezza e servizio di trasporto. Anche in questo caso si è deciso di differenziare le relazioni mantenendo un riferimento all'entità padre.
 
 ### Normalizzazione
 
@@ -753,6 +751,7 @@ Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizi
 | BAGAGLIO | Peso dipende da descrizione o se si tratta di un animale. |
 | DIPENDENTE | Non esistono dipendenze non banali tra gli attributi. |
 | DOCUMENTO | Non esistono dipendenze non banali tra gli attributi. |
+| SERVIZIO | Non esistono dipendenze non banali tra gli attributi. |
 | SERVIZIO_SICUREZZA | Non esistono dipendenze non banali tra gli attributi. |
 | SERVIZIO_COMMERCIALE | Non esistono dipendenze non banali tra gli attributi. |
 | PARCHEGGIO | Non esistono dipendenze non banali tra gli attributi. |
@@ -765,7 +764,7 @@ Modifiche alla struttura:
 
 ```mermaid
 erDiagram
-    AEROPORTO }|--|{ SERVIZIO: fornisce
+    AEROPORTO ||--|{ SERVIZIO: fornisce
 
     VOLO }|--|| AEROPORTO: partenza
     VOLO }|--|| AEROPORTO: arrivo
@@ -938,14 +937,15 @@ erDiagram
 | --------------- | --------------- |
 | AEROPORTO | <ins>IATA, ICAO</ins>, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | 
 | AEREO | <ins> numeroDiSerie</ins>, tipologia, modello, postiPasseggeri, postiPersonale, volumeStiva, *nomeCompagnia* |
-| VOLO | <ins>numeroVolo</ins>, partenza, arrivo, numeroBiglietti, *IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPartenza* |
+| VOLO | <ins>numeroVolo</ins>, partenza, arrivo, *IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPartenza* |
 | COMPAGNIA | <ins>nome</ins>, sede |
-| PACCO | <ins>id</ins>, peso, altezza, larghezza, spessore, contenuto, stato, *numeroVolo, codiceFiscale* |
+| PACCO | <ins>id</ins>, peso, altezza, larghezza, spessore, contenuto, stato, *numeroVolo* |
 | PERSONA | <ins>codiceFiscale</ins>, nome, cognome, dataNascita, nazionalita, numeroTelefono, email |
-| PASSEGGERO | <ins>numeroBiglietto</ins>, classeViaggio, posto, *numeroVolo* |
+| PASSEGGERO | <ins>numeroBiglietto</ins>, classeViaggio, posto, *codiceFiscale*, *numeroVolo* |
 | BAGAGLIO | <ins>id</ins>, peso, altezza, larghezza, spessore, stato, descrizione, animale, *numeroBiglietto* |
 | DIPENDENTE | <ins>matricola</ins>, dataAssunzione, stipendio, *codiceFiscale* |
-| DOCUMENTO | <ins>tipo, numero</ins>, scadenza, *numeroBiglietto*, *matricola* |
+| DOCUMENTO | <ins>tipo, numero</ins>, scadenza, *codiceFiscale* |
+| SERVIZIO | <ins>id</ins>, nome, descrizione, locazione, *IATA, ICAO* |
 | SERVIZIO_SICUREZZA | tempoMedioAttesa, numeroAddettiRichiesti, <ins>*id*<ins> |
 | SERVIZIO_COMMERCIALE | nome, tipo, gestore, <ins>*id*<ins> |
 | PARCHEGGIO | <ins>longitudine, latitudine</ins>, postiDisponibili, costoOrario, postiOccupati, <ins>*id*</ins>  |
@@ -953,11 +953,9 @@ erDiagram
 | NEGOZIO | tipoMerce, <ins>*id*</ins> |
 | LOUNGE | postiDisponibili, <ins>*id*</ins>, *nomeCompagnia*|
 | SERVIZIO_TRASPORTO | tipo, linea, costoPerPersona, <ins>*id*</ins> |
-| TRASPORTO_PARCHEGGIO | orari, <ins>*idServizioTrasporto, longitudineParcheggio, latitudineParcheggio*</ins> |
-| SERVIZIO | <ins>id</ins>, nome, descrizione, locazione, *IATA, ICAO* |
+| TRASPORTO_PARCHEGGIO | orari, <ins>*id, longitudine, latitudine*</ins> |
 | LAVORO_SERVIZIO | oraInizio, oraFine, mansione, <ins>*matricola, id*</ins> |
 | LAVORO_VOLO | oraInizio, oraFine, mansione, <ins>*matricola, numeroVolo*</ins> |
-| USUFRUISCE | <ins>*numeroBiglietto, id*</ins>, data, costo |
 
 | Traduzione | Vincoli di riferimento |
 | --------------- | --------------- |
@@ -970,19 +968,18 @@ erDiagram
 | PASSEGGERO | numeroVolo, codiceFiscale -> VOLO.numeroVolo, PERSONA.codiceFiscale |
 | BAGAGLIO | numeroBiglietto -> PASSEGGERO.numeroBiglietto |
 | DIPENDENTE | codiceFiscale -> PERSONA.codiceFiscale |
-| DOCUMENTO | numeroBiglietto, matricola -> PASSEGGERO.numeroBiglietto, DIPENDENTE.matricola |
+| DOCUMENTO | codiceFiscale -> PERSONA.codiceFiscale |
+| SERVIZIO | IATA, ICAO -> AEROPORTO.IATA, AEROPORTO.ICAO |
 | SERVIZIO_SICUREZZA | id -> SERVIZIO.id |
 | SERVIZIO_COMMERCIALE | id -> SERVIZIO.id |
 | PARCHEGGIO | id -> SERVIZIO.id |
 | RISTORANTE | id -> SERVIZIO.id |
 | NEGOZIO | id -> SERVIZIO.id |
-| LOUNGE | id -> SERVIZIO.id, nomeCompagnia -> COMPAGNIA.nome |
+| LOUNGE | id, nomeCompagnia -> SERVIZIO.id, COMPAGNIA.nome |
 | SERVIZIO_TRASPORTO | id -> SERVIZIO.id |
-| TRASPORTO_PARCHEGGIO | id -> SERVIZIO_TRASPORTO.id, latitudineParcheggio, longitudineParcheggio -> PARCHEGGIO.latitudine, PARCHEGGIO.longitudine|
-| SERVIZIO | IATA, ICAO -> AEROPORTO.IATA, AEROPORTO.ICAO |
+| TRASPORTO_PARCHEGGIO | id, longitudine, latitudine -> SERVIZIO_TRASPORTO.id, PARCHEGGIO.longitudine, PARCHEGGIO.latitudine |
 | LAVORO_SERVIZIO | matricola, id -> DIPENDENTE.matricola, SERVIZIO.id |
 | LAVORO_VOLO | matricola, numeroVolo -> DIPENDENTE.matricola, VOLO.numeroVolo |
-| USUFRUISCE | numeroBiglietto, id -> PASSEGGERO.numeroBiglietto, SERVIZIO.id |
 
 ## Codifica SQL
 
@@ -1042,7 +1039,6 @@ CREATE TABLE volo (
     numeroVolo CHAR(6) NOT NULL,
     partenza DATETIME NOT NULL,
     arrivo DATETIME NOT NULL,
-    numeroBiglietti INT NOT NULL,
     IATAArrivo CHAR(3) NOT NULL,
     ICAOArrivo CHAR(4) NOT NULL,
     IATAPartenza CHAR(3) NOT NULL,
@@ -1062,7 +1058,6 @@ CREATE TABLE pacco (
     contenuto VARCHAR(50) NOT NULL,
     stato ENUM('integro', 'danneggiato', 'disperso') DEFAULT 'integro',
     numeroVolo CHAR(6) NOT NULL,
-    codiceFiscale CHAR(16) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE
 );
@@ -1072,8 +1067,10 @@ CREATE TABLE passeggero (
     numeroBiglietto CHAR(6) NOT NULL,
     classeViaggio VARCHAR(50) NOT NULL,
     posto VARCHAR(50) NOT NULL,
+    codiceFiscale CHAR(16) NOT NULL,
     numeroVolo CHAR(6) NOT NULL,
     PRIMARY KEY (numeroBiglietto),
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale) ON DELETE CASCADE,
     FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE
 );
 
@@ -1097,7 +1094,7 @@ CREATE TABLE dipendente (
     stipendio INT NOT NULL,
     codiceFiscale CHAR(16) NOT NULL,
     PRIMARY KEY (matricola),
-    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale),
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale) ON DELETE CASCADE,
     CHECK (stipendio > 0)
 );
 
@@ -1105,12 +1102,9 @@ CREATE TABLE documento (
     tipo VARCHAR(50) NOT NULL,
     numero VARCHAR(50) NOT NULL,
     scadenza DATE NOT NULL,
-    numeroBiglietto CHAR(6),
-    matricola CHAR(6),
+    codiceFiscale CHAR(16) NOT NULL,
     PRIMARY KEY (tipo, numero),
-    FOREIGN KEY (numeroBiglietto) REFERENCES passeggero(numeroBiglietto),
-    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
-    CHECK (numeroBiglietto IS NOT NULL OR matricola IS NOT NULL) -- At least one of the two must be not null
+    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale) ON DELETE CASCADE
 );
 
 CREATE TABLE servizio (
@@ -1199,35 +1193,24 @@ CREATE TABLE lavoro_servizio (
     matricola CHAR(6) NOT NULL,
     id INT NOT NULL,
     mansione VARCHAR(50) NOT NULL,
-    dataInizio DATE NOT NULL,
-    dataFine DATE NOT NULL,
+    oraInizio TIME NOT NULL,
+    oraFine TIME NOT NULL,
     PRIMARY KEY (matricola, id),
     FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
     FOREIGN KEY (id) REFERENCES servizio(id),
-    CHECK (dataInizio <= dataFine)
+    CHECK (oraInizio <= oraFine)
 );
 
 CREATE TABLE lavoro_volo(
     matricola CHAR(6) NOT NULL,
     numeroVolo CHAR(6) NOT NULL,
     mansione VARCHAR(50) NOT NULL,
-    dataInizio DATE NOT NULL,
-    dataFine DATE NOT NULL,
+    oraInizio TIME NOT NULL,
+    oraFine TIME NOT NULL,
     PRIMARY KEY (matricola, numeroVolo),
     FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
     FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE,
-    CHECK (dataInizio <= dataFine)
-);
-
-CREATE TABLE usufruisce (
-    codiceFiscale CHAR(16) NOT NULL,
-    id INT NOT NULL,
-    data DATE NOT NULL,
-    costo DECIMAL(5, 2) NOT NULL,
-    PRIMARY KEY (codiceFiscale, id),
-    FOREIGN KEY (codiceFiscale) REFERENCES persona(codiceFiscale),
-    FOREIGN KEY (id) REFERENCES servizio(id),
-    CHECK (costo >= 0)
+    CHECK (oraInizio <= oraFine)
 );
 ```
 
