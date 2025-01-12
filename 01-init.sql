@@ -188,7 +188,7 @@ CREATE TABLE lounge (
 );
 
 CREATE TABLE servizio_trasporto (
-    tipo VARCHAR(50) NOT NULL,
+    tipo ENUM('navetta', 'bus', 'treno', 'tram', 'taxi') NOT NULL,
     linea VARCHAR(50) NOT NULL,
     costoPerPersona DECIMAL(5, 2) NOT NULL,
     id INT NOT NULL,
@@ -200,19 +200,19 @@ CREATE TABLE trasporto_parcheggio (
     id INT NOT NULL,
     longitudine DECIMAL(10, 8) NOT NULL,
     latitudine DECIMAL(10, 8) NOT NULL,
-    orari VARCHAR(200) NOT NULL,
+    frequenza ENUM('minutaria', 'oraria', 'giornaliera') NOT NULL,
+    intervallo INT NOT NULL,
     PRIMARY KEY (id, longitudine, latitudine),
     FOREIGN KEY (id) REFERENCES servizio_trasporto(id),
-    FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine),
-    CHECK (costo >= 0)
+    FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine)
 );
 
 CREATE TABLE lavoro_servizio (
     matricola CHAR(6) NOT NULL,
     id INT NOT NULL,
     mansione VARCHAR(50) NOT NULL,
-    oraInizio TIME NOT NULL,
-    oraFine TIME NOT NULL,
+    oraInizio DATETIME NOT NULL,
+    oraFine DATETIME NOT NULL,
     PRIMARY KEY (matricola, id),
     FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
     FOREIGN KEY (id) REFERENCES servizio(id),
@@ -223,10 +223,11 @@ CREATE TABLE lavoro_volo(
     matricola CHAR(6) NOT NULL,
     numeroVolo CHAR(6) NOT NULL,
     mansione VARCHAR(50) NOT NULL,
-    oraInizio TIME NOT NULL,
-    oraFine TIME NOT NULL,
+    oraInizio DATETIME NOT NULL,
+    oraFine DATETIME NOT NULL,
     PRIMARY KEY (matricola, numeroVolo),
     FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
     FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE,
     CHECK (oraInizio <= oraFine)
 );
+

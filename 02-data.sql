@@ -119,27 +119,27 @@ VALUES
 -- Popola la tabella servizio_trasporto
 INSERT INTO servizio_trasporto (id, tipo, linea, costoPerPersona)
 VALUES 
-  (1, 'Autobus', 'Linea 1', 5.00),
-  (2, 'Treno', 'Linea 2', 8.50),
-  (3, 'Taxi', 'Linea 3', 15.00);
+  (1, 'bus', 'Linea 1', 5.00),
+  (2, 'treno', 'Linea 2', 8.50),
+  (3, 'taxi', 'Linea 3', 15.00);
 
 -- Popola la tabella trasporto_parcheggio
-INSERT INTO trasporto_parcheggio (id, longitudine, latitudine, orari)
+INSERT INTO trasporto_parcheggio (id, longitudine, latitudine, frequenza, intervallo)
 VALUES 
-  (1, 41.8000, 12.2500, '06:00-22:00'),
-  (2, 45.6300, 8.7200, '05:00-23:00'),
-  (3, 45.5100, 12.3600, '24/7');
+  (1, 41.8000, 12.2500, 'minutaria', 15),
+  (2, 45.6300, 8.7200, 'giornaliera', 3),
+  (3, 45.5100, 12.3600, 'minutaria', 5);
 
 -- Popola la tabella lavoro_servizio
 INSERT INTO lavoro_servizio (matricola, id, mansione, oraInizio, oraFine)
 VALUES 
-  ('D00123', 1, 'Check-in', '08:00:00', '16:00:00'),
-  ('D00456', 2, 'Sicurezza', '09:00:00', '17:00:00'),
-  ('D00789', 3, 'Assistente commerciale', '10:00:00', '18:00:00');
+  ('D00123', 1, 'Check-in', '2024-01-05 08:00:00', '2024-01-05 10:00:00'),
+  ('D00456', 2, 'Sicurezza', '2024-01-06 09:00:00', '2024-01-06 17:00:00'),
+  ('D00789', 3, 'Assistente commerciale', '2024-01-07 10:00:00', '2024-01-07 18:00:00');
 
 -- Popola la tabella lavoro_volo
 INSERT INTO lavoro_volo (matricola, numeroVolo, mansione, oraInizio, oraFine)
 VALUES 
-  ('D00123', 'AZ1234', 'Hostess', '10:00:00', '12:00:00'),
-  ('D00456', 'RY5678', 'Pilota', '14:00:00', '16:30:00'),
-  ('D00789', 'EZ9101', 'Tecnico', '08:00:00', '10:30:00');
+  ('D00123', 'AZ1234', 'Hostess', '2024-01-05 10:00:00', '2024-01-05 12:00:00'),
+  ('D00456', 'RY5678', 'Pilota', '2024-01-06 09:00:00', '2024-01-06 17:00:00'),
+  ('D00789', 'EZ9101', 'Tecnico', '2024-01-07 9:00:00', '2024-01-07 16:00:00');

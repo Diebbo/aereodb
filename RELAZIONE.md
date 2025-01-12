@@ -646,6 +646,7 @@ Il database presenta le seguenti ridondanze:
 
 Al fine di migliorare le prestazioni del database verranno quindi introdotte le seguenti modifiche:
 - Passeggeri: dato l'elevato numero di inserimenti e ricerche. Verrà introdotta all'interno della tabella passeggero le informazioni relative alla persona, in modo da evitare di dover fare join tra le due tabelle.
+- Passeggeri: introduzione di un attributo numeroPasseggeri all'interno della tabella volo, in modo velocizzare il calcolo del numero di passeggeri presenti su un volo.
 
 **Tavola accessi in presenza di ridondanze** 
 
@@ -811,7 +812,7 @@ erDiagram
         string numeroVolo PK
         date partenza
         date arrivo
-        int numeroBiglietti
+        int numeroPasseggeri
     }
     AEREO {
         enum tipologia PK "passeggeri o cargo"
@@ -951,7 +952,7 @@ erDiagram
 | NEGOZIO | tipoMerce, <ins>*id*</ins> |
 | LOUNGE | postiDisponibili, <ins>*id*</ins>, *nomeCompagnia*|
 | SERVIZIO_TRASPORTO | tipo, linea, costoPerPersona, <ins>*id*</ins> |
-| TRASPORTO_PARCHEGGIO | orari, <ins>*id, longitudine, latitudine*</ins> |
+| TRASPORTO_PARCHEGGIO | frequenza, intervallo, <ins>*id, longitudine, latitudine*</ins> |
 | LAVORO_SERVIZIO | oraInizio, oraFine, mansione, <ins>*matricola, id*</ins> |
 | LAVORO_VOLO | oraInizio, oraFine, mansione, <ins>*matricola, numeroVolo*</ins> |
 
