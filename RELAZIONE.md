@@ -758,7 +758,7 @@ Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizi
 | RISTORANTE | Non esistono dipendenze non banali tra gli attributi. |  
 | NEGOZIO | Non esistono dipendenze non banali tra gli attributi. |
 | LOUNGE | Non esistono dipendenze non banali tra gli attributi. |
-| SERVIZIO_TRASPORTO | Non esistono dipendenze non banali tra gli attributi. |
+| SERVIZIO_TRASPORTO | Costi non e' un attributo atomico. |
 
 Modifiche alla struttura:
 
@@ -920,8 +920,6 @@ erDiagram
     DOCUMENTO }o--|| PASSEGGERO : "appartiene a"
     PASSEGGERO }o--|| PERSONA : "è"
     BAGAGLIO }o--|| PASSEGGERO : "appartiene a"
-    SERVIZIO ||--o{ EROGAZIONE_SERVIZIO : "viene erogato"
-    PASSEGGERO ||--o{ EROGAZIONE_SERVIZIO : "usufruisce"
     SERVIZIOSICUREZZA }o--|| SERVIZIO : "è un"
     SERVIZIOTRASPORTO }o--|| SERVIZIO : "è un"
     RISTORANTE }o--|| SERVIZIO : "è un"
