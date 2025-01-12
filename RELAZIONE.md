@@ -1372,11 +1372,174 @@ SET numeroPasseggeri = (SELECT COUNT(numeroBiglietto) FROM passeggero WHERE pass
 
 **Nuovo aeroporto**
 ```sql
-INSERT INTO aeroporto (IATA, ICAO, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo) VALUES (...)
+INSERT INTO aeroporto (IATA, ICAO, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo) VALUES (...);
+```
+  
+**Nuovo volo**
+```sql
+INSERT INTO volo (numeroVolo, partenza, arrivo, IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPartenza) VALUES (...);
 ```
 
+**Nuovo passeggero**
+```sql
+INSERT INTO passeggero (numeroBiglietto, classeViaggio, posto, codiceFiscale, numeroVolo) VALUES (...);
+```
 
+**Nuovo lavoratore**
+```sql
+INSERT INTO dipendente (matricola, dataAssunzione, stipendio, codiceFiscale) VALUES (...);
+```
 
+**Nuovo bagaglio**
+```sql
+INSERT INTO bagaglio (peso, altezza, larghezza, spessore, stato, descrizione, animale, numeroBiglietto) VALUES (...);
+```
+
+**Nuovo pacco**
+```sql
+INSERT INTO pacco (peso, altezza, larghezza, spessore, contenuto, stato, numeroVolo) VALUES (...);
+```
+
+**Nuova compagnia**
+```sql
+INSERT INTO compagnia (nome, sede) VALUES (...);
+```
+
+#### *Modifiche*
+
+**Esercizio commerciale aeroportuale** 
+```sql
+TODO:
+```
+
+**Servizio di sicurezza**
+```sql
+TODO:
+```
+
+**Servizio di trasporto**
+```sql
+TODO:
+```
+
+**Volo**
+```sql
+TODO:
+```
+
+**Documenti di identità**
+```sql
+TODO:
+```
+
+**Stato bagaglio**
+```sql
+TODO:
+```
+
+**Stipendio lavoratore**
+```sql
+TODO:
+```
+
+**Tempo di attesa controlli**
+```sql
+TODO:
+```
+
+**Posti nei parcheggi**
+```sql
+TODO:
+```
+
+#### *Cancellazioni*
+
+**Smantellamento aereo**
+```sql
+TODO:
+```
+
+**Cancellazione volo**
+```sql
+TODO:
+```
+
+**Invalidazione documenti di identità**
+```sql
+TODO:
+```
+
+**Licenziamento lavoratore**
+```sql
+TODO:
+```
+
+**Smarrimento bagaglio**
+```sql
+TODO:
+```
+
+#### *Ricerche*
+
+**Voli in partenza**
+```sql
+TODO:
+```
+
+**Voli in arrivo**
+```sql
+TODO:
+```
+
+**Lavoratori aeroportuali**
+```sql
+TODO:
+```
+
+**Lavoratori compagnie aeree**
+```sql
+TODO:
+```
+
+**Lavoratori compagnie logistiche**
+```sql
+TODO:
+```
+
+**Passeggeri**
+```sql
+TODO:
+```
+
+**Bagagli**
+```sql
+TODO:
+```
+
+**Merci trasportate**
+```sql
+TODO:
+```
+
+**Servizi aeroportuali**
+```sql
+TODO:
+```
+
+**Servizi di sicurezza**
+```sql
+TODO:
+```
+
+**Servizi di trasporto**
+```sql
+TODO:
+```
+
+**Stato parcheggi**
+```sql
+TODO:
+```
 
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
