@@ -164,7 +164,8 @@ CREATE TABLE parcheggio (
     postiOccupati INT NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (longitudine, latitudine),
-    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE,
+    CHECK (postiOccupati <= postiDisponibili)
 );
 
 CREATE TABLE ristorante (

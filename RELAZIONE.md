@@ -1507,62 +1507,87 @@ DELETE FROM servizio WHERE id = #id;
 
 **Voli in partenza**
 ```sql
-TODO:
+SELECT numeroVolo, partenza, arrivo, nomeCompagnia, numeroPasseggeri, provincia, a.nome AS luogoDestinazione
+FROM volo AS v JOIN aeroporto AS a ON v.IATAArrivo = a.IATA AND v.ICAOArrivo = a.ICAO
+WHERE v.IATAPartenza = #iata AND v.ICAOPartenza = #icao;
 ```
 
 **Voli in arrivo**
 ```sql
-TODO:
+SELECT numeroVolo, partenza, arrivo, nomeCompagnia, numeroPasseggeri, provincia, a.nome AS luogoPartenza
+FROM volo AS v JOIN aeroporto AS a ON v.IATAPartenza = a.IATA AND v.ICAOPartenza = a.ICAO
+WHERE v.IATAArrivo = #iata AND v.ICAOArrivo = #icao;
 ```
 
 **Lavoratori aeroportuali**
 ```sql
-TODO:
+SELECT p.nome, p.cognome, d.matricola, d.dataAssunzione, d.stipendio, ls.mansione, s.nome AS lavoro
+FROM persona AS p NATURAL JOIN dipendente AS d NATURAL JOIN lavoro_servizio AS ls JOIN servizio AS s ON ls.id = s.id
+WHERE IATA = #iata AND ICAO = #icao;
 ```
 
 **Lavoratori compagnie aeree**
 ```sql
-TODO:
+SELECT p.nome, p.cognome, d.matricola, d.dataAssunzione, d.stipendio, lv.mansione, v.nomeCompagnia
+FROM persona AS p NATURAL JOIN dipendente AS d NATURAL JOIN lavoro_volo AS lv NATURAL JOIN volo AS v JOIN aereo AS a ON v.aereo = a.numeroDiSerie
+WHERE a.tipologia = 'passeggeri';
+-- WHERE v.nomeCompagnia = #nomeCompagnia;
 ```
 
 **Lavoratori compagnie logistiche**
 ```sql
-TODO:
+SELECT p.nome, p.cognome, d.matricola, d.dataAssunzione, d.stipendio, lv.mansione, v.nomeCompagnia
+FROM persona AS p NATURAL JOIN dipendente AS d NATURAL JOIN lavoro_volo AS lv NATURAL JOIN volo AS v JOIN aereo AS a ON v.aereo = a.numeroDiSerie
+WHERE a.tipologia = 'cargo';
+-- WHERE v.nomeCompagnia = #nomeCompagnia;
 ```
 
 **Passeggeri**
 ```sql
-TODO:
+SELECT numeroBiglietto, nome, cognome, nazionalita, classeViaggio, posto, numeroVolo
+FROM persona NATURAL JOIN passeggero;
 ```
 
 **Bagagli**
 ```sql
-TODO:
+SELECT nome, cognome, numeroBiglietto, descrizione, stato
+FROM persona NATURAL JOIN passeggero NATURAL JOIN bagaglio;
 ```
 
 **Merci trasportate**
 ```sql
-TODO:
+SELECT * FROM pacco;
 ```
 
 **Servizi aeroportuali**
 ```sql
-TODO:
+SELECT s.nome, s.descrizione, s.locazione, a.nome, a.provincia
+FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
+WHERE a.IATA = #iata AND a.ICAO = #icao;
 ```
 
 **Servizi di sicurezza**
 ```sql
-TODO:
+SELECT s.nome, s.descrizione, s.locazione, a.nome, a.provincia, ss.tempoMedioAttesa, ss.numeroAddettiRichiesti
+FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
+                   JOIN servizio_sicurezza AS ss ON s.id = ss.id
+WHERE a.IATA = #iata AND a.ICAO = #icao;
 ```
 
 **Servizi di trasporto**
 ```sql
-TODO:
+SELECT s.nome, s.descrizione, s.locazione, a.nome, a.provincia, st.tipo, st.linea, st.costoPerPersona
+FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
+                   JOIN servizio_trasporto AS st ON s.id = st.id
+WHERE a.IATA = #iata AND a.ICAO = #icao;
 ```
 
 **Stato parcheggi**
 ```sql
-TODO:
+SELECT s.nome, s.descrizione, s.locazione, a.nome AS aeroporto, a.provincia, p.postiDisponibili, p.postiOccupati, p.costoOrario
+FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
+                   JOIN parcheggio AS p ON s.id = p.id
+WHERE a.IATA = #iata AND a.ICAO = #icao;
 ```
 
 ## Riferimenti
