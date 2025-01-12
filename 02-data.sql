@@ -144,7 +144,6 @@ VALUES
   ('D00456', 'RY5678', 'Pilota', '2024-01-06 09:00:00', '2024-01-06 17:00:00'),
   ('D00789', 'EZ9101', 'Tecnico', '2024-01-07 9:00:00', '2024-01-07 16:00:00');
 
-
 -- Adding redundant data
 UPDATE volo
 SET numeroPasseggeri = (SELECT COUNT(numeroBiglietto) FROM passeggero WHERE passeggero.numeroVolo = volo.numeroVolo);
