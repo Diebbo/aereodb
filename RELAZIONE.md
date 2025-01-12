@@ -151,7 +151,7 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 
 #### *Modifiche*
 
-1. **Esercizio commerciale aeroportuale**: aggiornamenti settimanali.  
+1. **Gestore servizio commerciale**: aggiornamenti mensili.  
 2. **Servizio di sicurezza**: modifiche mensili.  
 3. **Servizio di trasporto**: aggiornamenti trimestrali.  
 4. **Volo**: ritardo, cancellazione, cambio aereo: 5.000 al giorno.  
@@ -606,7 +606,7 @@ erDiagram
 | Nuovo pacco                             | Inserimento  | 65 milioni all'anno                         |
 | Nuova compagnia                         | Inserimento  | 2 all'anno                                  |
 | **Modifiche**                           |              |                                             |
-| Esercizio commerciale aeroportuale      | Modifica     | Variabile, stimata 100 al mese              |
+| Gestore servizio commerciale            | Modifica     | Variabile, stimata 50 al mese               |
 | Servizio di sicurezza                   | Modifica     | 50 al mese                                  |
 | Servizio di trasporto                   | Modifica     | 30 al mese                                  |
 | Volo (ritardo, cancellazione, cambio)   | Modifica     | 5% dei voli giornalieri (~37 al giorno)     |
@@ -1428,49 +1428,52 @@ INSERT INTO compagnia (nome, sede) VALUES (...);
 
 #### *Modifiche*
 
-**Esercizio commerciale aeroportuale** 
+**Gestore servizio commerciale** 
 ```sql
-TODO:
+UPDATE servizio_commerciale SET gestore = #gestore WHERE id = #id;
 ```
 
 **Servizio di sicurezza**
 ```sql
-TODO:
+UPDATE servizio_sicurezza SET numeroAddettiRichiesti = #nAddetti WHERE id = #id;
 ```
 
 **Servizio di trasporto**
 ```sql
-TODO:
+UPDATE servizio_trasporto SET tipo = #tipo, linea = #linea, costoPerPersona = #costo WHERE id = #id;
 ```
 
 **Volo**
 ```sql
-TODO:
+UPDATE volo SET partenza = #partenza, arrivo = #arrivo WHERE numeroVolo = #nVolo;
+
+UPDATE volo
+SET numeroPasseggeri = (SELECT COUNT(numeroBiglietto) FROM passeggero WHERE passeggero.numeroVolo = volo.numeroVolo);
 ```
 
 **Documenti di identità**
 ```sql
-TODO:
+UPDATE documento SET tipo = #newTipo, numero = #newNumero, scadenza = #scadenza, codiceFiscale = #codFiscale WHERE tipo = #oldTipo AND numero = #oldNumero;
 ```
 
 **Stato bagaglio**
 ```sql
-TODO:
+UPDATE bagaglio SET stato = #stato WHERE id = #id;
 ```
 
 **Stipendio lavoratore**
 ```sql
-TODO:
+UPDATE dipendente SET stipendio = #stipendio WHERE matricola = #matricola;
 ```
 
 **Tempo di attesa controlli**
 ```sql
-TODO:
+UPDATE servizio_sicurezza SET tempoMedioAttesa = #attesa WHERE id = #id;
 ```
 
 **Posti nei parcheggi**
 ```sql
-TODO:
+UPDATE parcheggio SET postiOccupati = #postiOccupati WHERE longitudine = #long AND latitudine = #lat;
 ```
 
 #### *Cancellazioni*

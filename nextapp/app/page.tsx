@@ -134,7 +134,7 @@ export default function Home() {
                 title="Modifica"
                 hidden={Array.from(op)[0] != 'u'}
               >
-                <SelectItem key="u-serv-commerciale">Esercizio commerciale aeroportuale</SelectItem>
+                <SelectItem key="u-serv-commerciale">Gestore servizio commerciale</SelectItem>
                 <SelectItem key="u-serv-sicurezza">Servizio di sicurezza</SelectItem>
                 <SelectItem key="u-serv-trasporto">Servizio di trasporto</SelectItem>
                 <SelectItem key="u-volo">Volo</SelectItem>
