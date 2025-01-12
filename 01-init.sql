@@ -61,10 +61,14 @@ CREATE TABLE volo (
     ICAOArrivo CHAR(4) NOT NULL,
     IATAPartenza CHAR(3) NOT NULL,
     ICAOPartenza CHAR(4) NOT NULL,
+    nomeCompagnia VARCHAR(50) NOT NULL,
+    aereo CHAR(10) NOT NULL,
     numeroPasseggeri INT DEFAULT 0,
     PRIMARY KEY (numeroVolo),
     FOREIGN KEY (IATAArrivo, ICAOArrivo) REFERENCES aeroporto(IATA, ICAO),
-    FOREIGN KEY (IATAPartenza, ICAOPartenza) REFERENCES aeroporto(IATA, ICAO)
+    FOREIGN KEY (IATAPartenza, ICAOPartenza) REFERENCES aeroporto(IATA, ICAO),
+    FOREIGN KEY (nomeCompagnia) REFERENCES compagnia(nome) ON DELETE CASCADE,
+    FOREIGN KEY (aereo) REFERENCES aereo(numeroDiSerie)
 );
 
 CREATE TABLE pacco (
@@ -145,7 +149,6 @@ CREATE TABLE servizio_sicurezza (
 );
 
 CREATE TABLE servizio_commerciale (
-    nome VARCHAR(50) NOT NULL,
     tipo VARCHAR(50) NOT NULL,
     gestore VARCHAR(50) NOT NULL,
     id INT NOT NULL,
