@@ -60,9 +60,9 @@ VALUES
 -- Popola la tabella dipendente
 INSERT INTO dipendente (matricola, dataAssunzione, stipendio, codiceFiscale)
 VALUES 
-  ('D00123', '2020-01-01', 3000, 'RSSMRA85M01H501T'),
-  ('D00456', '2019-05-10', 2800, 'VRDLGI90F10H501V'),
-  ('D00789', '2021-07-15', 3200, 'BNCLRA75T20H501X');
+  ('D00123', '2020-01-01', 3000, 'SMTTNS80L15H501Y'),
+  ('D00456', '2019-05-10', 2800, 'HLCKRN88K01H501Z'),
+  ('D00789', '2021-07-15', 3200, 'DVLJHN92A20H501W');
 
 -- Popola la tabella documento
 INSERT INTO documento (tipo, numero, scadenza, codiceFiscale)
@@ -70,6 +70,9 @@ VALUES
   ('Passaporto', 'AA1234567', '2030-01-01', 'RSSMRA85M01H501T'),
   ('CartaIdentità', 'CI987654', '2028-06-15', 'VRDLGI90F10H501V'),
   ('Patente', 'B12345', '2025-12-31', 'BNCLRA75T20H501X');
+  ('CartaIdentità', 'FS4516', '2027-07-15', 'SMTTNS80L15H501Y');
+  ('CartaIdentità', 'HW414WR', '2028-01-05', 'HLCKRN88K01H501Z');
+  ('Patente', 'B987654', '2026-11-20', 'DVLJHN92A20H501W');
 
 -- Popola la tabella servizio
 INSERT INTO servizio (id, nome, descrizione, locazione, IATA, ICAO)
