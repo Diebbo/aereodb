@@ -61,6 +61,8 @@ CREATE TABLE volo (
     ICAOArrivo CHAR(4) NOT NULL,
     IATAPartenza CHAR(3) NOT NULL,
     ICAOPartenza CHAR(4) NOT NULL,
+    numeroPasseggeri INT DEFAULT 0,
+
     PRIMARY KEY (numeroVolo),
 
     FOREIGN KEY (IATAArrivo, ICAOArrivo) REFERENCES aeroporto(IATA, ICAO),

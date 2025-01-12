@@ -759,7 +759,7 @@ Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizi
 | RISTORANTE | Non esistono dipendenze non banali tra gli attributi. |  
 | NEGOZIO | Non esistono dipendenze non banali tra gli attributi. |
 | LOUNGE | Non esistono dipendenze non banali tra gli attributi. |
-| SERVIZIO_TRASPORTO | Costi non e' un attributo atomico. |
+| SERVIZIO_TRASPORTO | Orari non e' un attributo atomico. |
 
 Modifiche alla struttura:
 
