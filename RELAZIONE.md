@@ -1430,22 +1430,22 @@ INSERT INTO compagnia (nome, sede) VALUES (...);
 
 **Gestore servizio commerciale** 
 ```sql
-UPDATE servizio_commerciale SET gestore = #gestore WHERE id = #id;
+UPDATE servizio_commerciale SET gestore = $gestore WHERE id = $id;
 ```
 
 **Servizio di sicurezza**
 ```sql
-UPDATE servizio_sicurezza SET numeroAddettiRichiesti = #nAddetti WHERE id = #id;
+UPDATE servizio_sicurezza SET numeroAddettiRichiesti = $nAddetti WHERE id = $id;
 ```
 
 **Servizio di trasporto**
 ```sql
-UPDATE servizio_trasporto SET tipo = #tipo, linea = #linea, costoPerPersona = #costo WHERE id = #id;
+UPDATE servizio_trasporto SET tipo = $tipo, linea = $linea, costoPerPersona = $costo WHERE id = $id;
 ```
 
 **Volo**
 ```sql
-UPDATE volo SET partenza = #partenza, arrivo = #arrivo WHERE numeroVolo = #nVolo;
+UPDATE volo SET partenza = $partenza, arrivo = $arrivo WHERE numeroVolo = $nVolo;
 
 UPDATE volo
 SET numeroPasseggeri = (SELECT COUNT(numeroBiglietto) FROM passeggero WHERE passeggero.numeroVolo = volo.numeroVolo);
@@ -1453,54 +1453,54 @@ SET numeroPasseggeri = (SELECT COUNT(numeroBiglietto) FROM passeggero WHERE pass
 
 **Documenti di identità**
 ```sql
-UPDATE documento SET tipo = #newTipo, numero = #newNumero, scadenza = #scadenza, codiceFiscale = #codFiscale WHERE tipo = #oldTipo AND numero = #oldNumero;
+UPDATE documento SET tipo = $newTipo, numero = $newNumero, scadenza = $scadenza, codiceFiscale = $codFiscale WHERE tipo = $oldTipo AND numero = $oldNumero;
 ```
 
 **Stato bagaglio**
 ```sql
-UPDATE bagaglio SET stato = #stato WHERE id = #id;
+UPDATE bagaglio SET stato = $stato WHERE id = $id;
 ```
 
 **Stipendio lavoratore**
 ```sql
-UPDATE dipendente SET stipendio = #stipendio WHERE matricola = #matricola;
+UPDATE dipendente SET stipendio = $stipendio WHERE matricola = $matricola;
 ```
 
 **Tempo di attesa controlli**
 ```sql
-UPDATE servizio_sicurezza SET tempoMedioAttesa = #attesa WHERE id = #id;
+UPDATE servizio_sicurezza SET tempoMedioAttesa = $attesa WHERE id = $id;
 ```
 
 **Posti nei parcheggi**
 ```sql
-UPDATE parcheggio SET postiOccupati = #postiOccupati WHERE longitudine = #long AND latitudine = #lat;
+UPDATE parcheggio SET postiOccupati = $postiOccupati WHERE longitudine = $long AND latitudine = $lat;
 ```
 
 #### *Cancellazioni*
 
 **Smantellamento aereo**
 ```sql
-DELETE FROM aereo WHERE numeroDiSerie = #nSerie;
+DELETE FROM aereo WHERE numeroDiSerie = $nSerie;
 ```
 
 **Cancellazione volo**
 ```sql
-DELETE FROM volo WHERE numeroVolo = #nVolo;
+DELETE FROM volo WHERE numeroVolo = $nVolo;
 ```
 
 **Invalidazione documenti di identità**
 ```sql
-DELETE FROM documento WHERE tipo = #tipo AND numero = #numero;
+DELETE FROM documento WHERE tipo = $tipo AND numero = $numero;
 ```
 
 **Licenziamento lavoratore**
 ```sql
-DELETE FROM dipendente WHERE matricola = #matricola;
+DELETE FROM dipendente WHERE matricola = $matricola;
 ```
 
 **Chiusura servizio**
 ```sql
-DELETE FROM servizio WHERE id = #id;
+DELETE FROM servizio WHERE id = $id;
 ```
 
 #### *Ricerche*
@@ -1509,21 +1509,21 @@ DELETE FROM servizio WHERE id = #id;
 ```sql
 SELECT numeroVolo, partenza, arrivo, nomeCompagnia, numeroPasseggeri, provincia, a.nome AS luogoDestinazione
 FROM volo AS v JOIN aeroporto AS a ON v.IATAArrivo = a.IATA AND v.ICAOArrivo = a.ICAO
-WHERE v.IATAPartenza = #iata AND v.ICAOPartenza = #icao;
+WHERE v.IATAPartenza = $iata AND v.ICAOPartenza = $icao;
 ```
 
 **Voli in arrivo**
 ```sql
 SELECT numeroVolo, partenza, arrivo, nomeCompagnia, numeroPasseggeri, provincia, a.nome AS luogoPartenza
 FROM volo AS v JOIN aeroporto AS a ON v.IATAPartenza = a.IATA AND v.ICAOPartenza = a.ICAO
-WHERE v.IATAArrivo = #iata AND v.ICAOArrivo = #icao;
+WHERE v.IATAArrivo = $iata AND v.ICAOArrivo = $icao;
 ```
 
 **Lavoratori aeroportuali**
 ```sql
 SELECT p.nome, p.cognome, d.matricola, d.dataAssunzione, d.stipendio, ls.mansione, s.nome AS lavoro
 FROM persona AS p NATURAL JOIN dipendente AS d NATURAL JOIN lavoro_servizio AS ls JOIN servizio AS s ON ls.id = s.id
-WHERE IATA = #iata AND ICAO = #icao;
+WHERE IATA = $iata AND ICAO = $icao;
 ```
 
 **Lavoratori compagnie aeree**
@@ -1531,7 +1531,7 @@ WHERE IATA = #iata AND ICAO = #icao;
 SELECT p.nome, p.cognome, d.matricola, d.dataAssunzione, d.stipendio, lv.mansione, v.nomeCompagnia
 FROM persona AS p NATURAL JOIN dipendente AS d NATURAL JOIN lavoro_volo AS lv NATURAL JOIN volo AS v JOIN aereo AS a ON v.aereo = a.numeroDiSerie
 WHERE a.tipologia = 'passeggeri';
--- WHERE v.nomeCompagnia = #nomeCompagnia;
+-- WHERE v.nomeCompagnia = $nomeCompagnia;
 ```
 
 **Lavoratori compagnie logistiche**
@@ -1539,7 +1539,7 @@ WHERE a.tipologia = 'passeggeri';
 SELECT p.nome, p.cognome, d.matricola, d.dataAssunzione, d.stipendio, lv.mansione, v.nomeCompagnia
 FROM persona AS p NATURAL JOIN dipendente AS d NATURAL JOIN lavoro_volo AS lv NATURAL JOIN volo AS v JOIN aereo AS a ON v.aereo = a.numeroDiSerie
 WHERE a.tipologia = 'cargo';
--- WHERE v.nomeCompagnia = #nomeCompagnia;
+-- WHERE v.nomeCompagnia = $nomeCompagnia;
 ```
 
 **Passeggeri**
@@ -1563,7 +1563,7 @@ SELECT * FROM pacco;
 ```sql
 SELECT s.nome, s.descrizione, s.locazione, a.nome, a.provincia
 FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
-WHERE a.IATA = #iata AND a.ICAO = #icao;
+WHERE a.IATA = $iata AND a.ICAO = $icao;
 ```
 
 **Servizi di sicurezza**
@@ -1571,7 +1571,7 @@ WHERE a.IATA = #iata AND a.ICAO = #icao;
 SELECT s.nome, s.descrizione, s.locazione, a.nome, a.provincia, ss.tempoMedioAttesa, ss.numeroAddettiRichiesti
 FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
                    JOIN servizio_sicurezza AS ss ON s.id = ss.id
-WHERE a.IATA = #iata AND a.ICAO = #icao;
+WHERE a.IATA = $iata AND a.ICAO = $icao;
 ```
 
 **Servizi di trasporto**
@@ -1579,7 +1579,7 @@ WHERE a.IATA = #iata AND a.ICAO = #icao;
 SELECT s.nome, s.descrizione, s.locazione, a.nome, a.provincia, st.tipo, st.linea, st.costoPerPersona
 FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
                    JOIN servizio_trasporto AS st ON s.id = st.id
-WHERE a.IATA = #iata AND a.ICAO = #icao;
+WHERE a.IATA = $iata AND a.ICAO = $icao;
 ```
 
 **Stato parcheggi**
@@ -1587,7 +1587,7 @@ WHERE a.IATA = #iata AND a.ICAO = #icao;
 SELECT s.nome, s.descrizione, s.locazione, a.nome AS aeroporto, a.provincia, p.postiDisponibili, p.postiOccupati, p.costoOrario
 FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
                    JOIN parcheggio AS p ON s.id = p.id
-WHERE a.IATA = #iata AND a.ICAO = #icao;
+WHERE a.IATA = $iata AND a.ICAO = $icao;
 ```
 
 ## Riferimenti
