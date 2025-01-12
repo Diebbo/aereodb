@@ -167,7 +167,7 @@ I **servizi di sicurezza** devono essere memorizzati separatamente. Più precisa
 2. **Cancellazione volo**: 500 al giorno.  
 3. **Invalidazione documenti di identità**: 50 al giorno.  
 4. **Licenziamento lavoratore**: 20 al mese.  
-5. **Smarrimento bagaglio**: 200 al giorno.  
+5. **Chiusura servizio**: 10 al mese.  
 
 #### *Ricerche*
 
@@ -620,7 +620,7 @@ erDiagram
 | Cancellazione volo                      | Cancellazione| 1% dei voli (circa 100 al giorno)           |
 | Invalidazione documenti di identità     | Cancellazione| 100 al mese                                 |
 | Licenziamento lavoratore                | Cancellazione| 50 al mese                                  |
-| Smarrimento bagaglio                    | Cancellazione| 0,1% dei bagagli (~7 milioni all'anno)      |
+| Chiusura servizio                       | Cancellazione| 10 al mese                                  |
 | **Ricerche**                            |              |                                             |
 | Voli in partenza                        | Ricerca      | 1.000 al giorno                             |
 | Voli in arrivo                          | Ricerca      | 1.000 al giorno                             |
@@ -1122,7 +1122,7 @@ CREATE TABLE servizio_sicurezza (
     numeroAddettiRichiesti INT CHECK (numeroAddettiRichiesti > 0),
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE servizio_commerciale (
@@ -1130,7 +1130,7 @@ CREATE TABLE servizio_commerciale (
     gestore VARCHAR(50) NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE parcheggio (
@@ -1141,21 +1141,21 @@ CREATE TABLE parcheggio (
     postiOccupati INT NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (longitudine, latitudine),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE ristorante (
     tipoCucina VARCHAR(50) NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE negozio (
     tipoMerce VARCHAR(50) NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE lounge (
@@ -1163,7 +1163,7 @@ CREATE TABLE lounge (
     id INT NOT NULL,
     nomeCompagnia VARCHAR(50) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id),
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE,
     FOREIGN KEY (nomeCompagnia) REFERENCES compagnia(nome)
 );
 
@@ -1173,7 +1173,7 @@ CREATE TABLE servizio_trasporto (
     costoPerPersona DECIMAL(5, 2) NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE trasporto_parcheggio (
@@ -1480,27 +1480,27 @@ UPDATE parcheggio SET postiOccupati = #postiOccupati WHERE longitudine = #long A
 
 **Smantellamento aereo**
 ```sql
-TODO:
+DELETE FROM aereo WHERE numeroDiSerie = #nSerie;
 ```
 
 **Cancellazione volo**
 ```sql
-TODO:
+DELETE FROM volo WHERE numeroVolo = #nVolo;
 ```
 
 **Invalidazione documenti di identità**
 ```sql
-TODO:
+DELETE FROM documento WHERE tipo = #tipo AND numero = #numero;
 ```
 
 **Licenziamento lavoratore**
 ```sql
-TODO:
+DELETE FROM dipendente WHERE matricola = #matricola;
 ```
 
-**Smarrimento bagaglio**
+**Chiusura servizio**
 ```sql
-TODO:
+DELETE FROM servizio WHERE id = #id;
 ```
 
 #### *Ricerche*

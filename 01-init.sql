@@ -145,7 +145,7 @@ CREATE TABLE servizio_sicurezza (
     numeroAddettiRichiesti INT CHECK (numeroAddettiRichiesti > 0),
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE servizio_commerciale (
@@ -153,7 +153,7 @@ CREATE TABLE servizio_commerciale (
     gestore VARCHAR(50) NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE parcheggio (
@@ -164,21 +164,21 @@ CREATE TABLE parcheggio (
     postiOccupati INT NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (longitudine, latitudine),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE ristorante (
     tipoCucina VARCHAR(50) NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE negozio (
     tipoMerce VARCHAR(50) NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE lounge (
@@ -186,7 +186,7 @@ CREATE TABLE lounge (
     id INT NOT NULL,
     nomeCompagnia VARCHAR(50) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id),
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE,
     FOREIGN KEY (nomeCompagnia) REFERENCES compagnia(nome)
 );
 
@@ -196,7 +196,7 @@ CREATE TABLE servizio_trasporto (
     costoPerPersona DECIMAL(5, 2) NOT NULL,
     id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES servizio(id)
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE
 );
 
 CREATE TABLE trasporto_parcheggio (

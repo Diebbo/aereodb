@@ -152,7 +152,7 @@ export default function Home() {
                 <SelectItem key="d-volo">Cancellazione volo</SelectItem>
                 <SelectItem key="d-documento">Invalidazione documenti di identità</SelectItem>
                 <SelectItem key="d-lavoratore">Licenziamento lavoratore</SelectItem>
-                <SelectItem key="d-bagaglio">Smarrimento bagaglio</SelectItem>
+                <SelectItem key="d-servizio">Chiusura servizio</SelectItem>
               </SelectSection>
             </Select>}
           </div>
