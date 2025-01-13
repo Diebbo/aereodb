@@ -983,6 +983,8 @@ erDiagram
 
 #### *Creazione database e tabelle*
 
+TODO: controllare gli on delete cascade per le eliminazioni
+
 ```sql
 -- Create the database
 CREATE DATABASE aereodb;
@@ -1183,8 +1185,8 @@ CREATE TABLE trasporto_parcheggio (
     frequenza ENUM('minutaria', 'oraria', 'giornaliera') NOT NULL,
     intervallo INT NOT NULL,
     PRIMARY KEY (id, longitudine, latitudine),
-    FOREIGN KEY (id) REFERENCES servizio_trasporto(id),
-    FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine)
+    FOREIGN KEY (id) REFERENCES servizio_trasporto(id) ON DELETE CASCADE,
+    FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine) ON DELETE CASCADE
 );
 
 CREATE TABLE lavoro_servizio (

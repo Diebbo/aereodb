@@ -96,7 +96,31 @@ export const retrieve = async (q: string, params?: string[]) => {
 
 export const remove = async (q: string, params?: string[]) => {
   try {
-    
+    switch (q) {
+      case 'd-aereo':
+        return (await excQuery(`
+          DELETE FROM aereo WHERE numeroDiSerie = ?;
+        `, params))
+      case 'd-volo':
+        return (await excQuery(`
+          DELETE FROM volo WHERE numeroVolo = ?;
+        `, params))
+      case 'd-documento':
+        return (await excQuery(`
+          DELETE FROM documento WHERE tipo = ? AND numero = ?;
+        `, params))
+      case 'd-lavoratore':
+        return (await excQuery(`
+          DELETE FROM dipendente WHERE matricola = ?;
+        `, params))
+      case 'd-servizio':
+        return (await excQuery(`
+          DELETE FROM servizio WHERE id = ?;
+        `, params))
+      default:
+        console.log('Delete inesistente')
+        break
+    }
   } catch (error) {
     console.error(error)
     throw error

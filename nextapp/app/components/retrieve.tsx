@@ -15,7 +15,6 @@ export default function Retrieve({ q }: { q: string }) {
       if (needsPK()) {
         try {
           const data = await getPK('aeroporto')
-          console.log('dati', data)
           setError('')
           setAirports(data)
         } catch (error) {
@@ -47,7 +46,6 @@ export default function Retrieve({ q }: { q: string }) {
   const fetchDb = async () => {
     try {
       const data = needsPK() ? await retrieve(q, selectedAirport.split(',')) : await retrieve(q)
-      console.log(data)
       setError('')
       setResult(data)
     } catch (error) {
