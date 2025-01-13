@@ -1,10 +1,6 @@
 import React from "react";
 
-type DeleteProps = {
-  q: string
-};
-
-const Delete: React.FC<DeleteProps> = ({ q }) => {
+export default function Delete({ q }: { q: string }) {
   return (
     <div className="p-4 border rounded-lg shadow-lg">
       <h2 className="text-xl font-semibold">Valore di q:</h2>
@@ -12,5 +8,3 @@ const Delete: React.FC<DeleteProps> = ({ q }) => {
     </div>
   );
 };
-
-export default Delete;

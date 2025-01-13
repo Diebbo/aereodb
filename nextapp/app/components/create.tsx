@@ -1,10 +1,6 @@
 import React from "react";
 
-type CreateProps = {
-  q: string
-};
-
-const Create: React.FC<CreateProps> = ({ q }) => {
+export default function Create({ q }: { q: string }) {
   return (
     <div className="p-4 border rounded-lg shadow-lg">
       <h2 className="text-xl font-semibold">Valore di q:</h2>
@@ -12,5 +8,3 @@ const Create: React.FC<CreateProps> = ({ q }) => {
     </div>
   );
 };
-
-export default Create;

@@ -4,11 +4,7 @@ import React from "react";
 import query from "../lib/db";
 // import { QueryResult } from "mysql2";
 
-type RetrieveProps = {
-  q: string
-};
-
-const Retrieve: React.FC<RetrieveProps> = async ({ q }) => {
+export default async function Retrieve({ q }: { q: string }) {
   // const [result, setResult] = React.useState<QueryResult>()
 
   const excQuery = async () => {
@@ -36,5 +32,3 @@ const Retrieve: React.FC<RetrieveProps> = async ({ q }) => {
     </div>
   );
 };
-
-export default Retrieve;
