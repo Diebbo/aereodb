@@ -1,34 +1,29 @@
 'use client'
 
-import React from "react";
-import query from "../lib/db";
-// import { QueryResult } from "mysql2";
+import { useState, useEffect } from "react";
+import { retrieve } from "../actions/query";
 
-export default async function Retrieve({ q }: { q: string }) {
-  // const [result, setResult] = React.useState<QueryResult>()
+export default function Retrieve({ q }: { q: string }) {
+  const [result, setResult] = useState<any>(null)
+  const [error, setError] = useState<any>('')
 
-  const excQuery = async () => {
-    switch (q) {
-      case 'r-partenze':
-        break
-      case 'r-arrivi':
-        break
-      case 'r-lav-aeroporto':
-      case 'r-lav-comp-aeree':
-      case 'r-lav-comp-log':
-      case 'r-passeggeri':
-      case 'r-bagagli':
-      case 'r-merci':
-        break
-      case 'r-serv-aeroporto':
-      case 'r-serv-sicurezza':
-      case 'r-serv-trasporto':
-      case 'r-parcheggi':
+  useEffect(() => {
+    const fetchDb = async () => {
+      try {
+        const data = await retrieve(q)
+        setError('')
+        setResult(data)
+      } catch (error) {
+        setError(error)
+      }
     }
-  }
+
+    fetchDb()
+  }, [])
+
   return (
     <div>
-      <p>{q}</p>
+      {error ? <p>error</p> : <p>ciao</p>}
     </div>
   );
 };

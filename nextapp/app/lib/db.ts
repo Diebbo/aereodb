@@ -1,15 +1,14 @@
-import mysql from 'mysql2/promise'
 import 'dotenv/config'
 
-// TODO: usare le env variables
-
 // connessione al DB
-const connection = await mysql.createConnection({
-  host: 'mariadb',
-  user: 'myuser',
-  password: 'mypassword',
-  database: 'aereodb',
-  port: 3306
+const mysql = require('serverless-mysql')({
+  config: {
+    host: '127.0.0.1',
+    port: 3306,
+    database: process.env.MYSQL_DATABASE || 'aereodb',
+    user: process.env.MYSQL_USER || 'myuser',
+    password: process.env.MYSQL_PASSWORD || 'mypassword'
+  }
 })
 
 /**
@@ -18,14 +17,10 @@ const connection = await mysql.createConnection({
  * @param q query da eseguire
  * @returns risultato della query
  */
-const query = async (q: string) => {
-  try {
-    const [rows, fields] = await connection.execute(q)
-    return rows
-  } catch (error) {
-    console.error("Query error:", error)
-    throw error
-  }
+const excQuery = async (q: string) => {
+  const results = await mysql.query(q)
+  await mysql.end()
+  return results
 }
 
-export default query;
+export default excQuery;
