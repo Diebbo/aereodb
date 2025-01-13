@@ -234,7 +234,7 @@ Servizi aeroportuali e servizi di sicurezza.
 | SERVIZIOSICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | tempoMedioAttesa, numeroAddettiRichiesti | " |
 | SERVIZIOTRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | tipo, linea, costoPerPersona | " |
 | SERVIZIOCOMMERCIALE | Attività interne all'aeroporto come ristorazione, negozi o lounge | tipo, gestore | " |
-| PARCHEGGIO | Area di sosta per veicoli | ubicazione, postiDisponibili, costoOrario, postiOccupati | ubicazione |
+| PARCHEGGIO | Area di sosta per veicoli | latitudine, longitudine, postiDisponibili, costoOrario, postiOccupati | latitudine, longitudine |
 | RISTORANTE | Attività commerciale di ristorazione | tipoCucina | " |
 | NEGOZIO | Attività commerciale di vendita | tipoMerce | " |
 | LOUNGE | Area di relax | postiDisponibili | " |
@@ -454,7 +454,7 @@ Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizi
 | SERVIZIO | Non esistono dipendenze non banali tra gli attributi. |
 | SERVIZIO_SICUREZZA | Non esistono dipendenze non banali tra gli attributi. |
 | SERVIZIO_COMMERCIALE | Non esistono dipendenze non banali tra gli attributi. |
-| PARCHEGGIO | Non esistono dipendenze non banali tra gli attributi. |
+| PARCHEGGIO | ubicazione non è un attrivuto |
 | RISTORANTE | Non esistono dipendenze non banali tra gli attributi. |  
 | NEGOZIO | Non esistono dipendenze non banali tra gli attributi. |
 | LOUNGE | Non esistono dipendenze non banali tra gli attributi. |
@@ -462,171 +462,7 @@ Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizi
 
 Modifiche alla struttura:
 
-```mermaid
-erDiagram
-    AEROPORTO ||--|{ SERVIZIO: fornisce
-
-    VOLO }|--|| AEROPORTO: partenza
-    VOLO }|--|| AEROPORTO: arrivo
-    VOLO }|--|| AEREO: uso_aereo
-    VOLO }|--o{ PASSEGGERO: trasporto_passeggeri
-    VOLO }|--o{ PACCO: trasporto_cargo
-
-    COMPAGNIA ||--|{ VOLO: opera
-    COMPAGNIA ||--|{ AEREO: possesso
-
-    PASSEGGERO ||--|| PERSONA: "è una"
-    PASSEGGERO ||--o{ BAGAGLIO: trasporto_bagaglio
-
-    DOCUMENTO }|--|| PERSONA: identificazione
-
-    DIPENDENTE ||--|| PERSONA: "è una"
-    DIPENDENTE }|--o{ VOLO: lavoro_volo
-    DIPENDENTE }|--o{ SERVIZIO: lavoro_servizio
-
-    SERVIZIOSICUREZZA ||--|| SERVIZIO: "è un"
-
-    SERVIZIOCOMMERCIALE ||--|| SERVIZIO: "è un"
-    
-    RISTORANTE ||--|| SERVIZIOCOMMERCIALE: "è un"
-    NEGOZIO ||--|| SERVIZIOCOMMERCIALE: "è un"
-    LOUNGE ||--|| SERVIZIOCOMMERCIALE: "è un"
-    COMPAGNIA ||--|| LOUNGE: offre
-
-    PARCHEGGIO ||--|| SERVIZIO: "è un"
-
-    SERVIZIOTRASPORTO ||--|| SERVIZIO: "è un"
-    SERVIZIOTRASPORTO }|--|{ PARCHEGGIO: collega
-
-    AEROPORTO {
-        string IATA PK
-        string ICAO PK
-        string nome
-        string provincia
-        string stato
-        int postiAereoPasseggeri
-        int postiAereoCargo
-    }
-    VOLO {
-        string numeroVolo PK
-        date partenza
-        date arrivo
-        int numeroPasseggeri
-    }
-    AEREO {
-        enum tipologia PK "passeggeri o cargo"
-        string modello
-        string numeroDiSerie PK
-        int postiPasseggeri
-        int postiPersonale
-        int volumeStiva
-    }
-    COMPAGNIA {
-        string nome PK
-        string sede
-    }
-    PACCO {
-        string id PK
-        float peso
-        float altezza
-        float larghezza
-        float spessore
-        string contenuto
-        enum stato "disperso, danneggiato o integro"
-    }
-    PERSONA {
-        string codiceFiscale PK
-        string nome
-        string cognome
-        date dataNascita
-        string nazionalita
-        string numeroTelefono
-        string email
-    }
-    PASSEGGERO {
-        string classeViaggio
-        string numeroBiglietto PK
-        string posto
-    }
-    BAGAGLIO {
-        string id PK
-        float peso
-        float altezza
-        float larghezza
-        float spessore
-        enum stato "disperso, danneggiato o integro"
-        string descrizione
-        bool animale
-    }
-    DIPENDENTE {
-        string matricola PK
-        date dataAssunzione
-        float stipendio
-    }
-    DOCUMENTO {
-        enum tipo PK
-        string numero PK
-        date scadenza
-    }
-    SERVIZIO {
-        string id PK
-        string nome
-        string descrizione
-        string locazione
-    }
-    SERVIZIOSICUREZZA {
-        int tempoMedioAttesa
-        int numeroAddetti
-    }
-    SERVIZIOTRASPORTO {
-        enum tipo "treno, autobus, metro, taxi"
-        string linea
-        float costoPerPersona
-    }
-    SERVIZIOCOMMERCIALE {
-        enum tipo "ristorante, bar, negozio"
-        string gestore
-    }
-    PARCHEGGIO {
-        string ubicazione PK
-        int postiDisponibili
-        float costoOrario
-        int postiOccupati
-    }
-    RISTORANTE {
-        string tipoCucina
-    }
-    NEGOZIO {
-        string tipoMerce
-    }
-    LOUNGE {
-        int postiDisponibili
-    }
-
-
-    AEROPORTO ||--o{ VOLO : "ospita"
-    AEROPORTO ||--o{ SERVIZIO : "fornisce"
-    VOLO }o--|| AEREO : "utilizza"
-    VOLO }o--|| COMPAGNIA : "operato da"
-    VOLO }o--|| PACCO : "trasporta"
-    VOLO }o--|| PASSEGGERO : "trasporta"
-    AEREO }o--|| COMPAGNIA : "di proprietà di"
-    DIPENDENTE }o--|| COMPAGNIA : "lavora per"
-    DIPENDENTE }o--|| VOLO : "lavora per"
-    DIPENDENTE }o--|| SERVIZIO : "lavora per"
-    DIPENDENTE ||--o{ PERSONA : "è un"
-    DIPENDENTE }o--|| DOCUMENTO : "possiede"
-    DOCUMENTO }o--|| PASSEGGERO : "appartiene a"
-    PASSEGGERO }o--|| PERSONA : "è"
-    BAGAGLIO }o--|| PASSEGGERO : "appartiene a"
-    SERVIZIOSICUREZZA }o--|| SERVIZIO : "è un"
-    SERVIZIOTRASPORTO }o--|| SERVIZIO : "è un"
-    RISTORANTE }o--|| SERVIZIO : "è un"
-    NEGOZIO }o--|| SERVIZIO : "è un"
-    LOUNGE }o--|| SERVIZIO : "è un"
-    SERVIZIOCOMMERCIALE }o--|| SERVIZIO : "è un"
-    PARCHEGGIO }o--|| AEROPORTO : "appartiene a"
-```
+![ER Schema](./grafici/normalizzazione.drawio.png)
 
 ### Traduzione verso il modello logico
 
