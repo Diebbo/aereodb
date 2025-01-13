@@ -1,10 +1,31 @@
-import React from "react";
+'use client'
+
+import { useState, useEffect } from "react";
+import { update } from "../actions/query";
 
 export default function Update({ q }: { q: string }) {
+  const [result, setResult] = useState<any>([])
+  const [error, setError] = useState<any>('')
+
+  useEffect(() => {
+    const fetchDb = async () => {
+      try {
+        const data = await update(q)
+        setError('')
+        setResult(data)
+      } catch (error) {
+        setError(error)
+      }
+    }
+
+    fetchDb()
+  }, [])
+
   return (
-    <div className="p-4 border rounded-lg shadow-lg">
-      <h2 className="text-xl font-semibold">Valore di q:</h2>
-      <p className="text-gray-700">{q}</p>
+    <div>
+      {/* {error ? <span className="error">error</span> : (
+        
+      )} */}
     </div>
   );
 };

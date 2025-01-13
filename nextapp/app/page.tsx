@@ -134,7 +134,7 @@ export default function Home() {
         </div>
         <ButtonGroup>
           <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Esegui</Button>
+          <Button type='submit' color="primary">Scegli</Button>
         </ButtonGroup>
       </Form>
       {crudComponent[0] == 'c' && <Create q={crudComponent[1]} />}

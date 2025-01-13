@@ -17,12 +17,12 @@ export default function RootLayout({
             </h1>
           </header>
           <main>
-            <Image
+            {/* <Image
               className="rounded-lg mx-auto"
               src="/wtc.jpg"
               alt="Immagine di aereo ed edifici"
               width={525}
-              height={295} />
+              height={295} /> */}
             
             {children}
 
