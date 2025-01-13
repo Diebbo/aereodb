@@ -1,7 +1,5 @@
 'use client'
 
-import type { Selection } from "@nextui-org/react"
-
 import Image from "next/image"
 import React from 'react'
 import { 
@@ -18,48 +16,35 @@ import Update from "./components/update"
 import Delete from "./components/delete"
 
 export default function Home() {
-  // operazione CRUD da eseguire (nel form)
-  const [op, setOp] = React.useState<Selection>(new Set([]))
-  // operazione specifica su cui operare (nel form)
-  const [entity, setEntity] = React.useState<Selection>(new Set([]))
-  // componente da mostrare
-  const [comp, setComp] = React.useState<string>('')
-  // operazione che il componente deve eseguire
-  const [val, setVal] = React.useState<string>('')
+  // operazione CRUD da eseguire
+  const [crud, setCrud] = React.useState<string>('')
+  // query da eseguire
+  const [query, setQuery] = React.useState<string>('')
+  // componente dei risultati da mostrare
+  const [crudComponent, setCrudComponent] = React.useState<string[]>(['', ''])  // [crud, op]
 
   /**
-   * Imposta una nuova operazione e svuota il campo specifico
-   * 
-   * @param newOp operazione CRUD selezionata
-   */
-  const handleOpChange = (newOp: Selection) => {
-    setOp(newOp)
-    setEntity(new Set([]))
-  }
-
-  /**
-   * Svuota i campi del form e nasconde il componente
+   * Svuota i campi del form e nasconde il componente risultati
    * 
    * @param event evento di reset
    */
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    setComp('')
-    setVal('')
-    setOp(new Set([]))
-    setEntity(new Set([]))
+    setCrudComponent(['', ''])
+    setCrud('')
+    setQuery('')
   }
 
   /**
-   * Manda in esecuzione l'operazione desiderata
+   * Manda in esecuzione l'operazione selezionata
    * 
    * @param event evento di submit
    */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setComp(Array.from(op)[0].toString())
-    setVal(Array.from(entity)[0].toString())
+
+    setCrudComponent([crud, query])
   }
 
   return (
@@ -78,32 +63,36 @@ export default function Home() {
           height={295} />
         <Form
           className="flex flex-col items-center gap-6 w-full max-w-md"
+          validationBehavior="native"
           onReset={handleReset}
           onSubmit={handleSubmit}
         >
           <div className="flex flex-row w-full gap-4">
             <Select
               className="flex-1"
-              label="Operazione"
+              label="Operazione CRUD"
               isRequired
-              selectedKeys={op}
-              onSelectionChange={handleOpChange}
+              selectedKeys={[crud]}
+              onChange={e => {
+                setQuery('')
+                setCrud(e.target.value)
+              }}
             >
               <SelectItem key='c'>Inserimento</SelectItem>
               <SelectItem key='r'>Ricerca</SelectItem>
               <SelectItem key='u'>Modifica</SelectItem>
               <SelectItem key='d'>Eliminazione</SelectItem>
             </Select>
-            {Array.from(op).length > 0 && <Select
+            {crud && <Select
               className="flex-1"
-              label="Entità"
+              label="Query"
               isRequired
-              selectedKeys={entity}
-              onSelectionChange={setEntity}
+              selectedKeys={[query]}
+              onChange={e => setQuery(e.target.value)}
             >
               <SelectSection
                 title="Inserimento"
-                hidden={Array.from(op)[0] != 'c'}
+                hidden={crud != 'c'}
               >
                 <SelectItem key='c-aeroporto'>Nuovo aeroporto</SelectItem>
                 <SelectItem key='c-volo'>Nuovo volo</SelectItem>
@@ -115,7 +104,7 @@ export default function Home() {
               </SelectSection>
               <SelectSection
                 title="Ricerca"
-                hidden={Array.from(op)[0] != 'r'}
+                hidden={crud != 'r'}
               >
                 <SelectItem key="r-partenze">Voli in partenza</SelectItem>
                 <SelectItem key="r-arrivi">Voli in arrivo</SelectItem>
@@ -132,7 +121,7 @@ export default function Home() {
               </SelectSection>
               <SelectSection
                 title="Modifica"
-                hidden={Array.from(op)[0] != 'u'}
+                hidden={crud != 'u'}
               >
                 <SelectItem key="u-serv-commerciale">Gestore servizio commerciale</SelectItem>
                 <SelectItem key="u-serv-sicurezza">Servizio di sicurezza</SelectItem>
@@ -146,7 +135,7 @@ export default function Home() {
               </SelectSection>
               <SelectSection
                 title="Eliminazione"
-                hidden={Array.from(op)[0] != 'd'}
+                hidden={crud != 'd'}
               >
                 <SelectItem key="d-aereo">Smantellamento aereo</SelectItem>
                 <SelectItem key="d-volo">Cancellazione volo</SelectItem>
@@ -161,10 +150,10 @@ export default function Home() {
             <Button type='submit' color="primary">Esegui</Button>
           </ButtonGroup>
         </Form>
-        {comp == 'c' && <Create e={val} />}
-        {comp == 'r' && <Retrieve e={val} />}
-        {comp == 'u' && <Update e={val} />}
-        {comp == 'd' && <Delete e={val} />}
+        {crudComponent[0] == 'c' && <Create q={crudComponent[1]} />}
+        {crudComponent[0] == 'r' && <Retrieve q={crudComponent[1]} />}
+        {crudComponent[0] == 'u' && <Update q={crudComponent[1]} />}
+        {crudComponent[0] == 'd' && <Delete q={crudComponent[1]} />}
       </main>
     </div>
   );
