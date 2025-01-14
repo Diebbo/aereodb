@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { update, selectAllFrom, selectCommercials, selectSecurities, selectParkings } from "../actions/query";
+import { datetimeToString, datetimeToDateString } from "../lib/date";
 import {
   Form,
   Input,
@@ -75,14 +76,15 @@ export default function Update({ q }: { q: string }) {
           break
         case 'u-volo':
           const v = flights.filter((f: any) => f.numeroVolo == selected)[0]
-          setPartenza(v?.partenza || '')
-          setArrivo(v?.arrivo || '')
+          setPartenza(v?.partenza ? datetimeToString(v?.partenza) : '')
+          setArrivo(v?.arrivo ? datetimeToString(v?.arrivo) : '')
+          console.log('partenza:', partenza)
           break
         case 'u-documento':
           const d = documents.filter((d: any) => `${d.tipo},${d.numero}` == selected)[0]
           setTipo(d?.tipo || '')
           setNumero(d?.numero || '')
-          setScadenza(d?.scadenza || '')
+          setScadenza(d?.scadenza ? datetimeToDateString(d?.scadenza) : '')
           break
         case 'u-bagaglio':
           setStato(bags.filter((b: any) => b.id == selected)[0]?.stato || '')
@@ -109,6 +111,7 @@ export default function Update({ q }: { q: string }) {
       alert('Modifica eseguita correttamente')
     } catch (error) {
       setError(error)
+      console.error(error)
     }
   }
 

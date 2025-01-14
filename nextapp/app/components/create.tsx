@@ -78,6 +78,7 @@ export default function Create({ q }: { q: string }) {
       setError('')
       alert('Inserimento eseguito correttamente')
     } catch (error) {
+      console.error(error)
       setError(error)
     }
   }

@@ -19,10 +19,11 @@ export const create = async (q: string, params: string[]) => {
         `, params)
         break
       case 'c-volo':
-        return (await excQuery(`
+        await excQuery(`
           INSERT INTO volo (numeroVolo, partenza, arrivo, IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPartenza, nomeCompagnia, aereo)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-        `, params))
+        `, params)
+        break
       case 'c-passeggero':
         await excQuery(`
           INSERT INTO passeggero (numeroBiglietto, classeViaggio, posto, codiceFiscale, numeroVolo)
