@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { retrieve, getPK } from "../actions/query";
+import { retrieve, selectAllFrom } from "../actions/query";
 import { Button, Form, Select, SelectItem } from "@nextui-org/react";
 
 export default function Retrieve({ q }: { q: string }) {
@@ -14,7 +14,7 @@ export default function Retrieve({ q }: { q: string }) {
     const fetchAirports = async () => {
       if (needsPK()) {
         try {
-          const data = await getPK('aeroporto')
+          const data = await selectAllFrom('aeroporto')
           setError('')
           setAirports(data)
         } catch (error) {
@@ -36,9 +36,7 @@ export default function Retrieve({ q }: { q: string }) {
       q == 'r-partenze' ||
       q == 'r-arrivi' ||
       q == 'r-lav-aeroporto' ||
-      q == 'r-serv-aeroporto' ||
-      q == 'r-serv-sicurezza' ||
-      q == 'r-serv-trasporto' ||
+      q.includes('serv') ||
       q == 'r-parcheggi'
     )
   }

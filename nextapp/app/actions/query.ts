@@ -2,14 +2,130 @@
 
 import excQuery from "../lib/db"
 
-export const create = async (q: string, params?: string[]) => {
-  
+/**
+ * Esegue una query di inserimento dati
+ * 
+ * @param q tipo di query da eseguire
+ * @param params parametri della query
+ * @returns risultato della query
+ */
+export const create = async (q: string, params: string[]) => {
+  try {
+    switch (q) {
+      case 'c-aeroporto':
+        await excQuery(`
+          INSERT INTO aeroporto (IATA, ICAO, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo)
+          VALUES (?, ?, ?, ?, ?, ?, ?);
+        `, params)
+        break
+      case 'c-volo':
+        return (await excQuery(`
+          INSERT INTO volo (numeroVolo, partenza, arrivo, IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPartenza, nomeCompagnia, aereo)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+        `, params))
+      case 'c-passeggero':
+        await excQuery(`
+          INSERT INTO passeggero (numeroBiglietto, classeViaggio, posto, codiceFiscale, numeroVolo)
+          VALUES (?, ?, ?, ?, ?);
+        `, params)
+        break
+      case 'c-lavoratore':
+        await excQuery(`
+          INSERT INTO dipendente (matricola, dataAssunzione, stipendio, codiceFiscale)
+          VALUES (?, ?, ?, ?);
+        `, params)
+        break
+      case 'c-bagaglio':
+        await excQuery(`
+          INSERT INTO bagaglio (peso, altezza, larghezza, spessore, stato, descrizione, animale, numeroBiglietto)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+        `, params)
+        break
+      case 'c-pacco':
+        await excQuery(`
+          INSERT INTO pacco (peso, altezza, larghezza, spessore, contenuto, stato, numeroVolo)
+          VALUES (?, ?, ?, ?, ?, ?, ?);
+        `, params)
+        break
+      case 'c-compagnia':
+        await excQuery(`
+          INSERT INTO compagnia (nome, sede) 
+          VALUES (?, ?);
+        `, params)
+        break
+      default:
+        console.log('Create inesistente')
+        return 'Sei un babbo'
+    }
+  } catch (error) {
+    console.error('Create error:', error)
+    throw error
+  }
 }
 
+/**
+ * Esegue una query di aggiornamento dati
+ * 
+ * @param q tipo di query da eseguire
+ * @param params parametri della query
+ * @returns risultato della query
+ */
 export const update = async (q: string, params?: string[]) => {
-  
+  try {
+    switch (q) {
+      case 'u-serv-commerciale':
+        return (await excQuery(`
+          
+        `, params))
+      case 'u-serv-sicurezza':
+        return (await excQuery(`
+          
+        `, params))
+      case 'u-serv-trasporto':
+        return (await excQuery(`
+          
+        `, params))
+      case 'u-volo':
+        return (await excQuery(`
+          
+        `, params))
+      case 'u-documento':
+        return (await excQuery(`
+          
+        `, params))
+      case 'u-bagaglio':
+        return (await excQuery(`
+          
+        `, params))
+      case 'u-stipendio':
+        return (await excQuery(`
+          
+        `, params))
+      case 'u-attesa':
+        return (await excQuery(`
+          
+        `, params))
+      case 'u-parcheggi':
+        return (await excQuery(`
+          
+        `, params))
+      default:
+        console.log('Update inesistente')
+        return 'Sei un babbo'
+    }
+  } catch (error) {
+    console.error('Update error:', error)
+    throw error
+  }
 }
 
+/**
+ * Esegue una query di ricerca dati
+ * 
+ * @param q tipo di query da eseguire
+ * @param params parametri della query
+ * @returns risultato della query
+ */
 export const retrieve = async (q: string, params?: string[]) => {
   try {
     switch (q) {
@@ -86,7 +202,7 @@ export const retrieve = async (q: string, params?: string[]) => {
         `, params))
       default:
         console.log('Retrieve inesistente')
-        break
+        return 'Sei un babbo'
     }
   } catch (error) {
     console.error('Retrieve error:', error)
@@ -94,32 +210,44 @@ export const retrieve = async (q: string, params?: string[]) => {
   }
 }
 
+/**
+ * Esegue una query di eliminazione dati
+ * 
+ * @param q tipo di query da eseguire
+ * @param params parametri della query
+ * @returns risultato della query
+ */
 export const remove = async (q: string, params?: string[]) => {
   try {
     switch (q) {
       case 'd-aereo':
-        return (await excQuery(`
+        await excQuery(`
           DELETE FROM aereo WHERE numeroDiSerie = ?;
-        `, params))
+        `, params)
+        break
       case 'd-volo':
-        return (await excQuery(`
+        await excQuery(`
           DELETE FROM volo WHERE numeroVolo = ?;
-        `, params))
+        `, params)
+        break
       case 'd-documento':
-        return (await excQuery(`
+        await excQuery(`
           DELETE FROM documento WHERE tipo = ? AND numero = ?;
-        `, params))
-      case 'd-lavoratore':
-        return (await excQuery(`
+        `, params)
+        break
+      case 'd-dipendente':
+        await excQuery(`
           DELETE FROM dipendente WHERE matricola = ?;
-        `, params))
+        `, params)
+        break
       case 'd-servizio':
-        return (await excQuery(`
+        await excQuery(`
           DELETE FROM servizio WHERE id = ?;
-        `, params))
+        `, params)
+        break
       default:
         console.log('Delete inesistente')
-        break
+        return 'Sei un babbo'
     }
   } catch (error) {
     console.error(error)
@@ -127,11 +255,17 @@ export const remove = async (q: string, params?: string[]) => {
   }
 }
 
-export const getPK = async (param: string) => {
+/**
+ * Seleziona tutti i dati da una tabella
+ * 
+ * @param param tabella da cui prendere i dati
+ * @returns risultato della query
+ */
+export const selectAllFrom = async (param: string) => {
   try {
-    return (await (excQuery(`SELECT * FROM ${param};`)))
+    return (await excQuery(`SELECT * FROM ${param};`))
   } catch (error) {
-    console.error(error)
+    console.error('SelectAllFrom error', error)
     throw error
   }
 }

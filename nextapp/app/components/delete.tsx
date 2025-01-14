@@ -1,38 +1,18 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { remove, getPK } from "../actions/query";
+import { remove, selectAllFrom } from "../actions/query";
 import { Form, Button, Select, SelectItem } from '@nextui-org/react'
 
 export default function Delete({ q }: { q: string }) {
-  const [result, setResult] = useState<any>()
   const [error, setError] = useState<any>('')
   const [entities, setEntities] = useState<any>([])
   const [selectedEntity, setSelectedEntity] = useState<string>('')
 
   useEffect(() => {
     const fetchPK = async () => {
-      let pk: string = ''
-      switch(q) {
-        case 'd-aereo':
-          pk = 'aereo'
-          break
-        case 'd-volo':
-          pk = 'volo'
-          break
-        case 'd-documento':
-          pk = 'documento'
-          break
-        case 'd-lavoratore':
-          pk = 'dipendente'
-          break
-        case 'd-servizio':
-          pk = 'servizio'
-          break
-      }
-
       try {
-        const data = await getPK(pk)
+        const data = await selectAllFrom(q.split('-')[1])
         setError('')
         setEntities(data)
       } catch (error) {
@@ -45,11 +25,97 @@ export default function Delete({ q }: { q: string }) {
 
   const fetchDb = async () => {
     try {
-      const res = await remove(q, selectedEntity.split(','))
+      await remove(q, selectedEntity.split(','))
       setError('')
-      setResult(res)
+      alert('Eliminazione eseguita correttamente')
     } catch (error) {
       setError(error)
+    }
+  }
+
+  const renderAereoSelect = () => {
+    return(
+      <Select
+        label="Aereo"
+        isRequired
+        selectedKeys={[selectedEntity]}
+        onChange={e => setSelectedEntity(e.target.value)}
+      >
+        {entities.map((ent: any) => (
+          <SelectItem key={ent.numeroDiSerie}>{ent.numeroDiSerie}</SelectItem>
+        ))}
+      </Select>
+    )
+  }
+
+  const renderVoloSelect = () => {
+    return(
+      <Select
+        label="Volo"
+        isRequired
+        selectedKeys={[selectedEntity]}
+        onChange={e => setSelectedEntity(e.target.value)}
+      >
+        {entities.map((ent: any) => (
+          <SelectItem key={ent.numeroVolo}>{ent.numeroVolo}</SelectItem>
+        ))}
+      </Select>
+    )
+  }
+
+  const renderDocumentoSelect = () => {
+    return(
+      <Select
+        label="Documento"
+        isRequired
+        selectedKeys={[selectedEntity]}
+        onChange={e => setSelectedEntity(e.target.value)}
+      >
+        {entities.map((ent: any) => (
+          <SelectItem key={ent.tipo + ',' + ent.numero}>{ent.tipo} - {ent.numero}</SelectItem>
+        ))}
+      </Select>
+    )
+  }
+
+  const renderLavoratoreSelect = () => {
+    return(
+      <Select
+        label="Dipendente"
+        isRequired
+        selectedKeys={[selectedEntity]}
+        onChange={e => setSelectedEntity(e.target.value)}
+      >
+        {entities.map((ent: any) => (
+          <SelectItem key={ent.matricola}>{ent.matricola}</SelectItem>
+        ))}
+      </Select>
+    )
+  }
+
+  const renderServizioSelect = () => {
+    return(
+      <Select
+        label="Servizio"
+        isRequired
+        selectedKeys={[selectedEntity]}
+        onChange={e => setSelectedEntity(e.target.value)}
+      >
+        {entities.map((ent: any) => (
+          <SelectItem key={ent.id}>{ent.id}</SelectItem>
+        ))}
+      </Select>
+    )
+  }
+
+  const renderSelect = () => {
+    switch (q) {
+      case 'd-aereo': return renderAereoSelect()
+      case 'd-volo': return renderVoloSelect()
+      case 'd-documento': return renderDocumentoSelect()
+      case 'd-dipendente': return renderLavoratoreSelect()
+      case 'd-servizio': return renderServizioSelect()
+      default: return null
     }
   }
 
@@ -64,56 +130,7 @@ export default function Delete({ q }: { q: string }) {
               fetchDb()
             }}
           >
-            {q == 'd-aereo' && <Select
-              label="Aereo"
-              isRequired
-              selectedKeys={[selectedEntity]}
-              onChange={e => setSelectedEntity(e.target.value)}
-            >
-              {entities.map((ent: any) => (
-                <SelectItem key={ent.numeroDiSerie}>{ent.numeroDiSerie}</SelectItem>
-              ))}
-            </Select>}
-            {q == 'd-volo' && <Select
-              label="Volo"
-              isRequired
-              selectedKeys={[selectedEntity]}
-              onChange={e => setSelectedEntity(e.target.value)}
-            >
-              {entities.map((ent: any) => (
-                <SelectItem key={ent.numeroVolo}>{ent.numeroVolo}</SelectItem>
-              ))}
-            </Select>}
-            {q == 'd-documento' && <Select
-              label="Documento"
-              isRequired
-              selectedKeys={[selectedEntity]}
-              onChange={e => setSelectedEntity(e.target.value)}
-            >
-              {entities.map((ent: any) => (
-                <SelectItem key={ent.tipo + ',' + ent.numero}>{ent.tipo} - {ent.numero}</SelectItem>
-              ))}
-            </Select>}
-            {q == 'd-lavoratore' && <Select
-              label="Dipendente"
-              isRequired
-              selectedKeys={[selectedEntity]}
-              onChange={e => setSelectedEntity(e.target.value)}
-            >
-              {entities.map((ent: any) => (
-                <SelectItem key={ent.matricola}>{ent.matricola}</SelectItem>
-              ))}
-            </Select>}
-            {q == 'd-servizio' && <Select
-              label="Servizio"
-              isRequired
-              selectedKeys={[selectedEntity]}
-              onChange={e => setSelectedEntity(e.target.value)}
-            >
-              {entities.map((ent: any) => (
-                <SelectItem key={ent.id}>{ent.id}</SelectItem>
-              ))}
-            </Select>}
+            {renderSelect()}
             <Button type='submit' color="primary">Elimina</Button>
           </Form>
         </div>
