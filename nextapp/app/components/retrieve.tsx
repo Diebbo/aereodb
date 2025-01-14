@@ -1,43 +1,103 @@
 'use client'
 
-import React from "react";
-import query from "../lib/db";
-import { QueryResult } from "mysql2";
+import { useState, useEffect } from "react";
+import { retrieve, selectAllFrom } from "../actions/query";
+import { Button, Form, Select, SelectItem } from "@nextui-org/react";
 
-type RetrieveProps = {
-  e: string
-};
+export default function Retrieve({ q }: { q: string }) {
+  const [result, setResult] = useState<any>([])
+  const [error, setError] = useState<any>('')
+  const [airports, setAirports] = useState<any>([])
+  const [selectedAirport, setSelectedAirport] = useState<string>('')
 
-const Retrieve: React.FC<RetrieveProps> = async ({ e }) => {
-  const [result, setResult] = React.useState<QueryResult>()
+  useEffect(() => {
+    const fetchAirports = async () => {
+      if (needsPK()) {
+        try {
+          const data = await selectAllFrom('aeroporto')
+          setError('')
+          setAirports(data)
+        } catch (error) {
+          setError(error)
+        }
+      }
+    }
 
-  const excQuery = async () => {
-    switch (e) {
-      case 'r-partenze':
-        setResult(await query('SELECT * FROM aeroporto AS a, volo AS v WHERE a.IATA = v.IATAPartenza AND a.ICAO = v.ICAOPartenza ORDER BY a.nome'))
-        break
-      case 'r-arrivi':
-        setResult(await query('SELECT * FROM aeroporto AS a, volo AS v WHERE a.IATA = v.IATAArrivo AND a.ICAO = v.ICAOArrivo ORDER BY a.nome'))
-        break
-      case 'r-lav-aeroporto':
-      case 'r-lav-comp-aeree':
-      case 'r-lav-comp-log':
-      case 'r-passeggeri':
-      case 'r-bagagli':
-      case 'r-merci':
-        setResult(await query('SELECT * FROM pacco'))
-        break
-      case 'r-serv-aeroporto':
-      case 'r-serv-sicurezza':
-      case 'r-serv-trasporto':
-      case 'r-parcheggi':
+    fetchAirports()
+  }, [])
+
+  /**
+   * Controlla se la query ha bisogno del parametro aeroporto
+   * 
+   * @returns true se serve la ricerca aggiuntiva
+   */
+  const needsPK = () => {
+    return(
+      q == 'r-partenze' ||
+      q == 'r-arrivi' ||
+      q == 'r-lav-aeroporto' ||
+      q.includes('serv') ||
+      q == 'r-parcheggi'
+    )
+  }
+
+  const fetchDb = async () => {
+    try {
+      const data = needsPK() ? await retrieve(q, selectedAirport.split(',')) : await retrieve(q)
+      setError('')
+      setResult(data)
+    } catch (error) {
+      setError(error)
     }
   }
+
   return (
-    <div onLoad={excQuery}>
-      <p>{e}</p>
+    <div>
+      {error ? <span className="error">error</span> : (
+        <div>
+          <Form
+            validationBehavior="native"
+            onSubmit={(e) => {
+              e.preventDefault()
+              fetchDb()
+            }}
+          >
+            {needsPK() && <Select
+              label="Aeroporto"
+              isRequired
+              selectedKeys={[selectedAirport]}
+              onChange={e => setSelectedAirport(e.target.value)}
+            >
+              {airports.map((a: any) => (
+                <SelectItem key={a.IATA + ',' + a.ICAO}>{a.IATA} - {a.ICAO}</SelectItem>
+              ))}
+              </Select>}
+            <Button type='submit' color="primary">Esegui ricerca</Button>
+          </Form>
+          {result.length === 0 ? (
+            <p>Nessun risultato</p>
+          ) : (
+            <table className="border-1 border-black border-collapse">
+              <thead>
+                <tr>
+                  {Object.keys(result[0]).map((key: string) => (
+                    <th key={key} className="border-1 border-black p-5">{key}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {result.map((row: any, i: number) => (
+                  <tr key={i}>
+                    {Object.values(row).map((value: any, j: number) => (
+                      <td key={j} className="border-1 border-black align-center p-5">{`${value}`}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
     </div>
   );
 };
-
-export default Retrieve;

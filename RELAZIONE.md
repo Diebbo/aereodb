@@ -520,6 +520,8 @@ Modifiche alla struttura:
 
 #### *Creazione database e tabelle*
 
+TODO: controllare gli on delete cascade per le eliminazioni
+
 ```sql
 -- Create the database
 CREATE DATABASE aereodb;
@@ -720,8 +722,8 @@ CREATE TABLE trasporto_parcheggio (
     frequenza ENUM('minutaria', 'oraria', 'giornaliera') NOT NULL,
     intervallo INT NOT NULL,
     PRIMARY KEY (id, longitudine, latitudine),
-    FOREIGN KEY (id) REFERENCES servizio_trasporto(id),
-    FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine)
+    FOREIGN KEY (id) REFERENCES servizio_trasporto(id) ON DELETE CASCADE,
+    FOREIGN KEY (longitudine, latitudine) REFERENCES parcheggio(longitudine, latitudine) ON DELETE CASCADE
 );
 
 CREATE TABLE lavoro_servizio (
@@ -990,7 +992,7 @@ SET numeroPasseggeri = (SELECT COUNT(numeroBiglietto) FROM passeggero WHERE pass
 
 **Documenti di identità**
 ```sql
-UPDATE documento SET tipo = $newTipo, numero = $newNumero, scadenza = $scadenza, codiceFiscale = $codFiscale WHERE tipo = $oldTipo AND numero = $oldNumero;
+UPDATE documento SET tipo = $newTipo, numero = $newNumero, scadenza = $scadenza WHERE tipo = $oldTipo AND numero = $oldNumero;
 ```
 
 **Stato bagaglio**
