@@ -72,7 +72,7 @@ export default function Retrieve({ q }: { q: string }) {
                 <SelectItem key={a.IATA + ',' + a.ICAO}>{a.IATA} - {a.ICAO}</SelectItem>
               ))}
               </Select>}
-            <Button type='submit' color="primary">Esegui</Button>
+            <Button type='submit' color="primary">Esegui ricerca</Button>
           </Form>
           {result.length === 0 ? (
             <p>Nessun risultato</p>

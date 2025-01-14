@@ -278,3 +278,45 @@ export const selectAllFrom = async (param: string) => {
     throw error
   }
 }
+
+/**
+ * Seleziona i servizi commerciali con la loro entità padre
+ * 
+ * @returns risultato della query
+ */
+export const selectCommercials = async () => {
+  try {
+    return (await excQuery('SELECT * FROM servizio_commerciale NATURAL JOIN servizio'))
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+/**
+ * Seleziona i servizi di sicurezza con la loro entità padre
+ * 
+ * @returns risultato della query
+ */
+export const selectSecurities = async () => {
+  try {
+    return (await excQuery('SELECT * FROM servizio_sicurezza NATURAL JOIN servizio'))
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+/**
+ * Seleziona i parcheggi con la loro entità padre
+ * 
+ * @returns risultato della query
+ */
+export const selectParkings = async () => {
+  try {
+    return (await excQuery('SELECT * FROM parcheggio NATURAL JOIN servizio'))
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
