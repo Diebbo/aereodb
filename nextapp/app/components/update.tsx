@@ -118,6 +118,7 @@ export default function Update({ q }: { q: string }) {
   const renderServCommercialeForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -125,13 +126,14 @@ export default function Update({ q }: { q: string }) {
         }}
       >
         <Select
+          className="flex-1"
           label="Servizio commerciale"
           isRequired
           selectedKeys={[selected]}
           onChange={e => setSelected(e.target.value)}
         >
           {commercials.map((c: any) => (
-            <SelectItem key={c.id}>
+            <SelectItem key={c.id} textValue={`${c.nome}, (${c.descrizione}), ${c.gestore}`}>
               {c.nome}, ({c.descrizione}), {c.gestore}
             </SelectItem>
           ))}
@@ -154,6 +156,7 @@ export default function Update({ q }: { q: string }) {
   const renderServSicurezzaForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -161,13 +164,14 @@ export default function Update({ q }: { q: string }) {
         }}
       >
         <Select
+          className="flex-1"
           label="Servizio sicurezza"
           isRequired
           selectedKeys={[selected]}
           onChange={e => setSelected(e.target.value)}
         >
           {securities.map((s: any) => (
-            <SelectItem key={s.id}>
+            <SelectItem key={s.id} textValue={`${s.nome}, (${s.descrizione}), ${s.numeroAddettiRichiesti} addetti`}>
               {s.nome}, ({s.descrizione}), {s.numeroAddettiRichiesti} addetti
             </SelectItem>
           ))}
@@ -191,6 +195,7 @@ export default function Update({ q }: { q: string }) {
   const renderServTrasportoForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -198,18 +203,20 @@ export default function Update({ q }: { q: string }) {
         }}
       >
         <Select
+          className="flex-1"
           label="Servizio trasporto"
           isRequired
           selectedKeys={[selected]}
           onChange={e => setSelected(e.target.value)}
         >
           {transports.map((t: any) => (
-            <SelectItem key={t.id}>
+            <SelectItem key={t.id} textValue={`${t.tipo} ${t.linea} - ${t.costoPerPersona} €`}>
               {t.tipo} {t.linea} - {t.costoPerPersona} €
             </SelectItem>
           ))}
         </Select>
         <Select
+          className="flex-1"
           label="Nuovo tipo"
           isRequired
           isDisabled={selected == ''}
@@ -249,6 +256,7 @@ export default function Update({ q }: { q: string }) {
   const renderVoloForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -256,13 +264,14 @@ export default function Update({ q }: { q: string }) {
         }}
       >
         <Select
+          className="flex-1"
           label="Volo"
           isRequired
           selectedKeys={[selected]}
           onChange={e => setSelected(e.target.value)}
         >
           {flights.map((f: any) => (
-            <SelectItem key={f.numeroVolo}>
+            <SelectItem key={f.numeroVolo} textValue={`${f.numeroVolo}, ${f.partenza.toLocaleString('it-IT')} - ${f.arrivo.toLocaleString('it-IT')} (${f.nomeCompagnia})`}>
               {f.numeroVolo}, {f.partenza.toLocaleString('it-IT')} - {f.arrivo.toLocaleString('it-IT')} ({f.nomeCompagnia})
             </SelectItem>
           ))}
@@ -294,6 +303,7 @@ export default function Update({ q }: { q: string }) {
   const renderDocumentoForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -301,13 +311,14 @@ export default function Update({ q }: { q: string }) {
         }}
       >
         <Select
+          className="flex-1"
           label="Documento"
           isRequired
           selectedKeys={[selected]}
           onChange={e => setSelected(e.target.value)}
         >
           {documents.map((d: any) => (
-            <SelectItem key={d.tipo + ',' + d.numero}>
+            <SelectItem key={d.tipo + ',' + d.numero} textValue={`${d.tipo}, ${d.numero}, ${d.scadenza} - ${d.codiceFiscale}`}>
               {d.tipo}, {d.numero}, {d.scadenza} - {d.codiceFiscale}
             </SelectItem>
           ))}
@@ -345,6 +356,7 @@ export default function Update({ q }: { q: string }) {
   const renderBagaglioForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -352,18 +364,20 @@ export default function Update({ q }: { q: string }) {
         }}
       >
         <Select
+          className="flex-1"
           label="Bagaglio"
           isRequired
           selectedKeys={[selected]}
           onChange={e => setSelected(e.target.value)}
         >
           {bags.map((b: any) => (
-            <SelectItem key={b.id}>
+            <SelectItem key={b.id} textValue={`${b.numeroBiglietto}, ${b.descrizione} (${b.stato})`}>
               {b.numeroBiglietto}, {b.descrizione} ({b.stato})
             </SelectItem>
           ))}
         </Select>
         <Select
+          className="flex-1"
           label="Nuovo stato"
           isRequired
           isDisabled={selected == ''}
@@ -385,6 +399,7 @@ export default function Update({ q }: { q: string }) {
   const renderStipendioForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -392,13 +407,14 @@ export default function Update({ q }: { q: string }) {
         }}
       >
         <Select
+          className="flex-1"
           label="Dipendente"
           isRequired
           selectedKeys={[selected]}
           onChange={e => setSelected(e.target.value)}
         >
           {employees.map((e: any) => (
-            <SelectItem key={e.matricola}>
+            <SelectItem key={e.matricola} textValue={`${e.matricola} (${e.codiceFiscale}), ${e.stipendio} €`}>
               {e.matricola} ({e.codiceFiscale}), {e.stipendio} €
             </SelectItem>
           ))}
@@ -424,6 +440,7 @@ export default function Update({ q }: { q: string }) {
   const renderAttesaForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -431,13 +448,14 @@ export default function Update({ q }: { q: string }) {
         }}
       >
         <Select
+          className="flex-1"
           label="Servizio sicurezza"
           isRequired
           selectedKeys={[selected]}
           onChange={e => setSelected(e.target.value)}
         >
           {securities.map((s: any) => (
-            <SelectItem key={s.id}>
+            <SelectItem key={s.id} textValue={`${s.nome}, (${s.descrizione}) - ${s.tempoMedioAttesa} min`}>
               {s.nome}, ({s.descrizione}) - {s.tempoMedioAttesa} min
             </SelectItem>
           ))}
@@ -462,6 +480,7 @@ export default function Update({ q }: { q: string }) {
   const renderParcheggiForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -469,13 +488,14 @@ export default function Update({ q }: { q: string }) {
         }}
       >
         <Select
+          className="flex-1"
           label="Parcheggio"
           isRequired
           selectedKeys={[selected]}
           onChange={e => setSelected(e.target.value)}
         >
           {parkings.map((p: any) => (
-            <SelectItem key={p.longitudine + ',' + p.latitudine}>
+            <SelectItem key={p.longitudine + ',' + p.latitudine} textValue={`${p.nome}, occupazione ${p.postiOccupati}/${p.postiDisponibili}`}>
               {p.nome}, occupazione {p.postiOccupati}/{p.postiDisponibili}
             </SelectItem>
           ))}

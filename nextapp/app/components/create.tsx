@@ -86,6 +86,7 @@ export default function Create({ q }: { q: string }) {
   const renderAeroportoForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -151,6 +152,7 @@ export default function Create({ q }: { q: string }) {
   const renderVoloForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -179,49 +181,53 @@ export default function Create({ q }: { q: string }) {
           isRequired
         />
         <Select
+          className="flex-1"
           label="Aeroporto partenza"
           isRequired
           selectedKeys={[aeroportoPartenza]}
           onChange={e => setAeroportoPartenza(e.target.value)}
         >
           {airports.map((a: any) => (
-            <SelectItem key={a.IATA + ',' + a.ICAO}>
+            <SelectItem key={a.IATA + ',' + a.ICAO} textValue={`${a.nome} (${a.provincia}, ${a.IATA} - ${a.ICAO})`}>
               {a.nome} ({a.provincia}, {a.IATA} - {a.ICAO})
             </SelectItem>
           ))}
         </Select>
         <Select
+          className="flex-1"
           label="Aeroporto arrivo"
           isRequired
           selectedKeys={[aeroportoArrivo]}
           onChange={e => setAeroportoArrivo(e.target.value)}
         >
           {airports.map((a: any) => (
-            <SelectItem key={a.IATA + ',' + a.ICAO}>
+            <SelectItem key={a.IATA + ',' + a.ICAO} textValue={`${a.nome} (${a.provincia}, ${a.IATA} - ${a.ICAO})`}>
               {a.nome} ({a.provincia}, {a.IATA} - {a.ICAO})
             </SelectItem>
           ))}
         </Select>
         <Select
+          className="flex-1"
           label="Compagnia"
           isRequired
           selectedKeys={[compagnia]}
           onChange={e => setCompagnia(e.target.value)}
         >
           {companies.map((c: any) => (
-            <SelectItem key={c.nome}>
+            <SelectItem key={c.nome} textValue={`${c.nome}`}>
               {c.nome}
             </SelectItem>
           ))}
         </Select>
         <Select
+          className="flex-1"
           label="Aereo"
           isRequired
           selectedKeys={[aereo]}
           onChange={e => setAereo(e.target.value)}
         >
           {planes.map((p: any) => (
-            <SelectItem key={p.numeroDiSerie}>
+            <SelectItem key={p.numeroDiSerie} textValue={`${p.modello} (${p.nomeCompagnia}), ${p.tipologia}`}>
               {p.modello} ({p.nomeCompagnia}), {p.tipologia}
             </SelectItem>
           ))}
@@ -237,6 +243,7 @@ export default function Create({ q }: { q: string }) {
   const renderPasseggeroForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -263,25 +270,27 @@ export default function Create({ q }: { q: string }) {
           isRequired
         />
         <Select
+          className="flex-1"
           label="Persona"
           isRequired
           selectedKeys={[persona]}
           onChange={e => setPersona(e.target.value)}
         >
           {people.map((p: any) => (
-            <SelectItem key={p.codiceFiscale}>
+            <SelectItem key={p.codiceFiscale} textValue={`${p.nome} ${p.cognome} (${p.codiceFiscale})`}>
               {p.nome} {p.cognome} ({p.codiceFiscale})
             </SelectItem>
           ))}
         </Select>
         <Select
+          className="flex-1"
           label="Volo"
           isRequired
           selectedKeys={[volo]}
           onChange={e => setVolo(e.target.value)}
         >
           {flights.map((f: any) => (
-            <SelectItem key={f.numeroVolo}>
+            <SelectItem key={f.numeroVolo} textValue={`${f.numeroVolo} - ${f.nomeCompagnia}`}>
               {f.numeroVolo} - {f.nomeCompagnia}
             </SelectItem>
           ))}
@@ -297,6 +306,7 @@ export default function Create({ q }: { q: string }) {
   const renderLavoratoreForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -326,13 +336,14 @@ export default function Create({ q }: { q: string }) {
           isRequired
         />
         <Select
+          className="flex-1"
           label="Persona"
           isRequired
           selectedKeys={[persona]}
           onChange={e => setPersona(e.target.value)}
         >
           {people.map((p: any) => (
-            <SelectItem key={p.codiceFiscale}>
+            <SelectItem key={p.codiceFiscale} textValue={`${p.nome} ${p.cognome} (${p.codiceFiscale})`}>
               {p.nome} {p.cognome} ({p.codiceFiscale})
             </SelectItem>
           ))}
@@ -348,6 +359,7 @@ export default function Create({ q }: { q: string }) {
   const renderBagaglioForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -397,13 +409,14 @@ export default function Create({ q }: { q: string }) {
           È un animale
         </Checkbox>
         <Select
+          className="flex-1"
           label="Passeggero"
           isRequired
           selectedKeys={[passeggero]}
           onChange={e => setPasseggero(e.target.value)}
         >
           {passengers.map((p: any) => (
-            <SelectItem key={p.numeroBiglietto}>
+            <SelectItem key={p.numeroBiglietto} textValue={`${p.numeroBiglietto} (${p.codiceFiscale})`}>
               {p.numeroBiglietto} ({p.codiceFiscale})
             </SelectItem>
           ))}
@@ -419,6 +432,7 @@ export default function Create({ q }: { q: string }) {
   const renderPaccoForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
@@ -461,13 +475,14 @@ export default function Create({ q }: { q: string }) {
           isRequired
         />
         <Select
+          className="flex-1"
           label="Volo"
           isRequired
           selectedKeys={[volo]}
           onChange={e => setVolo(e.target.value)}
         >
           {flights.map((f: any) => (
-            <SelectItem key={f.numeroVolo}>
+            <SelectItem key={f.numeroVolo} textValue={`${f.numeroVolo} - ${f.nomeCompagnia}`}>
               {f.numeroVolo} - {f.nomeCompagnia}
             </SelectItem>
           ))}
@@ -483,6 +498,7 @@ export default function Create({ q }: { q: string }) {
   const renderCompagniaForm = () => {
     return(
       <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()

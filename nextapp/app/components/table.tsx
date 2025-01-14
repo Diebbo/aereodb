@@ -24,8 +24,6 @@ export default function Table({ q }: { q: string }) {
     fetchDb()
   }, [])
 
-  // TODO: controllare il caso in cui apri e i dati non ci sono ancora
-
   return (
     <div>
       {error && <span className="error">Error</span>}

@@ -56,6 +56,7 @@ export default function Retrieve({ q }: { q: string }) {
       {error && <span className="error">error</span>}
       <div>
         <Form
+          className="flex flex-col items-center gap-4 w-full max-w-md"
           validationBehavior="native"
           onSubmit={(e) => {
             e.preventDefault()
@@ -63,13 +64,16 @@ export default function Retrieve({ q }: { q: string }) {
           }}
         >
           {needsPK() && <Select
+            className="flex-1"
             label="Aeroporto"
             isRequired
             selectedKeys={[selectedAirport]}
             onChange={e => setSelectedAirport(e.target.value)}
           >
             {airports.map((a: any) => (
-              <SelectItem key={a.IATA + ',' + a.ICAO}>{a.IATA} - {a.ICAO}</SelectItem>
+              <SelectItem key={a.IATA + ',' + a.ICAO} textValue={`${a.IATA} - ${a.ICAO}`}>
+                {a.IATA} - {a.ICAO}
+              </SelectItem>
             ))}
             </Select>}
           <Button type='submit' color="primary">Esegui ricerca</Button>
