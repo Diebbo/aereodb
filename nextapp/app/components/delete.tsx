@@ -36,6 +36,7 @@ export default function Delete({ q }: { q: string }) {
   const renderAereoSelect = () => {
     return(
       <Select
+        className="flex-1"
         label="Aereo"
         isRequired
         selectedKeys={[selectedEntity]}
@@ -51,6 +52,7 @@ export default function Delete({ q }: { q: string }) {
   const renderVoloSelect = () => {
     return(
       <Select
+        className="flex-1"
         label="Volo"
         isRequired
         selectedKeys={[selectedEntity]}
@@ -66,13 +68,14 @@ export default function Delete({ q }: { q: string }) {
   const renderDocumentoSelect = () => {
     return(
       <Select
+        className="flex-1"
         label="Documento"
         isRequired
         selectedKeys={[selectedEntity]}
         onChange={e => setSelectedEntity(e.target.value)}
       >
         {entities.map((ent: any) => (
-          <SelectItem key={ent.tipo + ',' + ent.numero}>{ent.tipo} - {ent.numero}</SelectItem>
+          <SelectItem key={ent.tipo + ',' + ent.numero}>{ent.tipo},{ent.numero}</SelectItem>
         ))}
       </Select>
     )
@@ -81,6 +84,7 @@ export default function Delete({ q }: { q: string }) {
   const renderLavoratoreSelect = () => {
     return(
       <Select
+        className="flex-1"
         label="Dipendente"
         isRequired
         selectedKeys={[selectedEntity]}
@@ -96,6 +100,7 @@ export default function Delete({ q }: { q: string }) {
   const renderServizioSelect = () => {
     return(
       <Select
+        className="flex-1"
         label="Servizio"
         isRequired
         selectedKeys={[selectedEntity]}
@@ -124,6 +129,7 @@ export default function Delete({ q }: { q: string }) {
       {error ? <span className="error">error</span> : (
         <div>
           <Form
+            className="flex flex-col items-center gap-4 w-full max-w-md"
             validationBehavior="native"
             onSubmit={(e) => {
               e.preventDefault()

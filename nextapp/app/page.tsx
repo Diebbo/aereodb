@@ -13,6 +13,7 @@ import Create from "./components/create"
 import Retrieve from "./components/retrieve"
 import Update from "./components/update"
 import Delete from "./components/delete"
+import Table from './components/table'
 
 export default function Home() {
   // operazione CRUD da eseguire
@@ -21,6 +22,8 @@ export default function Home() {
   const [query, setQuery] = React.useState<string>('')
   // componente dei risultati da mostrare
   const [crudComponent, setCrudComponent] = React.useState<string[]>(['', ''])  // [crud, op]
+  // valore per aggiornare i componenti (trigger)
+  const [submitKey, setSubmitKey] = React.useState<number>(0)
 
   /**
    * Svuota i campi del form e nasconde il componente risultati
@@ -43,6 +46,7 @@ export default function Home() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    setSubmitKey(prev => prev + 1)
     setCrudComponent([crud, query])
   }
 
@@ -69,6 +73,7 @@ export default function Home() {
             <SelectItem key='r'>Ricerca</SelectItem>
             <SelectItem key='u'>Modifica</SelectItem>
             <SelectItem key='d'>Eliminazione</SelectItem>
+            <SelectItem key='t'>Tabella raw</SelectItem>
           </Select>
           {crud && <Select
             className="flex-1"
@@ -77,10 +82,7 @@ export default function Home() {
             selectedKeys={[query]}
             onChange={e => setQuery(e.target.value)}
           >
-            <SelectSection
-              title="Inserimento"
-              hidden={crud != 'c'}
-            >
+            {crud == 'c' ? <SelectSection title="Inserimento">
               <SelectItem key='c-aeroporto'>Nuovo aeroporto</SelectItem>
               <SelectItem key='c-volo'>Nuovo volo</SelectItem>
               <SelectItem key='c-passeggero'>Nuovo passeggero</SelectItem>
@@ -88,11 +90,8 @@ export default function Home() {
               <SelectItem key='c-bagaglio'>Nuovo bagaglio</SelectItem>
               <SelectItem key='c-pacco'>Nuovo pacco</SelectItem>
               <SelectItem key='c-compagnia'>Nuova compagnia</SelectItem>
-            </SelectSection>
-            <SelectSection
-              title="Ricerca"
-              hidden={crud != 'r'}
-            >
+            </SelectSection> : null}
+            {crud == 'r' ? <SelectSection title="Ricerca">
               <SelectItem key="r-partenze">Voli in partenza</SelectItem>
               <SelectItem key="r-arrivi">Voli in arrivo</SelectItem>
               <SelectItem key="r-lav-aeroporto">Lavoratori aeroportuali</SelectItem>
@@ -105,11 +104,8 @@ export default function Home() {
               <SelectItem key="r-serv-sicurezza">Servizi di sicurezza</SelectItem>
               <SelectItem key="r-serv-trasporto">Servizi di trasporto</SelectItem>
               <SelectItem key="r-parcheggi">Stato parcheggi</SelectItem>
-            </SelectSection>
-            <SelectSection
-              title="Modifica"
-              hidden={crud != 'u'}
-            >
+            </SelectSection> : null }
+            {crud == 'u' ? <SelectSection title="Modifica">
               <SelectItem key="u-serv-commerciale">Gestore servizio commerciale</SelectItem>
               <SelectItem key="u-serv-sicurezza">Servizio di sicurezza</SelectItem>
               <SelectItem key="u-serv-trasporto">Servizio di trasporto</SelectItem>
@@ -119,17 +115,37 @@ export default function Home() {
               <SelectItem key="u-stipendio">Stipendio lavoratore</SelectItem>
               <SelectItem key="u-attesa">Tempo di attesa controlli</SelectItem>
               <SelectItem key="u-parcheggi">Posti nei parcheggi</SelectItem>
-            </SelectSection>
-            <SelectSection
-              title="Eliminazione"
-              hidden={crud != 'd'}
-            >
+            </SelectSection> : null }
+            {crud == 'd' ? <SelectSection title="Eliminazione">
               <SelectItem key="d-aereo">Smantellamento aereo</SelectItem>
               <SelectItem key="d-volo">Cancellazione volo</SelectItem>
               <SelectItem key="d-documento">Invalidazione documenti di identità</SelectItem>
               <SelectItem key="d-dipendente">Licenziamento lavoratore</SelectItem>
               <SelectItem key="d-servizio">Chiusura servizio</SelectItem>
-            </SelectSection>
+            </SelectSection> : null }
+            {crud == 't' ? <SelectSection title="TabellaRaw">
+              <SelectItem key="t-aeroporto">aeroporto</SelectItem>
+              <SelectItem key="t-compagnia">compagnia</SelectItem>
+              <SelectItem key="t-persona">persona</SelectItem>
+              <SelectItem key="t-aereo">aereo</SelectItem>
+              <SelectItem key="t-volo">volo</SelectItem>
+              <SelectItem key="t-pacco">pacco</SelectItem>
+              <SelectItem key="t-passeggero">passeggero</SelectItem>
+              <SelectItem key="t-bagaglio">bagaglio</SelectItem>
+              <SelectItem key="t-dipendente">dipendente</SelectItem>
+              <SelectItem key="t-documento">documento</SelectItem>
+              <SelectItem key="t-servizio">servizio</SelectItem>
+              <SelectItem key="t-servizio_sicurezza">servizio_sicurezza</SelectItem>
+              <SelectItem key="t-servizio_commerciale">servizio_commerciale</SelectItem>
+              <SelectItem key="t-parcheggio">parcheggio</SelectItem>
+              <SelectItem key="t-ristorante">ristorante</SelectItem>
+              <SelectItem key="t-negozio">negozio</SelectItem>
+              <SelectItem key="t-lounge">lounge</SelectItem>
+              <SelectItem key="t-servizio_trasporto">servizio_trasporto</SelectItem>
+              <SelectItem key="t-trasporto_parcheggio">trasporto_parcheggio</SelectItem>
+              <SelectItem key="t-lavoro_servizio">lavoro_servizio</SelectItem>
+              <SelectItem key="t-lavoro_volo">lavoro_volo</SelectItem>
+            </SelectSection> : null }
           </Select>}
         </div>
         <ButtonGroup>
@@ -137,10 +153,13 @@ export default function Home() {
           <Button type='submit' color="primary">Scegli</Button>
         </ButtonGroup>
       </Form>
-      {crudComponent[0] == 'c' && <Create q={crudComponent[1]} />}
-      {crudComponent[0] == 'r' && <Retrieve q={crudComponent[1]} />}
-      {crudComponent[0] == 'u' && <Update q={crudComponent[1]} />}
-      {crudComponent[0] == 'd' && <Delete q={crudComponent[1]} />}
+      <div key={submitKey}>
+        {crudComponent[0] == 'c' && <Create q={crudComponent[1]} />}
+        {crudComponent[0] == 'r' && <Retrieve q={crudComponent[1]} />}
+        {crudComponent[0] == 'u' && <Update q={crudComponent[1]} />}
+        {crudComponent[0] == 'd' && <Delete q={crudComponent[1]} />}
+        {crudComponent[0] == 't' && <Table q={crudComponent[1]} />}
+      </div>
     </div>
   );
 }

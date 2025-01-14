@@ -5,7 +5,7 @@ import { retrieve, selectAllFrom } from "../actions/query";
 import { Button, Form, Select, SelectItem } from "@nextui-org/react";
 
 export default function Retrieve({ q }: { q: string }) {
-  const [result, setResult] = useState<any>([])
+  const [result, setResult] = useState<any>(undefined)
   const [error, setError] = useState<any>('')
   const [airports, setAirports] = useState<any>([])
   const [selectedAirport, setSelectedAirport] = useState<string>('')
@@ -53,27 +53,32 @@ export default function Retrieve({ q }: { q: string }) {
 
   return (
     <div>
-      {error ? <span className="error">error</span> : (
-        <div>
-          <Form
-            validationBehavior="native"
-            onSubmit={(e) => {
-              e.preventDefault()
-              fetchDb()
-            }}
+      {error && <span className="error">error</span>}
+      <div>
+        <Form
+          className="flex flex-col items-center gap-4 w-full max-w-md"
+          validationBehavior="native"
+          onSubmit={(e) => {
+            e.preventDefault()
+            fetchDb()
+          }}
+        >
+          {needsPK() && <Select
+            className="flex-1"
+            label="Aeroporto"
+            isRequired
+            selectedKeys={[selectedAirport]}
+            onChange={e => setSelectedAirport(e.target.value)}
           >
-            {needsPK() && <Select
-              label="Aeroporto"
-              isRequired
-              selectedKeys={[selectedAirport]}
-              onChange={e => setSelectedAirport(e.target.value)}
-            >
-              {airports.map((a: any) => (
-                <SelectItem key={a.IATA + ',' + a.ICAO}>{a.IATA} - {a.ICAO}</SelectItem>
-              ))}
-              </Select>}
-            <Button type='submit' color="primary">Esegui ricerca</Button>
-          </Form>
+            {airports.map((a: any) => (
+              <SelectItem key={a.IATA + ',' + a.ICAO} textValue={`${a.IATA} - ${a.ICAO}`}>
+                {a.IATA} - {a.ICAO}
+              </SelectItem>
+            ))}
+            </Select>}
+          <Button type='submit' color="primary">Esegui ricerca</Button>
+        </Form>
+        {result ? (<div>
           {result.length === 0 ? (
             <p>Nessun risultato</p>
           ) : (
@@ -96,8 +101,8 @@ export default function Retrieve({ q }: { q: string }) {
               </tbody>
             </table>
           )}
-        </div>
-      )}
+        </div>) : null}
+      </div>
     </div>
   );
 };
