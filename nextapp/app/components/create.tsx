@@ -62,7 +62,7 @@ export default function Create({ q }: { q: string }) {
         if (q == 'c-volo') setPlanes(await selectAllFrom('aereo'))
         if (q == 'c-passeggero' || q == 'c-lavoratore') setPeople(await selectAllFrom('persona'))
         if (q == 'c-passeggero' || q == 'c-pacco') setFlights(await selectAllFrom('volo'))
-        if (q == 'c-bagaglio') setPassengers(await selectAllFrom('bagaglio'))
+        if (q == 'c-bagaglio') setPassengers(await selectAllFrom('passeggero'))
         setError('')
       } catch (error) {
         setError(error)
@@ -321,7 +321,7 @@ export default function Create({ q }: { q: string }) {
           isRequired
         />
         <Input
-          type="datetime-local"
+          type="date"
           label="Data assunzione"
           value={assunzione}
           onChange={(e) => setAssunzione(e.target.value)}
@@ -363,12 +363,12 @@ export default function Create({ q }: { q: string }) {
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
-          await fetchDb([peso, altezza, larghezza, spessore, 'integro', descrizione, animale ? 'TRUE' : 'FALSE', passeggero])
+          await fetchDb([peso, altezza, larghezza, spessore, 'integro', descrizione, animale ? '1' : '0', passeggero])
         }}
       >
         <Input
           type="number"
-          label="Peso"
+          label="Peso [kg]"
           value={peso}
           onChange={(e) => setPeso(e.target.value)}
           step={.01}
@@ -376,21 +376,21 @@ export default function Create({ q }: { q: string }) {
         />
         <Input
           type="number"
-          label="Altezza"
+          label="Altezza [cm]"
           value={altezza}
           onChange={(e) => setAltezza(e.target.value)}
           isRequired
         />
         <Input
           type="number"
-          label="Larghezza"
+          label="Larghezza [cm]"
           value={larghezza}
           onChange={(e) => setLarghezza(e.target.value)}
           isRequired
         />
         <Input
           type="number"
-          label="Spessore"
+          label="Spessore [cm]"
           value={spessore}
           onChange={(e) => setSpessore(e.target.value)}
           isRequired
@@ -441,7 +441,7 @@ export default function Create({ q }: { q: string }) {
       >
         <Input
           type="number"
-          label="Peso"
+          label="Peso [kg]"
           value={peso}
           onChange={(e) => setPeso(e.target.value)}
           step={.01}
@@ -449,21 +449,21 @@ export default function Create({ q }: { q: string }) {
         />
         <Input
           type="number"
-          label="Altezza"
+          label="Altezza [cm]"
           value={altezza}
           onChange={(e) => setAltezza(e.target.value)}
           isRequired
         />
         <Input
           type="number"
-          label="Larghezza"
+          label="Larghezza [cm]"
           value={larghezza}
           onChange={(e) => setLarghezza(e.target.value)}
           isRequired
         />
         <Input
           type="number"
-          label="Spessore"
+          label="Spessore [cm]"
           value={spessore}
           onChange={(e) => setSpessore(e.target.value)}
           isRequired

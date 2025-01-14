@@ -36,7 +36,7 @@ export default function Delete({ q }: { q: string }) {
   const renderAereoSelect = () => {
     return(
       <Select
-        className="flex-1"
+        className="flex-1 min-w-40"
         label="Aereo"
         isRequired
         selectedKeys={[selectedEntity]}
@@ -52,7 +52,7 @@ export default function Delete({ q }: { q: string }) {
   const renderVoloSelect = () => {
     return(
       <Select
-        className="flex-1"
+        className="flex-1 min-w-40"
         label="Volo"
         isRequired
         selectedKeys={[selectedEntity]}
@@ -68,7 +68,7 @@ export default function Delete({ q }: { q: string }) {
   const renderDocumentoSelect = () => {
     return(
       <Select
-        className="flex-1"
+        className="flex-1 min-w-40"
         label="Documento"
         isRequired
         selectedKeys={[selectedEntity]}
@@ -84,7 +84,7 @@ export default function Delete({ q }: { q: string }) {
   const renderLavoratoreSelect = () => {
     return(
       <Select
-        className="flex-1"
+        className="flex-1 min-w-40"
         label="Dipendente"
         isRequired
         selectedKeys={[selectedEntity]}
@@ -100,7 +100,7 @@ export default function Delete({ q }: { q: string }) {
   const renderServizioSelect = () => {
     return(
       <Select
-        className="flex-1"
+        className="flex-1 min-w-40"
         label="Servizio"
         isRequired
         selectedKeys={[selectedEntity]}

@@ -186,7 +186,7 @@ export const retrieve = async (q: string, params?: string[]) => {
         `))
       case 'r-serv-aeroporto':
         return (await excQuery(`
-          SELECT s.nome, s.descrizione, s.locazione, a.nome, a.provincia
+          SELECT s.nome, s.descrizione, s.locazione, a.nome AS aeroporto, a.provincia
           FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
           WHERE a.IATA = ? AND a.ICAO = ?;
         `, params))

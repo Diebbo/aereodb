@@ -54,7 +54,7 @@ export default function Retrieve({ q }: { q: string }) {
   return (
     <div>
       {error && <span className="error">error</span>}
-      <div>
+      <div className="flex flex-col items-center gap-4 w-full max-w-md">
         <Form
           className="flex flex-col items-center gap-4 w-full max-w-md"
           validationBehavior="native"
@@ -64,7 +64,7 @@ export default function Retrieve({ q }: { q: string }) {
           }}
         >
           {needsPK() && <Select
-            className="flex-1"
+            className="flex-1 min-w-36"
             label="Aeroporto"
             isRequired
             selectedKeys={[selectedAirport]}

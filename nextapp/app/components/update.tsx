@@ -96,7 +96,7 @@ export default function Update({ q }: { q: string }) {
           setTempoAttesa(securities.filter((s: any) => s.id == selected)[0]?.tempoMedioAttesa || '')
           break
         case 'u-parcheggi':
-          setPostiOccupati(parkings.filter((p: any) => `${p.longitudine},${p.latitudine}` == selected)[0].postiOccupati || '')
+          setPostiOccupati(parkings.filter((p: any) => `${p.longitudine},${p.latitudine}` == selected)[0]?.postiOccupati || '')
           break
       }
     }
@@ -319,7 +319,7 @@ export default function Update({ q }: { q: string }) {
         >
           {documents.map((d: any) => (
             <SelectItem key={d.tipo + ',' + d.numero} textValue={`${d.tipo}, ${d.numero}, ${d.scadenza} - ${d.codiceFiscale}`}>
-              {d.tipo}, {d.numero}, {d.scadenza} - {d.codiceFiscale}
+              {d.tipo}, {d.numero}, {datetimeToDateString(d.scadenza)} - {d.codiceFiscale}
             </SelectItem>
           ))}
         </Select>
