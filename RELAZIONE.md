@@ -3,6 +3,7 @@
 2024-12-27
 
 Diego Barbieri  0001080333  diego.barbieri5@studio.unibo.it
+
 Ivan De Simone  0001069314  ivan.desimone@studio.unibo.it
 
 # Indice
@@ -466,27 +467,27 @@ Modifiche alla struttura:
 
 | Traduzione | Vincoli di riferimento | 
 | --------------- | --------------- |
-| AEROPORTO | <ins>IATA, ICAO</ins>, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | 
-| AEREO | <ins> numeroDiSerie</ins>, tipologia, modello, postiPasseggeri, postiPersonale, volumeStiva, *nomeCompagnia* |
-| VOLO | <ins>numeroVolo</ins>, partenza, arrivo, *IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPartenza, nomeCompagnia, aereo* |
-| COMPAGNIA | <ins>nome</ins>, sede |
-| PACCO | <ins>id</ins>, peso, altezza, larghezza, spessore, contenuto, stato, *numeroVolo* |
-| PERSONA | <ins>codiceFiscale</ins>, nome, cognome, dataNascita, nazionalita, numeroTelefono, email |
-| PASSEGGERO | <ins>numeroBiglietto</ins>, classeViaggio, posto, *codiceFiscale*, *numeroVolo* |
-| BAGAGLIO | <ins>id</ins>, peso, altezza, larghezza, spessore, stato, descrizione, animale, *numeroBiglietto* |
-| DIPENDENTE | <ins>matricola</ins>, dataAssunzione, stipendio, *codiceFiscale* |
-| DOCUMENTO | <ins>tipo, numero</ins>, scadenza, *codiceFiscale* |
-| SERVIZIO | <ins>id</ins>, nome, descrizione, locazione, *IATA, ICAO* |
-| SERVIZIO_SICUREZZA | tempoMedioAttesa, numeroAddettiRichiesti, <ins>*id*<ins> |
-| SERVIZIO_COMMERCIALE | tipo, gestore, <ins>*id*<ins> |
-| PARCHEGGIO | <ins>longitudine, latitudine</ins>, postiDisponibili, costoOrario, postiOccupati, <ins>*id*</ins>  |
-| RISTORANTE | tipoCucina, <ins>*id*</ins> |
-| NEGOZIO | tipoMerce, <ins>*id*</ins> |
-| LOUNGE | postiDisponibili, <ins>*id*</ins>, *nomeCompagnia*|
-| SERVIZIO_TRASPORTO | tipo, linea, costoPerPersona, <ins>*id*</ins> |
-| TRASPORTO_PARCHEGGIO | frequenza, intervallo, <ins>*id, longitudine, latitudine*</ins> |
-| LAVORO_SERVIZIO | oraInizio, oraFine, mansione, <ins>*matricola, id*</ins> |
-| LAVORO_VOLO | oraInizio, oraFine, mansione, <ins>*matricola, numeroVolo*</ins> |
+| AEROPORTO | **IATA, ICAO**, nome, provincia, stato, postiAereoPasseggeri, postiAereoCargo | 
+| AEREO | ** numeroDiSerie**, tipologia, modello, postiPasseggeri, postiPersonale, volumeStiva, *nomeCompagnia* |
+| VOLO | **numeroVolo**, partenza, arrivo, *IATAArrivo, ICAOArrivo, IATAPartenza, ICAOPartenza, nomeCompagnia, aereo* |
+| COMPAGNIA | **nome**, sede |
+| PACCO | **id**, peso, altezza, larghezza, spessore, contenuto, stato, *numeroVolo* |
+| PERSONA | **codiceFiscale**, nome, cognome, dataNascita, nazionalita, numeroTelefono, email |
+| PASSEGGERO | **numeroBiglietto**, classeViaggio, posto, *codiceFiscale*, *numeroVolo* |
+| BAGAGLIO | **id**, peso, altezza, larghezza, spessore, stato, descrizione, animale, *numeroBiglietto* |
+| DIPENDENTE | **matricola**, dataAssunzione, stipendio, *codiceFiscale* |
+| DOCUMENTO | **tipo, numero**, scadenza, *codiceFiscale* |
+| SERVIZIO | **id**, nome, descrizione, locazione, *IATA, ICAO* |
+| SERVIZIO_SICUREZZA | tempoMedioAttesa, numeroAddettiRichiesti, ***id*** |
+| SERVIZIO_COMMERCIALE | tipo, gestore, ***id*** |
+| PARCHEGGIO | **longitudine, latitudine**, postiDisponibili, costoOrario, postiOccupati, ***id***  |
+| RISTORANTE | tipoCucina, ***id*** |
+| NEGOZIO | tipoMerce, ***id*** |
+| LOUNGE | postiDisponibili, ***id***, *nomeCompagnia*|
+| SERVIZIO_TRASPORTO | tipo, linea, costoPerPersona, ***id*** |
+| TRASPORTO_PARCHEGGIO | frequenza, intervallo, ***id, longitudine, latitudine*** |
+| LAVORO_SERVIZIO | oraInizio, oraFine, mansione, ***matricola, id*** |
+| LAVORO_VOLO | oraInizio, oraFine, mansione, ***matricola, numeroVolo*** |
 
 | Traduzione | Vincoli di riferimento |
 | --------------- | --------------- |
