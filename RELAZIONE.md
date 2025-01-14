@@ -1455,7 +1455,7 @@ SET numeroPasseggeri = (SELECT COUNT(numeroBiglietto) FROM passeggero WHERE pass
 
 **Documenti di identità**
 ```sql
-UPDATE documento SET tipo = $newTipo, numero = $newNumero, scadenza = $scadenza, codiceFiscale = $codFiscale WHERE tipo = $oldTipo AND numero = $oldNumero;
+UPDATE documento SET tipo = $newTipo, numero = $newNumero, scadenza = $scadenza WHERE tipo = $oldTipo AND numero = $oldNumero;
 ```
 
 **Stato bagaglio**

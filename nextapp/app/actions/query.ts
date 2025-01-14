@@ -55,7 +55,6 @@ export const create = async (q: string, params: string[]) => {
         break
       default:
         console.log('Create inesistente')
-        return 'Sei un babbo'
     }
   } catch (error) {
     console.error('Create error:', error)
@@ -70,48 +69,59 @@ export const create = async (q: string, params: string[]) => {
  * @param params parametri della query
  * @returns risultato della query
  */
-export const update = async (q: string, params?: string[]) => {
+export const update = async (q: string, params: string[]) => {
   try {
     switch (q) {
       case 'u-serv-commerciale':
-        return (await excQuery(`
-          
-        `, params))
+        await excQuery(`
+          UPDATE servizio_commerciale SET gestore = ? WHERE id = ?;
+        `, params)
+        break
       case 'u-serv-sicurezza':
-        return (await excQuery(`
-          
-        `, params))
+        await excQuery(`
+          UPDATE servizio_sicurezza SET numeroAddettiRichiesti = ? WHERE id = ?;
+        `, params)
+        break
       case 'u-serv-trasporto':
-        return (await excQuery(`
-          
-        `, params))
+        await excQuery(`
+          UPDATE servizio_trasporto SET tipo = ?, linea = ?, costoPerPersona = ? WHERE id = ?;
+        `, params)
+        break
       case 'u-volo':
-        return (await excQuery(`
-          
-        `, params))
+        await excQuery(`
+          UPDATE volo SET partenza = ?, arrivo = ? WHERE numeroVolo = ?;
+        `, params)
+        await excQuery(`
+          UPDATE volo SET numeroPasseggeri = (SELECT COUNT(numeroBiglietto) FROM passeggero WHERE passeggero.numeroVolo = volo.numeroVolo);
+        `)
+        break
       case 'u-documento':
-        return (await excQuery(`
-          
-        `, params))
+        await excQuery(`
+          UPDATE documento SET tipo = ?, numero = ?, scadenza = ? WHERE tipo = ? AND numero = ?;
+        `, params)
+        break
       case 'u-bagaglio':
-        return (await excQuery(`
-          
-        `, params))
+        await excQuery(`
+          UPDATE bagaglio SET stato = ? WHERE id = ?;
+        `, params)
+        break
       case 'u-stipendio':
-        return (await excQuery(`
-          
-        `, params))
+        await excQuery(`
+          UPDATE dipendente SET stipendio = ? WHERE matricola = ?;
+        `, params)
+        break
       case 'u-attesa':
-        return (await excQuery(`
-          
-        `, params))
+        await excQuery(`
+          UPDATE servizio_sicurezza SET tempoMedioAttesa = ? WHERE id = ?;
+        `, params)
+        break
       case 'u-parcheggi':
-        return (await excQuery(`
-          
-        `, params))
+        await excQuery(`
+          UPDATE parcheggio SET postiOccupati = ? WHERE longitudine = ? AND latitudine = ?;
+        `, params)
+        break
       default:
         console.log('Update inesistente')
-        return 'Sei un babbo'
     }
   } catch (error) {
     console.error('Update error:', error)
@@ -247,7 +257,6 @@ export const remove = async (q: string, params?: string[]) => {
         break
       default:
         console.log('Delete inesistente')
-        return 'Sei un babbo'
     }
   } catch (error) {
     console.error(error)
