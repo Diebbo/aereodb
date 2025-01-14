@@ -22,6 +22,8 @@ export default function Home() {
   const [query, setQuery] = React.useState<string>('')
   // componente dei risultati da mostrare
   const [crudComponent, setCrudComponent] = React.useState<string[]>(['', ''])  // [crud, op]
+  // valore per aggiornare i componenti (trigger)
+  const [submitKey, setSubmitKey] = React.useState<number>(0)
 
   /**
    * Svuota i campi del form e nasconde il componente risultati
@@ -44,6 +46,7 @@ export default function Home() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    setSubmitKey(prev => prev + 1)
     setCrudComponent([crud, query])
   }
 
@@ -150,11 +153,13 @@ export default function Home() {
           <Button type='submit' color="primary">Scegli</Button>
         </ButtonGroup>
       </Form>
-      {crudComponent[0] == 'c' && <Create q={crudComponent[1]} />}
-      {crudComponent[0] == 'r' && <Retrieve q={crudComponent[1]} />}
-      {crudComponent[0] == 'u' && <Update q={crudComponent[1]} />}
-      {crudComponent[0] == 'd' && <Delete q={crudComponent[1]} />}
-      {crudComponent[0] == 't' && <Table q={crudComponent[1]} />}
+      <div key={submitKey}>
+        {crudComponent[0] == 'c' && <Create q={crudComponent[1]} />}
+        {crudComponent[0] == 'r' && <Retrieve q={crudComponent[1]} />}
+        {crudComponent[0] == 'u' && <Update q={crudComponent[1]} />}
+        {crudComponent[0] == 'd' && <Delete q={crudComponent[1]} />}
+        {crudComponent[0] == 't' && <Table q={crudComponent[1]} />}
+      </div>
     </div>
   );
 }

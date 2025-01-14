@@ -7,6 +7,8 @@ export default function Table({ q }: { q: string }) {
   const [error, setError] = useState<any>('')
   const [data, setData] = useState<any>(undefined)
 
+  console.log('TABLE - q:', q)
+
   useEffect(() => {
     const fetchDb = async () => {
       try {
@@ -26,32 +28,31 @@ export default function Table({ q }: { q: string }) {
 
   return (
     <div>
-      {error ? <span className="error">error</span> : (
-        <div>
-          {(data && data?.length === 0) ? (
-            <p>Nessun risultato</p>
-          ) : (
-            <table className="border-1 border-black border-collapse">
-              <thead>
-                <tr>
-                  {Object.keys(data[0]).map((key: string) => (
-                    <th key={key} className="border-1 border-black p-5">{key}</th>
+      {error && <span className="error">Error</span>}
+      {data ? (<div>
+        {data.length === 0 ? (
+          <p>Nessun risultato</p>
+        ) : (
+          <table className="border-1 border-black border-collapse">
+            <thead>
+              <tr>
+                {Object.keys(data[0]).map((key: string) => (
+                  <th key={key} className="border-1 border-black p-5">{key}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row: any, i: number) => (
+                <tr key={i}>
+                  {Object.values(row).map((value: any, j: number) => (
+                    <td key={j} className="border-1 border-black align-center p-5">{`${value}`}</td>
                   ))}
                 </tr>
-              </thead>
-              <tbody>
-                {data.map((row: any, i: number) => (
-                  <tr key={i}>
-                    {Object.values(row).map((value: any, j: number) => (
-                      <td key={j} className="border-1 border-black align-center p-5">{`${value}`}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>) : null}
     </div>
   );
 };
