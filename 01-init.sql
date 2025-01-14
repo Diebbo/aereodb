@@ -218,8 +218,8 @@ CREATE TABLE lavoro_servizio (
     oraInizio DATETIME NOT NULL,
     oraFine DATETIME NOT NULL,
     PRIMARY KEY (matricola, id),
-    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
-    FOREIGN KEY (id) REFERENCES servizio(id),
+    FOREIGN KEY (matricola) REFERENCES dipendente(matricola) ON DELETE CASCADE,
+    FOREIGN KEY (id) REFERENCES servizio(id) ON DELETE CASCADE,
     CHECK (oraInizio <= oraFine)
 );
 
@@ -230,7 +230,7 @@ CREATE TABLE lavoro_volo(
     oraInizio DATETIME NOT NULL,
     oraFine DATETIME NOT NULL,
     PRIMARY KEY (matricola, numeroVolo),
-    FOREIGN KEY (matricola) REFERENCES dipendente(matricola),
+    FOREIGN KEY (matricola) REFERENCES dipendente(matricola) ON DELETE CASCADE,
     FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE,
     CHECK (oraInizio <= oraFine)
 );
