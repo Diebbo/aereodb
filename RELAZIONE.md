@@ -1129,6 +1129,10 @@ FROM servizio AS s JOIN aeroporto AS a ON s.IATA = a.IATA AND s.ICAO = a.ICAO
 WHERE a.IATA = $iata AND a.ICAO = $icao;
 ```
 
+## Testing
+
+[sito](http://aereodb.duckdns.org:3000) live.
+
 ## Riferimenti
 - [voli al giorno](https://in3giorni.com/faq/quanti-aerei-decollano-da-malpensa-ogni-giorno)
 - [voli in partenza al secondo](https://www.mytripmap.it/quanti-aerei-ci-sono-ora-in-volo-mappa-in-tempo-reale/)
