@@ -1,16 +1,9 @@
-<h1 align="center"> Gestione aeroportuale </h1>
-<p align="center"> 2024-12-27 </p>
+# Gestione aeroportuale 
 
-<p align="center">
-    Diego Barbieri <br>
-    0001080333 <br>
-    diego.barbieri5@studio.unibo.it <br>
-</p>
-<p align="center">
-    Ivan De Simone <br>
-    0001069314 <br>
-    ivan.desimone@studio.unibo.it <br>
-</p>
+2024-12-27
+
+Diego Barbieri  0001080333  diego.barbieri5@studio.unibo.it
+Ivan De Simone  0001069314  ivan.desimone@studio.unibo.it
 
 # Indice
 
@@ -193,26 +186,23 @@ Dall'entità volo sono state estratte due associazioni: trasportoPasseggeri vers
 
 ### Scheletro dello schema ER (approccio top-down)
 
-![ER Schema](./grafici/scheletro-top-down.drawio.png)
+![bozza top down](./grafici/scheletro-top-down.drawio.png)
 
 ### Sviluppo delle componenti (approccio inside-out)
 
-Volo e connessi.
 
-![ER Schema](./grafici/voli-inside-out.drawio.png)
+![Volo e connessi](./grafici/voli-inside-out.drawio.png)
 
-Voli passeggeri e voli cargo.
 
-![ER Schema](./grafici/voli-passeggeri-inside-out.drawio.png)
+![Voli passeggeri e voli cargo](./grafici/voli-passeggeri-inside-out.drawio.png)
 
-Servizi aeroportuali e servizi di sicurezza.
 
-![ER Schema](./grafici/servizi-inside-out.drawio.png)
+![Servizi aeroportuali e servizi di sicurezza](./grafici/servizi-inside-out.drawio.png)
 
 
 ### Unione delle componenti
 
-![ER Schema](./grafici/unione.drawio.png)
+![schema finale](./grafici/unione.drawio.png)
 
 ### Dizionario dei dati
 
@@ -231,9 +221,9 @@ Servizi aeroportuali e servizi di sicurezza.
 | DIPENDENTE | Personale dell'aeroporto o di volo | matricola, dataAssunzione, stipendio | matricola |
 | DOCUMENTO | Documento di identità | tipo, numero, scadenza | numero, tipo |
 | SERVIZIO | Servizio aeroportuale | id, nome, descrizione, locazione | id |
-| SERVIZIOSICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | tempoMedioAttesa, numeroAddettiRichiesti | " |
-| SERVIZIOTRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | tipo, linea, costoPerPersona | " |
-| SERVIZIOCOMMERCIALE | Attività interne all'aeroporto come ristorazione, negozi o lounge | tipo, gestore | " |
+| SERVIZIO SICUREZZA | Servizio di controllo delle attività ordinarie all'interno dell'aeroporto | tempoMedioAttesa, numeroAddettiRichiesti | " |
+| SERVIZIO TRASPORTO | Mezzo di collegamento a servizi esterni all'aeroporto | tipo, linea, costoPerPersona | " |
+| SERVIZIO COMMERCIALE | Attività interne all'aeroporto come ristorazione, negozi o lounge | tipo, gestore | " |
 | PARCHEGGIO | Area di sosta per veicoli | latitudine, longitudine, postiDisponibili, costoOrario, postiOccupati | latitudine, longitudine |
 | RISTORANTE | Attività commerciale di ristorazione | tipoCucina | " |
 | NEGOZIO | Attività commerciale di vendita | tipoMerce | " |
@@ -247,15 +237,15 @@ Servizi aeroportuali e servizi di sicurezza.
 | PARTENZA | Associa i voli a un aeroporto di partenza | VOLO(1,1) - AEROPORTO(1,N) | - |
 | ARRIVO | Associa i voli a un aeroporto di arrivo | VOLO(1,1) - AEROPORTO(1,N) | - |
 | USO_AEREO | Associa i voli a un aereo | VOLO(1,1) - AEREO(1,N) | - |
-| TRASPORTO_PASSEGGERI | Associa i passeggeri ai voli | VOLO(0,N) - PASSEGGERO(1,1) | - |
-| TRASPORTO_CARGO | Associa i pacchi ai voli | VOLO(0,N) - PACCO(1,1) | carico (string) |
+| TRASPORTO PASSEGGERI | Associa i passeggeri ai voli | VOLO(0,N) - PASSEGGERO(1,1) | - |
+| TRASPORTO CARGO | Associa i pacchi ai voli | VOLO(0,N) - PACCO(1,1) | carico (string) |
 | OPERA | Associa una compagnia ai voli | COMPAGNIA(1,N) - VOLO(1,1) | - |
 | POSSESSO | Associa una compagnia agli aerei | COMPAGNIA(1,N) - AEREO(1,1) | - |
-| TRASPORTO_BAGAGLIO | Associa i bagagli a un passeggero | BAGAGLIO(1,1) - PASSEGGERO(0,N) | - |
+| TRASPORTO BAGAGLIO | Associa i bagagli a un passeggero | BAGAGLIO(1,1) - PASSEGGERO(0,N) | - |
 | CLIENTELA | Associa i passeggeri alle compagnie | PASSEGGERO(1,N) - COMPAGNIA(1,N) | kmViaggiati (int) |
 | IDENTIFICAZIONE | Associa i documenti di identità a una persona | DOCUMENTO(1,1) - PERSONA(1,N) | - |
-| LAVORO_VOLO | Associa i dipendenti ai voli | DIPENDENTE(0,N) - VOLO(1,N) | oraInizio (time), oraFine (time), mansione(string) |
-| LAVORO_SERVIZIO | Associa i dipendenti ai servizi | DIPENDENTE(0,N) - SERVIZIO(1,N) | oraInizio (time), oraFine (time), mansione (string) |
+| LAVORO VOLO | Associa i dipendenti ai voli | DIPENDENTE(0,N) - VOLO(1,N) | oraInizio (time), oraFine (time), mansione(string) |
+| LAVORO SERVIZIO | Associa i dipendenti ai servizi | DIPENDENTE(0,N) - SERVIZIO(1,N) | oraInizio (time), oraFine (time), mansione (string) |
 | OFFRE | Associa una compagnia a una lounge | COMPAGNIA(1,1) - LOUNGE(1,1) | - |
 | COLLEGA | Associa i servizi di trasporto ai parcheggi | SERVIZIOTRASPORTO(1,N) - PARCHEGGIO(1,N) | orari (string) |
 
@@ -350,12 +340,14 @@ Al fine di migliorare le prestazioni del database verranno quindi introdotte le 
 **Tavola accessi in presenza di ridondanze** 
 
 Inserimento di un passeggero:
+
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | PERSONA | S | 1 |
 | PASSEGGERO | S | 1 |
 
 Ricerca di un passeggero:
+
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | PERSONA | L | 1 |
@@ -363,12 +355,14 @@ Ricerca di un passeggero:
 **Tavola accessi in assenza di ridondanze** 
 
 Inserimento di un passeggero:
+
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | PASSEGGERO | S | 1 |
 | PERSONA | S | 1 |
 
 Ricerca di un passeggero:
+
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | PASSEGGERO | L | 1 |
@@ -381,6 +375,7 @@ Proviamo invece a calcolare il numero di passeggeri che appartengono ad un volo:
 
 **Tabella con ridondanze** 
 Inserimento di un passeggero:
+
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | PASSEGGERO | S | 1 |
@@ -390,6 +385,7 @@ Inserimento di un passeggero:
 Costo di un inserimento: 3
 
 Ricerca di un volo:
+
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | VOLO | L | 1 |
@@ -401,6 +397,7 @@ Tempo totale di ricerca: 1 * 10.000 (volte al mese) = 10.000
 
 **Tabella senza ridondanze**
 Inserimento di un passeggero:
+
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | PASSEGGERO | S | 1 |
@@ -409,6 +406,7 @@ Inserimento di un passeggero:
 Costo di un inserimento: 2
 
 Ricerca di un volo:
+
 | Tabella | Operazione | Accessi |
 | --------------- | --------------- | --------------- |
 | VOLO | L | 1 |
@@ -452,17 +450,17 @@ Anche l'entità servizio astrae tre sotto-entità: servizio commerciale, servizi
 | DIPENDENTE | Non esistono dipendenze non banali tra gli attributi. |
 | DOCUMENTO | Non esistono dipendenze non banali tra gli attributi. |
 | SERVIZIO | Non esistono dipendenze non banali tra gli attributi. |
-| SERVIZIO_SICUREZZA | Non esistono dipendenze non banali tra gli attributi. |
-| SERVIZIO_COMMERCIALE | Non esistono dipendenze non banali tra gli attributi. |
+| SERVIZIO SICUREZZA | Non esistono dipendenze non banali tra gli attributi. |
+| SERVIZIO COMMERCIALE | Non esistono dipendenze non banali tra gli attributi. |
 | PARCHEGGIO | ubicazione non è un attrivuto |
 | RISTORANTE | Non esistono dipendenze non banali tra gli attributi. |  
 | NEGOZIO | Non esistono dipendenze non banali tra gli attributi. |
 | LOUNGE | Non esistono dipendenze non banali tra gli attributi. |
-| SERVIZIO_TRASPORTO | Orari non e' un attributo atomico. |
+| SERVIZIO TRASPORTO | Orari non e' un attributo atomico. |
 
 Modifiche alla struttura:
 
-![ER Schema](./grafici/normalizzazione.drawio.png)
+![Modifiche Normalizzate](./grafici/normalizzazione.drawio.png)
 
 ### Traduzione verso il modello logico
 
