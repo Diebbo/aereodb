@@ -43,7 +43,7 @@ export default function Retrieve({ q }: { q: string }) {
 
   const fetchDb = async () => {
     try {
-      const data = needsPK() ? await retrieve(q, selectedAirport.split(',')) : await retrieve(q)
+      const data = needsPK() ? await retrieve(q, selectedAirport.split(',')) : await retrieve(q, [])
       setError('')
       setResult(data)
     } catch (error) {
