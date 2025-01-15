@@ -7,8 +7,16 @@ import {
   Button,
   Form,
   Select,
-  SelectItem
+  SelectItem,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  getKeyValue,
 } from "@nextui-org/react";
+import { datetimeToString } from "../lib/date";
 
 export default function Retrieve({ q }: { q: string }) {
   const [error, setError] = useState<string>('')
@@ -78,7 +86,7 @@ export default function Retrieve({ q }: { q: string }) {
           <Alert color='danger' variant="solid" title={error} />
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-4 w-full max-w-md fade-in">
+        <div className="flex flex-col items-center gap-4 w-full max-w-xl fade-in">
           <Form
             className="flex flex-col items-center gap-4 w-full max-w-md"
             validationBehavior="native"
@@ -113,24 +121,26 @@ export default function Retrieve({ q }: { q: string }) {
                   <p>Nessun risultato</p>
                 </div>
               ) : (
-                <table className="border-1 border-black border-collapse">
-                  <thead>
-                    <tr>
-                      {Object.keys(data[0]).map((key: string) => (
-                        <th key={key} className="border-1 border-black p-5">{key}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((row: any, i: number) => (
-                      <tr key={i}>
-                        {Object.values(row).map((value: any, j: number) => (
-                          <td key={j} className="border-1 border-black align-center p-5">{`${value}`}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <Table>
+                  <TableHeader>
+                    {Object.keys(data[0]).map((k) =>
+                      <TableColumn key={k}>{k}</TableColumn>
+                    )}
+                  </TableHeader>
+                  <TableBody>
+                    {data.map((row: any, i: number) =>
+                      <TableRow key={i}>
+                        {(v) => <TableCell>
+                          {
+                            getKeyValue(row, v) instanceof Date ? 
+                            datetimeToString(getKeyValue(row, v)) :
+                            getKeyValue(row, v)
+                          }
+                        </TableCell>}
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
               )}
             </div>
           ) : null}

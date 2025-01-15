@@ -2,11 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { selectAllFrom } from "../actions/query";
+import { datetimeToString } from "../lib/date";
 import {
-  Alert
+  Alert,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  getKeyValue,
 } from '@nextui-org/react'
 
-export default function Table({ q }: { q: string }) {
+export default function Tables({ q }: { q: string }) {
   const [error, setError] = useState<string>('')
   // dati da visualizzare
   const [data, setData] = useState<any>(undefined)
@@ -44,24 +52,26 @@ export default function Table({ q }: { q: string }) {
                   <p>Nessun risultato</p>
                 </div>
               ) : (
-                <table className="border-1 border-black border-collapse">
-                  <thead>
-                    <tr>
-                      {Object.keys(data[0]).map((key: string) => (
-                        <th key={key} className="border-1 border-black p-5">{key}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((row: any, i: number) => (
-                      <tr key={i}>
-                        {Object.values(row).map((value: any, j: number) => (
-                          <td key={j} className="border-1 border-black align-center p-5">{`${value}`}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <Table>
+                  <TableHeader>
+                    {Object.keys(data[0]).map((k) =>
+                      <TableColumn key={k}>{k}</TableColumn>
+                    )}
+                  </TableHeader>
+                  <TableBody>
+                    {data.map((row: any, i: number) =>
+                      <TableRow key={i}>
+                        {(v) => <TableCell>
+                          {
+                            getKeyValue(row, v) instanceof Date ? 
+                            datetimeToString(getKeyValue(row, v)) :
+                            getKeyValue(row, v)
+                          }
+                        </TableCell>}
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
               )}
             </div>
           ) : null}

@@ -13,7 +13,7 @@ import Create from "./components/create"
 import Retrieve from "./components/retrieve"
 import Update from "./components/update"
 import Delete from "./components/delete"
-import Table from './components/table'
+import Tables from './components/table'
 
 export default function Home() {
   // operazione CRUD da eseguire
@@ -142,7 +142,7 @@ export default function Home() {
         {crudComponent[0] == 'r' && <Retrieve q={crudComponent[1]} />}
         {crudComponent[0] == 'u' && <Update q={crudComponent[1]} />}
         {crudComponent[0] == 'd' && <Delete q={crudComponent[1]} />}
-        {crudComponent[0] == 't' && <Table q={crudComponent[1]} />}
+        {crudComponent[0] == 't' && <Tables q={crudComponent[1]} />}
       </div>
     </div>
   );
