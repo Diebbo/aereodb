@@ -107,7 +107,7 @@ CREATE TABLE bagaglio (
     animale BOOLEAN NOT NULL,
     numeroBiglietto CHAR(6) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (numeroBiglietto) REFERENCES passeggero(numeroBiglietto)
+    FOREIGN KEY (numeroBiglietto) REFERENCES passeggero(numeroBiglietto) ON DELETE CASCADE
 );
 
 CREATE TABLE dipendente (
@@ -234,4 +234,3 @@ CREATE TABLE lavoro_volo(
     FOREIGN KEY (numeroVolo) REFERENCES volo(numeroVolo) ON DELETE CASCADE,
     CHECK (oraInizio <= oraFine)
 );
-

@@ -15,7 +15,6 @@ const mysql = require('serverless-mysql')({
  * Esegue una query sul DB
  * 
  * @param q query da eseguire
- * @param params array di parametri della query (opzionale)
  * @returns risultato della query
  */
 const excQuery = async (q: string) => {

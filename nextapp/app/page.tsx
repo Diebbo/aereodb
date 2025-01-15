@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import { useState } from 'react'
 import { 
   Form,
   ButtonGroup,
@@ -17,51 +17,35 @@ import Table from './components/table'
 
 export default function Home() {
   // operazione CRUD da eseguire
-  const [crud, setCrud] = React.useState<string>('')
+  const [crud, setCrud] = useState<string>('')
   // query da eseguire
-  const [query, setQuery] = React.useState<string>('')
+  const [query, setQuery] = useState<string>('')
   // componente dei risultati da mostrare
-  const [crudComponent, setCrudComponent] = React.useState<string[]>(['', ''])  // [crud, op]
+  const [crudComponent, setCrudComponent] = useState<string[]>(['', ''])  // [crud, query]
   // valore per aggiornare i componenti (trigger)
-  const [submitKey, setSubmitKey] = React.useState<number>(0)
-
-  /**
-   * Svuota i campi del form e nasconde il componente risultati
-   * 
-   * @param event evento di reset
-   */
-  const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    setCrudComponent(['', ''])
-    setCrud('')
-    setQuery('')
-  }
-
-  /**
-   * Manda in esecuzione l'operazione selezionata
-   * 
-   * @param event evento di submit
-   */
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    setSubmitKey(prev => prev + 1)
-    setCrudComponent([crud, query])
-  }
+  const [submitKey, setSubmitKey] = useState<number>(0)
 
   return (
     <div className="flex flex-col items-center">
       <Form
         className="flex flex-col items-center gap-6 w-full max-w-md my-12"
         validationBehavior="native"
-        onReset={handleReset}
-        onSubmit={handleSubmit}
+        onReset={(event) => {
+          event.preventDefault()
+          setCrudComponent(['', ''])
+          setCrud('')
+          setQuery('')
+        }}
+        onSubmit={(event) => {
+          event.preventDefault()
+          setSubmitKey(prev => prev + 1)
+          setCrudComponent([crud, query])
+        }}
       >
         <div className="flex flex-row w-full gap-4">
           <Select
             className="flex-1"
-            label="Operazione CRUD"
+            label="Operazione"
             isRequired
             selectedKeys={[crud]}
             onChange={e => {

@@ -2,37 +2,60 @@
 
 import { useState, useEffect } from "react";
 import { remove, selectAllFrom } from "../actions/query";
-import { Form, Button, Select, SelectItem } from '@nextui-org/react'
+import {
+  Alert,
+  Form,
+  Button,
+  Select,
+  SelectItem
+} from '@nextui-org/react'
 
 export default function Delete({ q }: { q: string }) {
-  const [error, setError] = useState<any>('')
+  const [success, setSuccess] = useState<string>('')
+  const [error, setError] = useState<string>('')
+  // collezione per scegliere quale riga eliminare
   const [entities, setEntities] = useState<any>([])
+  // riga selezionata da eliminare
   const [selectedEntity, setSelectedEntity] = useState<string>('')
 
+  // prende l'elenco delle righe presenti
   useEffect(() => {
-    const fetchPK = async () => {
+    const fetchData = async () => {
       try {
-        const data = await selectAllFrom(q.split('-')[1])
+        setEntities(await selectAllFrom(q.split('-')[1]))
         setError('')
-        setEntities(data)
       } catch (error) {
-        setError(error)
+        console.error(error)
+        setError('fetchData error')
+        setTimeout(() => {
+          setError('')
+        }, 4000);
       }
     }
 
-    fetchPK()
+    fetchData()
   }, [])
 
+  /**
+   * Esegue la query di eliminazione
+   */
   const fetchDb = async () => {
     try {
       await remove(q, selectedEntity.split(','))
       setError('')
-      alert('Eliminazione eseguita correttamente')
+      setSuccess('Eliminazione eseguita correttamente')
     } catch (error) {
-      setError(error)
+      console.error(error)
+      setSuccess('')
+      setError("Errore nell'eliminazione")
     }
   }
 
+  /**
+   * Renderizza il select per scegliere l'aereo da eliminare
+   * 
+   * @returns componente Select
+   */
   const renderAereoSelect = () => {
     return(
       <Select
@@ -43,12 +66,22 @@ export default function Delete({ q }: { q: string }) {
         onChange={e => setSelectedEntity(e.target.value)}
       >
         {entities.map((ent: any) => (
-          <SelectItem key={ent.numeroDiSerie}>{ent.numeroDiSerie}</SelectItem>
+          <SelectItem 
+            key={ent.numeroDiSerie}
+            textValue={`${ent.numeroDiSerie} - ${ent.modello}`}
+          >
+            {ent.numeroDiSerie} - {ent.modello}
+          </SelectItem>
         ))}
       </Select>
     )
   }
 
+  /**
+   * Renderizza il select per scegliere il volo da eliminare
+   * 
+   * @returns componente Select
+   */
   const renderVoloSelect = () => {
     return(
       <Select
@@ -59,12 +92,22 @@ export default function Delete({ q }: { q: string }) {
         onChange={e => setSelectedEntity(e.target.value)}
       >
         {entities.map((ent: any) => (
-          <SelectItem key={ent.numeroVolo}>{ent.numeroVolo}</SelectItem>
+          <SelectItem 
+            key={ent.numeroVolo}
+            textValue={`${ent.numeroVolo} (${ent.nomeCompagnia})`}
+          >
+            {ent.numeroVolo} ({ent.nomeCompagnia})
+          </SelectItem>
         ))}
       </Select>
     )
   }
 
+  /**
+   * Renderizza il select per scegliere il documento da eliminare
+   * 
+   * @returns componente Select
+   */
   const renderDocumentoSelect = () => {
     return(
       <Select
@@ -75,12 +118,22 @@ export default function Delete({ q }: { q: string }) {
         onChange={e => setSelectedEntity(e.target.value)}
       >
         {entities.map((ent: any) => (
-          <SelectItem key={ent.tipo + ',' + ent.numero}>{ent.tipo},{ent.numero}</SelectItem>
+          <SelectItem
+            key={ent.tipo + ',' + ent.numero}
+            textValue={`${ent.tipo} - ${ent.numero}`}
+          >
+            {ent.tipo} - {ent.numero}
+          </SelectItem>
         ))}
       </Select>
     )
   }
 
+  /**
+   * Renderizza il select per scegliere il lavoratore da eliminare
+   * 
+   * @returns componente Select
+   */
   const renderLavoratoreSelect = () => {
     return(
       <Select
@@ -91,12 +144,22 @@ export default function Delete({ q }: { q: string }) {
         onChange={e => setSelectedEntity(e.target.value)}
       >
         {entities.map((ent: any) => (
-          <SelectItem key={ent.matricola}>{ent.matricola}</SelectItem>
+          <SelectItem
+            key={ent.matricola}
+            textValue={`${ent.matricola} - ${ent.codiceFiscale}`}
+          >
+            {ent.matricola} - {ent.codiceFiscale}
+          </SelectItem>
         ))}
       </Select>
     )
   }
 
+  /**
+   * Renderizza il select per scegliere il servizio da eliminare
+   * 
+   * @returns componente Select
+   */
   const renderServizioSelect = () => {
     return(
       <Select
@@ -107,12 +170,22 @@ export default function Delete({ q }: { q: string }) {
         onChange={e => setSelectedEntity(e.target.value)}
       >
         {entities.map((ent: any) => (
-          <SelectItem key={ent.id}>{ent.id}</SelectItem>
+          <SelectItem
+            key={ent.id}
+            textValue={`${ent.id} - ${ent.nome}`}
+          >
+            {ent.id} - {ent.nome}
+          </SelectItem>
         ))}
       </Select>
     )
   }
 
+  /**
+   * Decide quale select renderizzare in base alla query da eseguire
+   * 
+   * @returns componente Select da mostrare all'utente
+   */
   const renderSelect = () => {
     switch (q) {
       case 'd-aereo': return renderAereoSelect()
@@ -126,7 +199,15 @@ export default function Delete({ q }: { q: string }) {
 
   return (
     <div>
-      {error ? <span className="error">error</span> : (
+      {error ? (
+        <div key='danger' className="w-full flex items-center my-3 fade-in">
+          <Alert color='danger' variant="solid" title={error} />
+        </div>
+      ) : success ? (
+        <div key='success' className="w-full flex items-center my-3 fade-in">
+          <Alert color='success' variant="solid" title={success} />
+        </div>
+      ) : (
         <div>
           <Form
             className="flex flex-col items-center gap-4 w-full max-w-md"

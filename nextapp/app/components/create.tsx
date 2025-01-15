@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { create, selectAllFrom } from "../actions/query";
+import { datetimeToString, datetimeToDateString } from "../lib/date";
 import {
+  Alert,
   Form,
   Input,
   ButtonGroup,
@@ -13,7 +15,8 @@ import {
 } from "@nextui-org/react";
 
 export default function Create({ q }: { q: string }) {
-  const [error, setError] = useState<any>('')
+  const [success, setSuccess] = useState<string>('')
+  const [error, setError] = useState<string>('')
   // campi dei form
   const [iata, setIata] = useState<string>('')
   const [icao, setIcao] = useState<string>('')
@@ -54,9 +57,11 @@ export default function Create({ q }: { q: string }) {
   const [flights, setFlights] = useState<any>([])
   const [passengers, setPassengers] = useState<any>([])
 
+  // prende i dati per inserire le FK
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // prende solo i dati che servono in base alla query da eseguire
         if (q == 'c-volo') setAirports(await selectAllFrom('aeroporto'))
         if (q == 'c-volo') setCompanies(await selectAllFrom('compagnia'))
         if (q == 'c-volo') setPlanes(await selectAllFrom('aereo'))
@@ -65,24 +70,53 @@ export default function Create({ q }: { q: string }) {
         if (q == 'c-bagaglio') setPassengers(await selectAllFrom('passeggero'))
         setError('')
       } catch (error) {
-        setError(error)
+        console.error(error)
+        setError('fetchData error')
+        setTimeout(() => {
+          setError('')
+        }, 4000);
       }
     }
 
     fetchData()
   }, [])
 
+  /**
+   * Esegue la query di creazione
+   * 
+   * @param params valori da inserire nella query
+   */
   const fetchDb = async (params: string[]) => {
     try {
       await create(q, params)
       setError('')
-      alert('Inserimento eseguito correttamente')
+      setSuccess('Inserimento avvenuto correttamente')
     } catch (error) {
       console.error(error)
-      setError(error)
+      setSuccess('')
+      setError('Errore nella creazione')
     }
   }
 
+  /**
+   * Renderizza i bottoni di reset e submit
+   * 
+   * @returns ButtonGroup con i Button
+   */
+  const renderButtons = () => {
+    return(
+      <ButtonGroup>
+        <Button type='reset' color="primary" variant="flat">Reset</Button>
+        <Button type='submit' color="primary">Crea</Button>
+      </ButtonGroup>
+    )
+  }
+
+  /**
+   * Renderizza il form di creazione aeroporto
+   * 
+   * @returns componente Form
+   */
   const renderAeroportoForm = () => {
     return(
       <Form
@@ -141,14 +175,16 @@ export default function Create({ q }: { q: string }) {
           min={0}
           isRequired
         />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Crea</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di creazione volo
+   * 
+   * @returns componente Form
+   */
   const renderVoloForm = () => {
     return(
       <Form
@@ -156,7 +192,12 @@ export default function Create({ q }: { q: string }) {
         validationBehavior="native"
         onSubmit={async e => {
           e.preventDefault()
-          await fetchDb([numVolo, partenza, arrivo].concat(aeroportoArrivo.split(',')).concat(aeroportoPartenza.split(',')).concat([compagnia, aereo]))
+          await fetchDb(
+            [numVolo, partenza, arrivo]
+            .concat(aeroportoArrivo.split(','))
+            .concat(aeroportoPartenza.split(','))
+            .concat([compagnia, aereo])
+          )
         }}
       >
         <Input
@@ -171,6 +212,7 @@ export default function Create({ q }: { q: string }) {
           label="Data e ora partenza"
           value={partenza}
           onChange={(e) => setPartenza(e.target.value)}
+          placeholder={datetimeToString(new Date())}
           isRequired
         />
         <Input
@@ -178,6 +220,7 @@ export default function Create({ q }: { q: string }) {
           label="Data e ora arrivo"
           value={arrivo}
           onChange={(e) => setArrivo(e.target.value)}
+          placeholder={datetimeToString(new Date())}
           isRequired
         />
         <Select
@@ -188,7 +231,10 @@ export default function Create({ q }: { q: string }) {
           onChange={e => setAeroportoPartenza(e.target.value)}
         >
           {airports.map((a: any) => (
-            <SelectItem key={a.IATA + ',' + a.ICAO} textValue={`${a.nome} (${a.provincia}, ${a.IATA} - ${a.ICAO})`}>
+            <SelectItem
+              key={a.IATA + ',' + a.ICAO}
+              textValue={`${a.nome} (${a.provincia}, ${a.IATA} - ${a.ICAO})`}
+            >
               {a.nome} ({a.provincia}, {a.IATA} - {a.ICAO})
             </SelectItem>
           ))}
@@ -201,7 +247,10 @@ export default function Create({ q }: { q: string }) {
           onChange={e => setAeroportoArrivo(e.target.value)}
         >
           {airports.map((a: any) => (
-            <SelectItem key={a.IATA + ',' + a.ICAO} textValue={`${a.nome} (${a.provincia}, ${a.IATA} - ${a.ICAO})`}>
+            <SelectItem
+              key={a.IATA + ',' + a.ICAO}
+              textValue={`${a.nome} (${a.provincia}, ${a.IATA} - ${a.ICAO})`}
+            >
               {a.nome} ({a.provincia}, {a.IATA} - {a.ICAO})
             </SelectItem>
           ))}
@@ -214,7 +263,10 @@ export default function Create({ q }: { q: string }) {
           onChange={e => setCompagnia(e.target.value)}
         >
           {companies.map((c: any) => (
-            <SelectItem key={c.nome} textValue={`${c.nome}`}>
+            <SelectItem
+              key={c.nome}
+              textValue={`${c.nome}`}
+            >
               {c.nome}
             </SelectItem>
           ))}
@@ -227,19 +279,24 @@ export default function Create({ q }: { q: string }) {
           onChange={e => setAereo(e.target.value)}
         >
           {planes.map((p: any) => (
-            <SelectItem key={p.numeroDiSerie} textValue={`${p.modello} (${p.nomeCompagnia}), ${p.tipologia}`}>
+            <SelectItem
+              key={p.numeroDiSerie}
+              textValue={`${p.modello} (${p.nomeCompagnia}), ${p.tipologia}`}
+            >
               {p.modello} ({p.nomeCompagnia}), {p.tipologia}
             </SelectItem>
           ))}
         </Select>
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Crea</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di creazione passeggero
+   * 
+   * @returns componente Form
+   */
   const renderPasseggeroForm = () => {
     return(
       <Form
@@ -277,7 +334,10 @@ export default function Create({ q }: { q: string }) {
           onChange={e => setPersona(e.target.value)}
         >
           {people.map((p: any) => (
-            <SelectItem key={p.codiceFiscale} textValue={`${p.nome} ${p.cognome} (${p.codiceFiscale})`}>
+            <SelectItem
+              key={p.codiceFiscale}
+              textValue={`${p.nome} ${p.cognome} (${p.codiceFiscale})`}
+            >
               {p.nome} {p.cognome} ({p.codiceFiscale})
             </SelectItem>
           ))}
@@ -290,19 +350,24 @@ export default function Create({ q }: { q: string }) {
           onChange={e => setVolo(e.target.value)}
         >
           {flights.map((f: any) => (
-            <SelectItem key={f.numeroVolo} textValue={`${f.numeroVolo} - ${f.nomeCompagnia}`}>
+            <SelectItem
+              key={f.numeroVolo}
+              textValue={`${f.numeroVolo} - ${f.nomeCompagnia}`}
+            >
               {f.numeroVolo} - {f.nomeCompagnia}
             </SelectItem>
           ))}
         </Select>
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Crea</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di creazione lavoratore
+   * 
+   * @returns componente Form
+   */
   const renderLavoratoreForm = () => {
     return(
       <Form
@@ -325,6 +390,7 @@ export default function Create({ q }: { q: string }) {
           label="Data assunzione"
           value={assunzione}
           onChange={(e) => setAssunzione(e.target.value)}
+          placeholder={datetimeToDateString(new Date())}
           isRequired
         />
         <Input
@@ -333,6 +399,7 @@ export default function Create({ q }: { q: string }) {
           value={stipendio}
           onChange={(e) => setStipendio(e.target.value)}
           min={0}
+          step={10}
           isRequired
         />
         <Select
@@ -343,28 +410,28 @@ export default function Create({ q }: { q: string }) {
           onChange={e => setPersona(e.target.value)}
         >
           {people.map((p: any) => (
-            <SelectItem key={p.codiceFiscale} textValue={`${p.nome} ${p.cognome} (${p.codiceFiscale})`}>
+            <SelectItem
+              key={p.codiceFiscale}
+              textValue={`${p.nome} ${p.cognome} (${p.codiceFiscale})`}
+            >
               {p.nome} {p.cognome} ({p.codiceFiscale})
             </SelectItem>
           ))}
         </Select>
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Crea</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
-  const renderBagaglioForm = () => {
+  /**
+   * Renderizza gli input per inserire le dimensioni
+   * 
+   * @returns componente div con campi peso, altezza, larghezza e spessore
+   */
+  const renderDimensionsInput = () => {
     return(
-      <Form
+      <div
         className="flex flex-col items-center gap-4 w-full max-w-md"
-        validationBehavior="native"
-        onSubmit={async e => {
-          e.preventDefault()
-          await fetchDb([peso, altezza, larghezza, spessore, 'integro', descrizione, animale ? '1' : '0', passeggero])
-        }}
       >
         <Input
           type="number"
@@ -395,6 +462,26 @@ export default function Create({ q }: { q: string }) {
           onChange={(e) => setSpessore(e.target.value)}
           isRequired
         />
+      </div>
+    )
+  }
+
+  /**
+   * Renderizza il form di creazione bagaglio
+   * 
+   * @returns componente Form
+   */
+  const renderBagaglioForm = () => {
+    return(
+      <Form
+        className="flex flex-col items-center gap-4 w-full max-w-md"
+        validationBehavior="native"
+        onSubmit={async e => {
+          e.preventDefault()
+          await fetchDb([peso, altezza, larghezza, spessore, 'integro', descrizione, animale ? '1' : '0', passeggero])
+        }}
+      >
+        {renderDimensionsInput()}
         <Input
           label="Descrizione"
           value={descrizione}
@@ -416,19 +503,24 @@ export default function Create({ q }: { q: string }) {
           onChange={e => setPasseggero(e.target.value)}
         >
           {passengers.map((p: any) => (
-            <SelectItem key={p.numeroBiglietto} textValue={`${p.numeroBiglietto} (${p.codiceFiscale})`}>
+            <SelectItem
+              key={p.numeroBiglietto}
+              textValue={`${p.numeroBiglietto} (${p.codiceFiscale})`}
+            >
               {p.numeroBiglietto} ({p.codiceFiscale})
             </SelectItem>
           ))}
         </Select>
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Crea</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di creazione pacco
+   * 
+   * @returns componente Form
+   */
   const renderPaccoForm = () => {
     return(
       <Form
@@ -439,35 +531,7 @@ export default function Create({ q }: { q: string }) {
           await fetchDb([peso, altezza, larghezza, spessore, contenuto, 'integro', volo])
         }}
       >
-        <Input
-          type="number"
-          label="Peso [kg]"
-          value={peso}
-          onChange={(e) => setPeso(e.target.value)}
-          step={.01}
-          isRequired
-        />
-        <Input
-          type="number"
-          label="Altezza [cm]"
-          value={altezza}
-          onChange={(e) => setAltezza(e.target.value)}
-          isRequired
-        />
-        <Input
-          type="number"
-          label="Larghezza [cm]"
-          value={larghezza}
-          onChange={(e) => setLarghezza(e.target.value)}
-          isRequired
-        />
-        <Input
-          type="number"
-          label="Spessore [cm]"
-          value={spessore}
-          onChange={(e) => setSpessore(e.target.value)}
-          isRequired
-        />
+        {renderDimensionsInput()}
         <Input
           label="Contenuto"
           value={contenuto}
@@ -482,19 +546,24 @@ export default function Create({ q }: { q: string }) {
           onChange={e => setVolo(e.target.value)}
         >
           {flights.map((f: any) => (
-            <SelectItem key={f.numeroVolo} textValue={`${f.numeroVolo} - ${f.nomeCompagnia}`}>
+            <SelectItem
+              key={f.numeroVolo}
+              textValue={`${f.numeroVolo} - ${f.nomeCompagnia}`}
+            >
               {f.numeroVolo} - {f.nomeCompagnia}
             </SelectItem>
           ))}
         </Select>
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Crea</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di creazione compagnia
+   * 
+   * @returns componente Form
+   */
   const renderCompagniaForm = () => {
     return(
       <Form
@@ -516,14 +585,16 @@ export default function Create({ q }: { q: string }) {
             onChange={(e) => setSede(e.target.value)}
             isRequired
           />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Crea</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Decide quale form renderizzare in base alla query da eseguire
+   * 
+   * @returns componente Form da mostrare all'utente
+   */
   const renderForm = () => {
     switch (q) {
       case 'c-aeroporto': return renderAeroportoForm()
@@ -539,8 +610,16 @@ export default function Create({ q }: { q: string }) {
 
   return (
     <div>
-      {error ? <span className="error">error</span> : (
-        <div>
+      {error ? (
+        <div key='danger' className="w-full flex items-center my-3 fade-in">
+          <Alert color='danger' variant="solid" title={error} />
+        </div>
+      ) : success ? (
+        <div key='success' className="w-full flex items-center my-3 fade-in">
+          <Alert color='success' variant="solid" title={success} />
+        </div>
+      ) : (
+        <div className="fade-in">
           {renderForm()}
         </div>
       )}

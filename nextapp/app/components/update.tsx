@@ -1,9 +1,16 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { update, selectAllFrom, selectCommercials, selectSecurities, selectParkings } from "../actions/query";
+import {
+  update,
+  selectAllFrom,
+  selectCommercials,
+  selectSecurities,
+  selectParkings
+} from "../actions/query";
 import { datetimeToString, datetimeToDateString } from "../lib/date";
 import {
+  Alert,
   Form,
   Input,
   ButtonGroup,
@@ -13,7 +20,8 @@ import {
 } from "@nextui-org/react";
 
 export default function Update({ q }: { q: string }) {
-  const [error, setError] = useState<any>('')
+  const [success, setSuccess] = useState<string>('')
+  const [error, setError] = useState<string>('')
   // campi dei form
   const [gestore, setGestore] = useState<string>('')
   const [numAddetti, setNumAddetti] = useState<string>('')
@@ -39,9 +47,11 @@ export default function Update({ q }: { q: string }) {
   const [employees, setEmployees] = useState<any>([])
   const [parkings, setParkings] = useState<any>([])
 
+  // prende i dati per scegliere la riga da modificare
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // prende solo i dati che servono in base alla query da eseguire
         if (q == 'u-serv-commerciale') setCommercials(await selectCommercials())
         if (q == 'u-serv-sicurezza' || q == 'u-attesa') setSecurities(await selectSecurities())
         if (q == 'u-serv-trasporto') setTransports(await selectAllFrom('servizio_trasporto'))
@@ -52,51 +62,62 @@ export default function Update({ q }: { q: string }) {
         if (q == 'u-parcheggi') setParkings(await selectParkings())
         setError('')
       } catch (error) {
-        setError(error)
+        console.error(error)
+        setError('fetchData error')
+        setTimeout(() => {
+          setError('')
+        }, 4000);
       }
     }
 
     fetchData()
   }, [])
 
+  // quando viene selezionato un elemento popola il form con i suoi valori
   useEffect(() => {
     const prepareFields = () => {
+      let x: any
       switch (q) {
         case 'u-serv-commerciale':
-          setGestore(commercials.filter((c: any) => c.id == selected)[0]?.gestore || '')
+          x = commercials.filter((c: any) => c.id == selected)[0]
+          setGestore(x?.gestore || '')
           break
         case 'u-serv-sicurezza':
-          setNumAddetti(securities.filter((s: any) => s.id == selected)[0]?.numeroAddettiRichiesti || '')
+          x = securities.filter((s: any) => s.id == selected)[0]
+          setNumAddetti(x?.numeroAddettiRichiesti || '')
           break
         case 'u-serv-trasporto':
-          const f = transports.filter((t: any) => t.id == selected)[0]
-          setTipo(f?.tipo || '')
-          setLinea(f?.linea || '')
-          setCosto(f?.costoPerPersona || '')
+          x = transports.filter((t: any) => t.id == selected)[0]
+          setTipo(x?.tipo || '')
+          setLinea(x?.linea || '')
+          setCosto(x?.costoPerPersona || '')
           break
         case 'u-volo':
-          const v = flights.filter((f: any) => f.numeroVolo == selected)[0]
-          setPartenza(v?.partenza ? datetimeToString(v?.partenza) : '')
-          setArrivo(v?.arrivo ? datetimeToString(v?.arrivo) : '')
-          console.log('partenza:', partenza)
+          x = flights.filter((f: any) => f.numeroVolo == selected)[0]
+          setPartenza(x?.partenza ? datetimeToString(x?.partenza) : '')
+          setArrivo(x?.arrivo ? datetimeToString(x?.arrivo) : '')
           break
         case 'u-documento':
-          const d = documents.filter((d: any) => `${d.tipo},${d.numero}` == selected)[0]
-          setTipo(d?.tipo || '')
-          setNumero(d?.numero || '')
-          setScadenza(d?.scadenza ? datetimeToDateString(d?.scadenza) : '')
+          x = documents.filter((d: any) => `${d.tipo},${d.numero}` == selected)[0]
+          setTipo(x?.tipo || '')
+          setNumero(x?.numero || '')
+          setScadenza(x?.scadenza ? datetimeToDateString(x?.scadenza) : '')
           break
         case 'u-bagaglio':
-          setStato(bags.filter((b: any) => b.id == selected)[0]?.stato || '')
+          x = bags.filter((b: any) => b.id == selected)[0]
+          setStato(x?.stato || '')
           break
         case 'u-stipendio':
-          setStipendio(employees.filter((e: any) => e.matricola == selected)[0]?.stipendio || '')
+          x = employees.filter((e: any) => e.matricola == selected)[0]
+          setStipendio(x?.stipendio || '')
           break
         case 'u-attesa':
-          setTempoAttesa(securities.filter((s: any) => s.id == selected)[0]?.tempoMedioAttesa || '')
+          x = securities.filter((s: any) => s.id == selected)[0]
+          setTempoAttesa(x?.tempoMedioAttesa || '')
           break
         case 'u-parcheggi':
-          setPostiOccupati(parkings.filter((p: any) => `${p.longitudine},${p.latitudine}` == selected)[0]?.postiOccupati || '')
+          x = parkings.filter((p: any) => `${p.longitudine},${p.latitudine}` == selected)[0]
+          setPostiOccupati(x?.postiOccupati || '')
           break
       }
     }
@@ -104,18 +125,43 @@ export default function Update({ q }: { q: string }) {
     prepareFields()
   }, [selected])
 
+  /**
+   * Esegue la query di aggiornamento
+   * 
+   * @param params valori da inserire nella query
+   */
   const fetchDb = async (params: string[]) => {
     try {
       await update(q, params)
       setError('')
-      alert('Modifica eseguita correttamente')
+      setSuccess('Modifica eseguita correttamente')
     } catch (error) {
-      setError(error)
       console.error(error)
+      setSuccess('')
+      setError('Errore nella modifica')
     }
   }
 
-  const renderServCommercialeForm = () => {
+  /**
+   * Renderizza i bottoni di reset e submit
+   * 
+   * @returns ButtonGroup con i Button
+   */
+  const renderButtons = () => {
+    return(
+      <ButtonGroup>
+        <Button type='reset' color="primary" variant="flat">Reset</Button>
+        <Button type='submit' color="primary">Aggiorna</Button>
+      </ButtonGroup>
+    )
+  }
+
+  /**
+   * Renderizza il form di modifica servizio commerciale
+   * 
+   * @returns componente Form
+   */
+  const renderServizioCommercialeForm = () => {
     return(
       <Form
         className="flex flex-col items-center gap-4 w-full max-w-md"
@@ -133,7 +179,10 @@ export default function Update({ q }: { q: string }) {
           onChange={e => setSelected(e.target.value)}
         >
           {commercials.map((c: any) => (
-            <SelectItem key={c.id} textValue={`${c.nome}, (${c.descrizione}), ${c.gestore}`}>
+            <SelectItem
+              key={c.id}
+              textValue={`${c.nome}, (${c.descrizione}), ${c.gestore}`}
+            >
               {c.nome}, ({c.descrizione}), {c.gestore}
             </SelectItem>
           ))}
@@ -145,15 +194,17 @@ export default function Update({ q }: { q: string }) {
           isRequired
           isDisabled={selected == ''}
         />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Aggiorna</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
-  const renderServSicurezzaForm = () => {
+  /**
+   * Renderizza il form di modifica servizio di sicurezza
+   * 
+   * @returns componente Form
+   */
+  const renderServizioSicurezzaForm = () => {
     return(
       <Form
         className="flex flex-col items-center gap-4 w-full max-w-md"
@@ -171,7 +222,10 @@ export default function Update({ q }: { q: string }) {
           onChange={e => setSelected(e.target.value)}
         >
           {securities.map((s: any) => (
-            <SelectItem key={s.id} textValue={`${s.nome}, (${s.descrizione}), ${s.numeroAddettiRichiesti} addetti`}>
+            <SelectItem
+              key={s.id}
+              textValue={`${s.nome}, (${s.descrizione}), ${s.numeroAddettiRichiesti} addetti`}
+            >
               {s.nome}, ({s.descrizione}), {s.numeroAddettiRichiesti} addetti
             </SelectItem>
           ))}
@@ -184,15 +238,17 @@ export default function Update({ q }: { q: string }) {
           min={0}
           isDisabled={selected == ''}
         />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Aggiorna</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
-  const renderServTrasportoForm = () => {
+  /**
+   * Renderizza il form di modifica servizio di trasporto
+   * 
+   * @returns componente Form
+   */
+  const renderServizioTrasportoForm = () => {
     return(
       <Form
         className="flex flex-col items-center gap-4 w-full max-w-md"
@@ -210,7 +266,10 @@ export default function Update({ q }: { q: string }) {
           onChange={e => setSelected(e.target.value)}
         >
           {transports.map((t: any) => (
-            <SelectItem key={t.id} textValue={`${t.tipo} ${t.linea} - ${t.costoPerPersona} €`}>
+            <SelectItem
+              key={t.id}
+              textValue={`${t.tipo} ${t.linea} - ${t.costoPerPersona} €`}
+            >
               {t.tipo} {t.linea} - {t.costoPerPersona} €
             </SelectItem>
           ))}
@@ -223,11 +282,11 @@ export default function Update({ q }: { q: string }) {
           selectedKeys={[tipo]}
           onChange={e => setTipo(e.target.value)}
         >
-          <SelectItem key='navetta'>Navetta</SelectItem>
-          <SelectItem key='bus'>Bus</SelectItem>
-          <SelectItem key='treno'>Treno</SelectItem>
-          <SelectItem key='tram'>Tram</SelectItem>
-          <SelectItem key='taxi'>Taxi</SelectItem>
+          <SelectItem key='navetta' textValue="Navetta">Navetta</SelectItem>
+          <SelectItem key='bus' textValue="Bus">Bus</SelectItem>
+          <SelectItem key='treno' textValue="Treno">Treno</SelectItem>
+          <SelectItem key='tram' textValue="Tram">Tram</SelectItem>
+          <SelectItem key='taxi' textValue="Taxi">Taxi</SelectItem>
         </Select>
         <Input
           label="Nuova linea"
@@ -245,14 +304,16 @@ export default function Update({ q }: { q: string }) {
           isRequired
           isDisabled={selected == ''}
         />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Aggiorna</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di modifica volo
+   * 
+   * @returns componente Form
+   */
   const renderVoloForm = () => {
     return(
       <Form
@@ -271,8 +332,11 @@ export default function Update({ q }: { q: string }) {
           onChange={e => setSelected(e.target.value)}
         >
           {flights.map((f: any) => (
-            <SelectItem key={f.numeroVolo} textValue={`${f.numeroVolo}, ${f.partenza.toLocaleString('it-IT')} - ${f.arrivo.toLocaleString('it-IT')} (${f.nomeCompagnia})`}>
-              {f.numeroVolo}, {f.partenza.toLocaleString('it-IT')} - {f.arrivo.toLocaleString('it-IT')} ({f.nomeCompagnia})
+            <SelectItem
+              key={f.numeroVolo}
+              textValue={`${f.numeroVolo}, ${datetimeToString(f.partenza)} - ${datetimeToString(f.arrivo)} (${f.nomeCompagnia})`}
+            >
+              {f.numeroVolo}, {datetimeToString(f.partenza)} - {datetimeToString(f.arrivo)} ({f.nomeCompagnia})
             </SelectItem>
           ))}
         </Select>
@@ -292,14 +356,16 @@ export default function Update({ q }: { q: string }) {
           isRequired
           isDisabled={selected == ''}
         />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Aggiorna</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di modifica documento
+   * 
+   * @returns componente Form
+   */
   const renderDocumentoForm = () => {
     return(
       <Form
@@ -318,7 +384,10 @@ export default function Update({ q }: { q: string }) {
           onChange={e => setSelected(e.target.value)}
         >
           {documents.map((d: any) => (
-            <SelectItem key={d.tipo + ',' + d.numero} textValue={`${d.tipo}, ${d.numero}, ${d.scadenza} - ${d.codiceFiscale}`}>
+            <SelectItem
+              key={d.tipo + ',' + d.numero}
+              textValue={`${d.tipo}, ${d.numero}, ${datetimeToDateString(d.scadenza)} - ${d.codiceFiscale}`}
+            >
               {d.tipo}, {d.numero}, {datetimeToDateString(d.scadenza)} - {d.codiceFiscale}
             </SelectItem>
           ))}
@@ -345,14 +414,16 @@ export default function Update({ q }: { q: string }) {
           isRequired
           isDisabled={selected == ''}
         />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Aggiorna</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di modifica bagaglio
+   * 
+   * @returns componente Form
+   */
   const renderBagaglioForm = () => {
     return(
       <Form
@@ -371,7 +442,10 @@ export default function Update({ q }: { q: string }) {
           onChange={e => setSelected(e.target.value)}
         >
           {bags.map((b: any) => (
-            <SelectItem key={b.id} textValue={`${b.numeroBiglietto}, ${b.descrizione} (${b.stato})`}>
+            <SelectItem
+              key={b.id}
+              textValue={`${b.numeroBiglietto}, ${b.descrizione} (${b.stato})`}
+            >
               {b.numeroBiglietto}, {b.descrizione} ({b.stato})
             </SelectItem>
           ))}
@@ -384,18 +458,20 @@ export default function Update({ q }: { q: string }) {
           selectedKeys={[stato]}
           onChange={e => setStato(e.target.value)}
         >
-          <SelectItem key='integro'>Integro</SelectItem>
-          <SelectItem key='danneggiato'>Danneggiato</SelectItem>
-          <SelectItem key='disperso'>Disperso</SelectItem>
+          <SelectItem key='integro' textValue="Integro">Integro</SelectItem>
+          <SelectItem key='danneggiato' textValue="Danneggiato">Danneggiato</SelectItem>
+          <SelectItem key='disperso' textValue="Disperso">Disperso</SelectItem>
         </Select>
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Aggiorna</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di modifica stipendio
+   * 
+   * @returns componente Form
+   */
   const renderStipendioForm = () => {
     return(
       <Form
@@ -414,7 +490,10 @@ export default function Update({ q }: { q: string }) {
           onChange={e => setSelected(e.target.value)}
         >
           {employees.map((e: any) => (
-            <SelectItem key={e.matricola} textValue={`${e.matricola} (${e.codiceFiscale}), ${e.stipendio} €`}>
+            <SelectItem
+              key={e.matricola}
+              textValue={`${e.matricola} (${e.codiceFiscale}), ${e.stipendio} €`}
+            >
               {e.matricola} ({e.codiceFiscale}), {e.stipendio} €
             </SelectItem>
           ))}
@@ -429,14 +508,16 @@ export default function Update({ q }: { q: string }) {
           step={10}
           isDisabled={selected == ''}
         />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Aggiorna</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di modifica attesa
+   * 
+   * @returns componente Form
+   */
   const renderAttesaForm = () => {
     return(
       <Form
@@ -455,7 +536,10 @@ export default function Update({ q }: { q: string }) {
           onChange={e => setSelected(e.target.value)}
         >
           {securities.map((s: any) => (
-            <SelectItem key={s.id} textValue={`${s.nome}, (${s.descrizione}) - ${s.tempoMedioAttesa} min`}>
+            <SelectItem
+              key={s.id}
+              textValue={`${s.nome}, (${s.descrizione}) - ${s.tempoMedioAttesa} min`}
+            >
               {s.nome}, ({s.descrizione}) - {s.tempoMedioAttesa} min
             </SelectItem>
           ))}
@@ -469,14 +553,16 @@ export default function Update({ q }: { q: string }) {
           min={0}
           isDisabled={selected == ''}
         />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Aggiorna</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Renderizza il form di modifica parcheggio
+   * 
+   * @returns componente Form
+   */
   const renderParcheggiForm = () => {
     return(
       <Form
@@ -495,7 +581,10 @@ export default function Update({ q }: { q: string }) {
           onChange={e => setSelected(e.target.value)}
         >
           {parkings.map((p: any) => (
-            <SelectItem key={p.longitudine + ',' + p.latitudine} textValue={`${p.nome}, occupazione ${p.postiOccupati}/${p.postiDisponibili}`}>
+            <SelectItem
+              key={p.longitudine + ',' + p.latitudine}
+              textValue={`${p.nome}, occupazione ${p.postiOccupati}/${p.postiDisponibili}`}
+            >
               {p.nome}, occupazione {p.postiOccupati}/{p.postiDisponibili}
             </SelectItem>
           ))}
@@ -509,19 +598,21 @@ export default function Update({ q }: { q: string }) {
           min={0}
           isDisabled={selected == ''}
         />
-        <ButtonGroup>
-          <Button type='reset' color="primary" variant="flat">Reset</Button>
-          <Button type='submit' color="primary">Aggiorna</Button>
-        </ButtonGroup>
+        {renderButtons()}
       </Form>
     )
   }
 
+  /**
+   * Decide quale form renderizzare in base alla query da eseguire
+   * 
+   * @returns componente Form da mostrare all'utente
+   */
   const renderForm = () => {
     switch (q) {
-      case 'u-serv-commerciale': return renderServCommercialeForm()
-      case 'u-serv-sicurezza': return renderServSicurezzaForm()
-      case 'u-serv-trasporto': return renderServTrasportoForm()
+      case 'u-serv-commerciale': return renderServizioCommercialeForm()
+      case 'u-serv-sicurezza': return renderServizioSicurezzaForm()
+      case 'u-serv-trasporto': return renderServizioTrasportoForm()
       case 'u-volo': return renderVoloForm()
       case 'u-documento': return renderDocumentoForm()
       case 'u-bagaglio': return renderBagaglioForm()
@@ -534,8 +625,16 @@ export default function Update({ q }: { q: string }) {
 
   return (
     <div>
-      {error ? <span className="error">error</span> : (
-        <div>
+      {error ? (
+        <div key='danger' className="w-full flex items-center my-3 fade-in">
+          <Alert color='danger' variant="solid" title={error} />
+        </div>
+      ) : success ? (
+        <div key='success' className="w-full flex items-center my-3 fade-in">
+          <Alert color='success' variant="solid" title={success} />
+        </div>
+      ) : (
+        <div className="fade-in">
           {renderForm()}
         </div>
       )}

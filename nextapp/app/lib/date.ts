@@ -2,7 +2,7 @@
  * Converte un datetime in una stringa leggibile da un input
  * di type="datetime-local"
  * @param datetime datetime da convertire
- * @returns stringa formattata da passare ad un <input>
+ * @returns stringa in formato yyyy-MM-ddThh:mm
  */
 export const datetimeToString = (datetime: Date) => {
   // aggiungo lo zero prima dei numeri a cifra singola
@@ -21,7 +21,7 @@ export const datetimeToString = (datetime: Date) => {
  * Converte un datetime in una stringa leggibile da un input
  * di type="date"
  * @param datetime datetime da convertire
- * @returns stringa formattata da passare ad un <input>
+ * @returns stringa in formato yyyy-MM-dd
  */
 export const datetimeToDateString = (datetime: Date) => {
   // aggiungo lo zero prima dei numeri a cifra singola
